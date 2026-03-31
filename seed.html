@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TUBS // BOARD SEEDER</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080a0f; --surface: #0d1117; --border: #1e2a35;
+    --text: #c8d8e8; --muted: #4a6070;
+    --mz: #00e5a0; --pu: #5b8cff; --tr: #ffb830;
+    --danger: #ff4455; --warn: #ff9500;
+    --mono: 'Space Mono', monospace; --display: 'Bebas Neue', sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--mono); min-height:100vh; padding:24px; }
+  h1 { font-family:var(--display); font-size:2.4rem; letter-spacing:4px; color:#fff; margin-bottom:4px; }
+  h1 span { color:var(--mz); }
+  .sub { font-size:0.65rem; color:var(--muted); letter-spacing:2px; margin-bottom:28px; }
+
+  .cred-box { background:var(--surface); border:1px solid var(--warn); padding:16px 20px; margin-bottom:24px; display:none; }
+  .cred-box.show { display:block; }
+  .cred-box h3 { font-size:0.7rem; color:var(--warn); letter-spacing:2px; margin-bottom:12px; }
+  .cred-fields { display:flex; gap:10px; flex-wrap:wrap; }
+  .cred-fields input { flex:1; min-width:180px; background:#0a0600; border:1px solid #3a2200; color:var(--text); font-family:var(--mono); font-size:0.7rem; padding:8px 12px; }
+  .cred-fields input:focus { outline:none; border-color:var(--warn); }
+  .cred-fields button { padding:8px 20px; background:var(--warn); border:none; color:#000; font-family:var(--mono); font-size:0.7rem; font-weight:700; cursor:pointer; letter-spacing:1px; }
+
+  .project-block { background:var(--surface); border:1px solid var(--border); margin-bottom:16px; overflow:hidden; }
+  .project-block-header { padding:14px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
+  .proj-title { font-family:var(--display); font-size:1.4rem; letter-spacing:3px; }
+  .proj-title.mz { color:var(--mz); } .proj-title.pu { color:var(--pu); } .proj-title.tr { color:var(--tr); }
+  .proj-count { font-size:0.6rem; color:var(--muted); letter-spacing:1px; }
+  .task-list { padding:12px 20px; }
+  .task-row { display:flex; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid var(--border); font-size:0.72rem; }
+  .task-row:last-child { border:none; }
+  .list-badge { font-size:0.55rem; padding:2px 7px; border-radius:2px; flex-shrink:0; letter-spacing:0.5px; }
+  .badge-week { background:rgba(255,184,48,0.15); color:var(--tr); }
+  .badge-backlog { background:rgba(255,255,255,0.06); color:var(--muted); }
+  .task-status { font-size:0.65rem; margin-left:auto; flex-shrink:0; }
+  .status-pending { color:var(--muted); }
+  .status-ok { color:var(--mz); }
+  .status-err { color:var(--danger); }
+  .status-skip { color:var(--warn); }
+
+  .action-bar { display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
+  .btn { padding:10px 24px; font-family:var(--mono); font-size:0.7rem; font-weight:700; letter-spacing:1px; cursor:pointer; border:none; transition:opacity 0.2s; }
+  .btn:disabled { opacity:0.4; cursor:not-allowed; }
+  .btn-mz { background:var(--mz); color:#000; }
+  .btn-all { background:#fff; color:#000; }
+  .btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+
+  .log-box { background:var(--surface); border:1px solid var(--border); padding:16px 20px; font-size:0.68rem; line-height:2; max-height:200px; overflow-y:auto; display:none; }
+  .log-box.show { display:block; }
+  .log-ok { color:var(--mz); } .log-err { color:var(--danger); } .log-info { color:var(--muted); } .log-skip { color:var(--warn); }
+
+  .progress-bar { height:3px; background:var(--border); margin-bottom:24px; }
+  .progress-fill { height:100%; background:var(--mz); width:0%; transition:width 0.4s ease; }
+
+  .done-banner { background:#001a0e; border:1px solid var(--mz); padding:16px 20px; display:none; }
+  .done-banner.show { display:block; }
+  .done-banner p { font-size:0.75rem; color:var(--mz); letter-spacing:1px; margin-bottom:8px; }
+  .done-banner a { color:var(--mz); font-size:0.7rem; }
+</style>
+</head>
+<body>
+
+<h1>TUBS <span>//</span> BOARD SEEDER</h1>
+<div class="sub">ONE-TIME TASK POPULATION · ALL 3 BOARDS · USES STORED CREDENTIALS</div>
+
+<div class="cred-box" id="credBox">
+  <h3>⚠ CREDENTIALS NOT FOUND — ENTER THEM HERE</h3>
+  <div class="cred-fields">
+    <input type="text" id="inputKey" placeholder="TRELLO API KEY">
+    <input type="text" id="inputToken" placeholder="TRELLO TOKEN">
+    <button onclick="saveCreds()">SAVE</button>
+  </div>
+</div>
+
+<div class="action-bar">
+  <button class="btn btn-mz" id="btnMz" onclick="seedProject('mz')">SEED MZANSIACADEMY</button>
+  <button class="btn btn-outline" id="btnPu" onclick="seedProject('pu')">SEED PULSIFY</button>
+  <button class="btn btn-outline" id="btnTr" onclick="seedProject('tr')">SEED TRADINGSYSTEM</button>
+  <button class="btn btn-all" id="btnAll" onclick="seedAll()">SEED ALL 3</button>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div id="projectBlocks"></div>
+
+<div class="log-box" id="logBox"></div>
+
+<div class="done-banner" id="doneBanner">
+  <p>✓ SEEDING COMPLETE — open your dashboard and hit REFRESH</p>
+  <a href="#" onclick="window.close()">Close this tab</a>
+</div>
+
+<script>
+const BOARD_IDS = {
+  mz: '69cb010e55ed742dbc28e919',
+  pu: '69cb01bdaa70276c08a27d10',
+  tr: '69cb0198f467f3fd08d26c92',
+};
+
+const TASKS = {
+  mz: [
+    // This Week
+    { name: 'Set up Next.js project structure (app router)', list: 'This Week' },
+    { name: 'Configure Firebase Auth (email + Google provider)', list: 'This Week' },
+    { name: 'Connect Supabase — create analytics schema', list: 'This Week' },
+    { name: 'Deploy skeleton app to Vercel', list: 'This Week' },
+    { name: 'Set up Cloudflare Workers project + wrangler.toml', list: 'This Week' },
+    // Backlog
+    { name: 'Build Amahle AI assistant UI component (Groq)', list: 'Backlog' },
+    { name: 'Design gamification engine — XP + streaks + badges', list: 'Backlog' },
+    { name: 'Load Grade 8 Mathematics CAPS content', list: 'Backlog' },
+    { name: 'Load Grade 8 Physical Science CAPS content', list: 'Backlog' },
+    { name: 'Load Grade 8 English First Additional Language content', list: 'Backlog' },
+    { name: 'Build quiz engine with answer feedback', list: 'Backlog' },
+    { name: 'Leaderboard — per school, per subject', list: 'Backlog' },
+    { name: 'Progressive Web App (PWA) manifest + service worker', list: 'Backlog' },
+    { name: 'Offline mode — cache lessons for low-data users', list: 'Backlog' },
+    { name: 'Teacher dashboard — track learner progress', list: 'Backlog' },
+    { name: 'Beta onboarding flow — 100 learners', list: 'Backlog' },
+    { name: 'Performance audit — Lighthouse score >90', list: 'Backlog' },
+    { name: 'Set up error monitoring (Sentry)', list: 'Backlog' },
+  ],
+  pu: [
+    { name: 'Design Supabase database schema (events, users, squads)', list: 'This Week' },
+    { name: 'Set up Next.js + Supabase auth flow', list: 'This Week' },
+    { name: 'Integrate Mapbox — base map with event pins', list: 'This Week' },
+    { name: 'Configure Paystack test environment + webhook', list: 'This Week' },
+    { name: 'Wire up Claude API for event recommendations', list: 'This Week' },
+    { name: 'Build Vibe Feed UI — event cards + filters', list: 'Backlog' },
+    { name: 'Squad Planning — invite friends to events', list: 'Backlog' },
+    { name: 'Mux live streaming integration', list: 'Backlog' },
+    { name: 'OneSignal push notifications setup', list: 'Backlog' },
+    { name: 'Event organiser onboarding flow', list: 'Backlog' },
+    { name: 'Ticket purchase flow — Paystack live', list: 'Backlog' },
+    { name: 'QR code ticket generation + scanning', list: 'Backlog' },
+    { name: 'AI event recommendations feed', list: 'Backlog' },
+    { name: 'Social sharing — events to WhatsApp/Instagram', list: 'Backlog' },
+    { name: 'Closed beta — 50 Durban event organisers', list: 'Backlog' },
+    { name: 'Analytics dashboard for organisers', list: 'Backlog' },
+  ],
+  tr: [
+    { name: 'Define core entry/exit strategy logic in MQL5', list: 'This Week' },
+    { name: 'Set up MT5 backtesting environment', list: 'This Week' },
+    { name: 'Code risk management module (SL/TP/lot sizing)', list: 'This Week' },
+    { name: 'Run first backtest on 1yr historical data', list: 'This Week' },
+    { name: 'Analyse backtest results — winrate + drawdown', list: 'Backlog' },
+    { name: 'Optimise input parameters (strategy tester)', list: 'Backlog' },
+    { name: 'Run 2yr backtest with optimised params', list: 'Backlog' },
+    { name: 'Set up demo account forward test', list: 'Backlog' },
+    { name: 'Monitor demo performance for 4 weeks', list: 'Backlog' },
+    { name: 'Build trade log — journal every signal', list: 'Backlog' },
+    { name: 'Deploy to live account — micro lots only', list: 'Backlog' },
+    { name: 'Set up Telegram/email alerts on trade signals', list: 'Backlog' },
+    { name: 'Monthly performance review — tweak strategy', list: 'Backlog' },
+  ]
+};
+
+const PROJECT_NAMES = { mz: 'MZANSIACADEMY', pu: 'PULSIFY', tr: 'TRADINGSYSTEM' };
+const PROJECT_CLS = { mz: 'mz', pu: 'pu', tr: 'tr' };
+
+let listCache = {}; // boardKey -> { listName -> listId }
+let seededCards = {}; // track which cards were already seeded
+
+function getKey() { return localStorage.getItem('trello_key') || ''; }
+function getToken() { return localStorage.getItem('trello_token') || ''; }
+
+function saveCreds() {
+  const k = document.getElementById('inputKey').value.trim();
+  const t = document.getElementById('inputToken').value.trim();
+  if (!k || !t) return;
+  localStorage.setItem('trello_key', k);
+  localStorage.setItem('trello_token', t);
+  document.getElementById('credBox').classList.remove('show');
+  renderTaskPreviews();
+}
+
+function log(msg, cls='log-info') {
+  const box = document.getElementById('logBox');
+  box.classList.add('show');
+  box.innerHTML += `<div class="${cls}">${msg}</div>`;
+  box.scrollTop = box.scrollHeight;
+}
+
+function setProgress(pct) {
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function renderTaskPreviews() {
+  const container = document.getElementById('projectBlocks');
+  container.innerHTML = Object.keys(TASKS).map(k => `
+    <div class="project-block" id="block-${k}">
+      <div class="project-block-header">
+        <div class="proj-title ${PROJECT_CLS[k]}">${PROJECT_NAMES[k]}</div>
+        <div class="proj-count">${TASKS[k].length} TASKS TO SEED</div>
+      </div>
+      <div class="task-list">
+        ${TASKS[k].map((t, i) => `
+          <div class="task-row" id="task-${k}-${i}">
+            <span class="list-badge ${t.list === 'This Week' ? 'badge-week' : 'badge-backlog'}">${t.list.toUpperCase()}</span>
+            <span>${t.name}</span>
+            <span class="task-status status-pending" id="status-${k}-${i}">PENDING</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+async function getLists(boardKey) {
+  if (listCache[boardKey]) return listCache[boardKey];
+  const key = getKey(), token = getToken();
+  const res = await fetch(`https://api.trello.com/1/boards/${BOARD_IDS[boardKey]}/lists?key=${key}&token=${token}&fields=name,id`);
+  if (!res.ok) throw new Error(`Failed to fetch lists for ${PROJECT_NAMES[boardKey]}`);
+  const lists = await res.json();
+  const map = {};
+  lists.forEach(l => { map[l.name.trim()] = l.id; });
+  listCache[boardKey] = map;
+  return map;
+}
+
+async function getExistingCards(boardKey) {
+  const key = getKey(), token = getToken();
+  const res = await fetch(`https://api.trello.com/1/boards/${BOARD_IDS[boardKey]}/cards?key=${key}&token=${token}&fields=name`);
+  if (!res.ok) return [];
+  const cards = await res.json();
+  return cards.map(c => c.name.toLowerCase().trim());
+}
+
+async function createCard(listId, name) {
+  const key = getKey(), token = getToken();
+  const res = await fetch(`https://api.trello.com/1/cards`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ idList: listId, name, key, token })
+  });
+  if (!res.ok) throw new Error(`Failed to create: ${name}`);
+  return await res.json();
+}
+
+async function seedProject(boardKey) {
+  const key = getKey(), token = getToken();
+  if (!key || !token) { document.getElementById('credBox').classList.add('show'); return; }
+
+  disableButtons();
+  log(`── SEEDING ${PROJECT_NAMES[boardKey]} ──`, 'log-info');
+
+  try {
+    const lists = await getLists(boardKey);
+    const existing = await getExistingCards(boardKey);
+    const tasks = TASKS[boardKey];
+    let done = 0;
+
+    for (let i = 0; i < tasks.length; i++) {
+      const task = tasks[i];
+      const statusEl = document.getElementById(`status-${boardKey}-${i}`);
+
+      // Check if already exists
+      if (existing.includes(task.name.toLowerCase().trim())) {
+        statusEl.textContent = 'SKIPPED';
+        statusEl.className = 'task-status status-skip';
+        log(`  SKIP  ${task.name}`, 'log-skip');
+        done++;
+        setProgress((done / tasks.length) * 100);
+        continue;
+      }
+
+      const listId = lists[task.list];
+      if (!listId) {
+        statusEl.textContent = 'NO LIST';
+        statusEl.className = 'task-status status-err';
+        log(`  ERR   List "${task.list}" not found — create it in Trello`, 'log-err');
+        done++;
+        continue;
+      }
+
+      try {
+        await createCard(listId, task.name);
+        statusEl.textContent = '✓ ADDED';
+        statusEl.className = 'task-status status-ok';
+        log(`  OK    ${task.name}`, 'log-ok');
+      } catch(e) {
+        statusEl.textContent = 'FAILED';
+        statusEl.className = 'task-status status-err';
+        log(`  ERR   ${task.name}: ${e.message}`, 'log-err');
+      }
+
+      done++;
+      setProgress((done / tasks.length) * 100);
+      await delay(150); // avoid rate limiting
+    }
+
+    log(`── ${PROJECT_NAMES[boardKey]} DONE ──`, 'log-ok');
+  } catch(e) {
+    log(`FATAL: ${e.message}`, 'log-err');
+  }
+
+  enableButtons();
+  checkAllDone();
+}
+
+async function seedAll() {
+  disableButtons();
+  for (const k of ['mz', 'pu', 'tr']) {
+    await seedProject(k);
+  }
+  enableButtons();
+  checkAllDone();
+}
+
+function checkAllDone() {
+  const allStatuses = document.querySelectorAll('.task-status');
+  const allResolved = Array.from(allStatuses).every(el =>
+    el.textContent !== 'PENDING'
+  );
+  if (allResolved) {
+    document.getElementById('doneBanner').classList.add('show');
+    setProgress(100);
+  }
+}
+
+function disableButtons() {
+  ['btnMz','btnPu','btnTr','btnAll'].forEach(id => {
+    document.getElementById(id).disabled = true;
+  });
+}
+function enableButtons() {
+  ['btnMz','btnPu','btnTr','btnAll'].forEach(id => {
+    document.getElementById(id).disabled = false;
+  });
+}
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// INIT
+window.addEventListener('DOMContentLoaded', () => {
+  if (!getKey() || !getToken()) {
+    document.getElementById('credBox').classList.add('show');
+  }
+  renderTaskPreviews();
+});
+</script>
+</body>
+</html>
