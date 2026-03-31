@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TUBS // FOUNDER DASHBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080a0f;
+    --surface: #0d1117;
+    --surface2: #131920;
+    --border: #1e2a35;
+    --border-bright: #2a3f50;
+    --text: #c8d8e8;
+    --muted: #4a6070;
+    --accent-mz: #00e5a0;
+    --accent-pu: #5b8cff;
+    --accent-tr: #ffb830;
+    --danger: #ff4455;
+    --warn: #ff9500;
+    --mono: 'Space Mono', monospace;
+    --display: 'Bebas Neue', sans-serif;
+    --body: 'DM Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,160,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,160,0.015) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .dashboard { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 24px 0 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .header-left h1 {
+    font-family: var(--display);
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    letter-spacing: 4px;
+    line-height: 1;
+    color: #fff;
+  }
+  .header-left h1 span { color: var(--accent-mz); }
+  .header-sub {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-top: 6px;
+  }
+  .header-right { text-align: right; }
+  .sync-time {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+  .btn-row { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
+  .sync-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid var(--border-bright);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sync-btn:hover { border-color: var(--accent-mz); color: var(--accent-mz); }
+  .sync-btn.spinning .icon { animation: spin 1s linear infinite; }
+  .creds-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid var(--warn);
+    color: var(--warn);
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .creds-btn:hover { background: var(--warn); color: #000; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* CONFIG BANNER */
+  .config-banner {
+    background: #1a0a00;
+    border: 1px solid var(--warn);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: none;
+  }
+  .config-banner.show { display: block; }
+  .config-banner h3 { font-family: var(--mono); font-size: 0.75rem; color: var(--warn); letter-spacing: 2px; margin-bottom: 12px; }
+  .config-fields { display: flex; gap: 12px; flex-wrap: wrap; }
+  .config-fields input {
+    flex: 1;
+    min-width: 200px;
+    background: #0d0800;
+    border: 1px solid #3a2200;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 8px 12px;
+    letter-spacing: 1px;
+  }
+  .config-fields input:focus { outline: none; border-color: var(--warn); }
+  .config-fields button {
+    padding: 8px 20px;
+    background: var(--warn);
+    border: none;
+    color: #000;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
+
+  /* ERROR BANNER */
+  .error-banner {
+    background: #1a0008;
+    border: 1px solid var(--danger);
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--danger);
+    letter-spacing: 1px;
+    display: none;
+  }
+  .error-banner.show { display: block; }
+
+  /* ═══════════════════════════════════════════════════
+     TODAY'S FOCUS PANEL — NEW
+     ═══════════════════════════════════════════════════ */
+  .focus-panel {
+    background: var(--surface);
+    border: 1px solid var(--accent-mz);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .focus-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-mz), var(--accent-pu), var(--accent-tr));
+  }
+  .focus-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .focus-title {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    letter-spacing: 3px;
+    color: #fff;
+  }
+  .focus-day {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    border: 1px solid var(--border-bright);
+  }
+  .focus-day.mz { color: var(--accent-mz); border-color: var(--accent-mz); }
+  .focus-day.pu { color: var(--accent-pu); border-color: var(--accent-pu); }
+  .focus-day.tr { color: var(--accent-tr); border-color: var(--accent-tr); }
+  .focus-body { padding: 16px 20px; }
+  .focus-project-label {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .focus-project-label.mz { color: var(--accent-mz); }
+  .focus-project-label.pu { color: var(--accent-pu); }
+  .focus-project-label.tr { color: var(--accent-tr); }
+  .focus-task {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    background: var(--surface2);
+    border-left: 3px solid;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+  .focus-task.mz { border-color: var(--accent-mz); }
+  .focus-task.pu { border-color: var(--accent-pu); }
+  .focus-task.tr { border-color: var(--accent-tr); }
+  .focus-task .focus-idx {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .focus-empty {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    padding: 8px 0;
+  }
+  .focus-due-flag {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .due-overdue { background: rgba(255,68,85,0.15); color: var(--danger); }
+  .due-soon { background: rgba(255,149,0,0.15); color: var(--warn); }
+  .due-ok { background: rgba(0,229,160,0.08); color: var(--accent-mz); }
+
+  /* COMMAND BAR — daily stats */
+  .command-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .cmd-stat {
+    background: var(--surface);
+    padding: 16px 20px;
+    text-align: center;
+  }
+  .cmd-stat .val {
+    font-family: var(--display);
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+    line-height: 1;
+    color: #fff;
+  }
+  .cmd-stat .val.green { color: var(--accent-mz); }
+  .cmd-stat .val.red { color: var(--danger); }
+  .cmd-stat .val.yellow { color: var(--accent-tr); }
+  .cmd-stat .val.blue { color: var(--accent-pu); }
+  .cmd-stat .label {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     VELOCITY TRACKER — NEW
+     ═══════════════════════════════════════════════════ */
+  .velocity-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .section-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-title {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    letter-spacing: 3px;
+    color: #fff;
+  }
+  .section-meta {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+  .velocity-body { padding: 20px; }
+  .velocity-stats {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .vel-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .vel-stat .vel-val {
+    font-family: var(--display);
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .vel-stat .vel-label {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+  }
+  .vel-trend-up { color: var(--accent-mz); }
+  .vel-trend-down { color: var(--danger); }
+  .vel-trend-flat { color: var(--accent-tr); }
+  .velocity-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 80px;
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+  .vel-bar-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    justify-content: flex-end;
+  }
+  .vel-bar {
+    width: 100%;
+    max-width: 40px;
+    min-height: 2px;
+    background: var(--accent-mz);
+    transition: height 0.5s ease;
+    position: relative;
+  }
+  .vel-bar.current { background: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.3); }
+  .vel-bar-count {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    color: var(--text);
+  }
+  .vel-bar-label {
+    font-family: var(--mono);
+    font-size: 0.48rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* PROJECT GRID */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .project-card:hover { border-color: var(--border-bright); }
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .project-card.mz::before { background: var(--accent-mz); }
+  .project-card.pu::before { background: var(--accent-pu); }
+  .project-card.tr::before { background: var(--accent-tr); }
+
+  .project-header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .project-name {
+    font-family: var(--display);
+    font-size: 1.6rem;
+    letter-spacing: 3px;
+    line-height: 1;
+  }
+  .project-card.mz .project-name { color: var(--accent-mz); }
+  .project-card.pu .project-name { color: var(--accent-pu); }
+  .project-card.tr .project-name { color: var(--accent-tr); }
+  .project-tag {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .project-status {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    padding: 4px 8px;
+    letter-spacing: 1px;
+    border: 1px solid currentColor;
+  }
+  .status-active { color: var(--accent-mz); }
+  .status-blocked { color: var(--danger); }
+  .status-building { color: var(--accent-tr); }
+
+  /* PROGRESS */
+  .progress-section { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .progress-label span:last-child { color: var(--text); }
+  .progress-track {
+    height: 4px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+  }
+  .project-card.mz .progress-fill { background: var(--accent-mz); }
+  .project-card.pu .progress-fill { background: var(--accent-pu); }
+  .project-card.tr .progress-fill { background: var(--accent-tr); }
+
+  /* TASK BREAKDOWN */
+  .task-breakdown {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  .task-col { text-align: center; }
+  .task-col .count {
+    font-family: var(--display);
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+  .task-col .col-label {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  .col-backlog .count { color: var(--muted); }
+  .col-week .count { color: var(--accent-tr); }
+  .col-progress .count { color: #fff; }
+  .col-blocked .count { color: var(--danger); }
+  .col-done .count { color: var(--accent-mz); }
+
+  /* DUE DATE ALERTS — NEW */
+  .due-alerts {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    display: none;
+  }
+  .due-alerts.show { display: block; }
+  .due-alerts-title {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    color: var(--danger);
+    margin-bottom: 8px;
+  }
+  .due-alert-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 0.72rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .due-alert-item:last-child { border: none; }
+  .due-badge {
+    font-family: var(--mono);
+    font-size: 0.5rem;
+    padding: 2px 6px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+  }
+  .badge-overdue { background: rgba(255,68,85,0.2); color: var(--danger); }
+  .badge-due-soon { background: rgba(255,149,0,0.2); color: var(--warn); }
+  .badge-due-week { background: rgba(91,140,255,0.15); color: var(--accent-pu); }
+
+  /* MILESTONE */
+  .milestone-section { padding: 14px 20px; border-bottom: 1px solid var(--border); }
+  .milestone-header {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .milestone-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 7px;
+  }
+  .milestone-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .milestone-dot.done { background: var(--accent-mz); }
+  .milestone-dot.active { background: var(--accent-tr); box-shadow: 0 0 6px var(--accent-tr); }
+  .milestone-dot.pending { background: var(--border-bright); }
+  .milestone-text {
+    font-size: 0.75rem;
+    flex: 1;
+    line-height: 1.3;
+  }
+  .milestone-text.done { color: var(--muted); text-decoration: line-through; }
+  .milestone-text.active { color: var(--text); }
+  .milestone-text.pending { color: var(--muted); }
+  .milestone-eta {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  /* ACTIVE TASKS LIST */
+  .tasks-section { padding: 14px 20px; }
+  .tasks-header {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.78rem;
+    line-height: 1.3;
+  }
+  .task-item:last-child { border-bottom: none; }
+  .task-pill {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    padding: 2px 6px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    letter-spacing: 0.5px;
+  }
+  .pill-week { background: rgba(255,184,48,0.15); color: var(--accent-tr); }
+  .pill-progress { background: rgba(255,255,255,0.08); color: var(--text); }
+  .pill-blocked { background: rgba(255,68,85,0.15); color: var(--danger); }
+  .task-name { flex: 1; }
+  .task-due {
+    font-family: var(--mono);
+    font-size: 0.5rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .task-due.overdue { color: var(--danger); }
+  .task-due.soon { color: var(--warn); }
+  .task-due.normal { color: var(--muted); }
+  .no-tasks {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    padding: 10px 0;
+    font-style: italic;
+  }
+
+  /* SCHEDULE */
+  .schedule-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+  }
+  .day-col {
+    background: var(--surface);
+    padding: 16px;
+  }
+  .day-col.is-today { background: var(--surface2); }
+  .day-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .day-label.today { color: var(--accent-mz); }
+  .day-owner {
+    font-family: var(--mono);
+    font-size: 0.48rem;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    margin-bottom: 8px;
+    display: inline-block;
+    border-radius: 2px;
+  }
+  .day-owner.mz { background: rgba(0,229,160,0.1); color: var(--accent-mz); }
+  .day-owner.pu { background: rgba(91,140,255,0.1); color: var(--accent-pu); }
+  .day-owner.tr { background: rgba(255,184,48,0.1); color: var(--accent-tr); }
+  .schedule-task {
+    padding: 7px 10px;
+    margin-bottom: 6px;
+    border-left: 2px solid;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    background: var(--surface2);
+  }
+  .schedule-task.mz { border-color: var(--accent-mz); }
+  .schedule-task.pu { border-color: var(--accent-pu); }
+  .schedule-task.tr { border-color: var(--accent-tr); }
+  .schedule-task .proj-tag {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .schedule-task.mz .proj-tag { color: var(--accent-mz); opacity: 0.7; }
+  .schedule-task.pu .proj-tag { color: var(--accent-pu); opacity: 0.7; }
+  .schedule-task.tr .proj-tag { color: var(--accent-tr); opacity: 0.7; }
+
+  /* ANALYST NOTE */
+  .analyst-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .analyst-body { padding: 20px; }
+  .analyst-line {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+  .analyst-line:last-child { border-bottom: none; }
+  .analyst-icon { font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+  .analyst-line.warn { color: var(--warn); }
+  .analyst-line.good { color: var(--accent-mz); }
+  .analyst-line.info { color: var(--text); }
+  .analyst-line.alert { color: var(--danger); }
+
+  /* FOOTER */
+  .footer {
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .footer-text {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* ENTRY ANIMATION */
+  .focus-panel, .project-card, .schedule-section, .analyst-section, .velocity-section {
+    animation: fadeUp 0.4s ease both;
+  }
+  .project-card:nth-child(2) { animation-delay: 0.1s; }
+  .project-card:nth-child(3) { animation-delay: 0.2s; }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(12px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .projects-grid { grid-template-columns: 1fr; }
+    .command-bar { grid-template-columns: repeat(3, 1fr); }
+    .schedule-grid { grid-template-columns: 1fr; }
+    .task-breakdown { grid-template-columns: repeat(5,1fr); gap: 4px; }
+    .velocity-stats { gap: 16px; }
+    .focus-header { flex-direction: column; gap: 8px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dashboard">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h1>TUBS <span>//</span> OPS</h1>
+      <div class="header-sub">FOUNDER DASHBOARD &nbsp;·&nbsp; DURBAN, ZA &nbsp;·&nbsp; 3 ACTIVE VENTURES</div>
+    </div>
+    <div class="header-right">
+      <div class="sync-time" id="syncTime">NOT SYNCED</div>
+      <div class="btn-row">
+        <button class="creds-btn" onclick="showCredentials()">⚙ CREDENTIALS</button>
+        <button class="sync-btn" id="syncBtn" onclick="loadAll()">
+          <span class="icon">⟳</span> REFRESH
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIG BANNER -->
+  <div class="config-banner show" id="configBanner">
+    <h3>⚠ TRELLO CREDENTIALS REQUIRED</h3>
+    <div class="config-fields">
+      <input type="text" id="inputKey" placeholder="TRELLO API KEY" autocomplete="off">
+      <input type="text" id="inputToken" placeholder="TRELLO TOKEN" autocomplete="off">
+      <button onclick="saveCredentials()">CONNECT</button>
+    </div>
+  </div>
+
+  <!-- ERROR BANNER -->
+  <div class="error-banner" id="errorBanner"></div>
+
+  <!-- TODAY'S FOCUS PANEL — NEW -->
+  <div class="focus-panel" id="focusPanel" style="display:none;">
+    <div class="focus-header">
+      <div class="focus-title">TODAY'S FOCUS</div>
+      <div class="focus-day" id="focusDayBadge">—</div>
+    </div>
+    <div class="focus-body" id="focusBody">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- COMMAND BAR -->
+  <div class="command-bar" id="commandBar">
+    <div class="cmd-stat"><div class="val" id="stat-total">—</div><div class="label">TOTAL TASKS</div></div>
+    <div class="cmd-stat"><div class="val green" id="stat-done">—</div><div class="label">COMPLETED</div></div>
+    <div class="cmd-stat"><div class="val" id="stat-active">—</div><div class="label">IN FLIGHT</div></div>
+    <div class="cmd-stat"><div class="val red" id="stat-blocked">—</div><div class="label">BLOCKED</div></div>
+    <div class="cmd-stat"><div class="val yellow" id="stat-pct">—</div><div class="label">DONE %</div></div>
+    <div class="cmd-stat"><div class="val blue" id="stat-velocity">—</div><div class="label">THIS WEEK</div></div>
+  </div>
+
+  <!-- VELOCITY TRACKER — NEW -->
+  <div class="velocity-section" id="velocitySection" style="display:none;">
+    <div class="section-header">
+      <div class="section-title">VELOCITY TRACKER</div>
+      <div class="section-meta" id="velTrend">—</div>
+    </div>
+    <div class="velocity-body">
+      <div class="velocity-stats" id="velStats">
+        <!-- Injected -->
+      </div>
+      <div class="velocity-chart" id="velChart">
+        <!-- Injected -->
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT CARDS -->
+  <div class="projects-grid" id="projectsGrid">
+    <!-- Injected by JS -->
+  </div>
+
+  <!-- WORK SCHEDULE -->
+  <div class="schedule-section">
+    <div class="section-header">
+      <div class="section-title">WEEKLY SCHEDULE</div>
+      <div class="section-meta" id="weekLabel">—</div>
+    </div>
+    <div class="schedule-grid" id="scheduleGrid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- ANALYST NOTES -->
+  <div class="analyst-section">
+    <div class="section-header">
+      <div class="section-title">ANALYST NOTES</div>
+      <div class="section-meta">AUTO-GENERATED</div>
+    </div>
+    <div class="analyst-body" id="analystBody">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-text">TUBS FOUNDER OS &nbsp;·&nbsp; MZANSIACADEMY · PULSIFY · TRADINGSYSTEM</div>
+    <div class="footer-text" id="footerDate">—</div>
+  </div>
+
+</div>
+
+<script>
+// ─── CONFIG ─────────────────────────────────────────────────────────────────
+const BOARD_IDS = {
+  mz: '69cb010e55ed742dbc28e919',
+  tr: '69cb0198f467f3fd08d26c92',
+  pu: '69cb01bdaa70276c08a27d10',
+};
+
+const PROJECT_META = {
+  mz: {
+    name: 'MZANSIACADEMY',
+    tag: 'FREE GAMIFIED LEARNING · SA GRADE 8–12 · PWA',
+    cls: 'mz',
+    status: 'BUILDING',
+    statusCls: 'status-building',
+    milestones: [
+      { text: 'Next.js architecture migration', weeks: 0 },
+      { text: 'Firebase Auth + Supabase analytics', weeks: 1 },
+      { text: 'Cloudflare Workers API layer live', weeks: 2 },
+      { text: 'Amahle AI assistant (Groq) functional', weeks: 3 },
+      { text: 'Core 5 subjects: CAPS content loaded', weeks: 5 },
+      { text: 'Gamification engine (XP, badges, streaks)', weeks: 7 },
+      { text: 'Beta launch: 100 learners', weeks: 9 },
+      { text: 'Public launch: mzansi-academy.vercel.app', weeks: 12 },
+    ]
+  },
+  pu: {
+    name: 'PULSIFY',
+    tag: 'SA EVENTS DISCOVERY & TICKETING · SOCIAL',
+    cls: 'pu',
+    status: 'ACTIVE',
+    statusCls: 'status-active',
+    milestones: [
+      { text: 'Supabase schema + auth foundation', weeks: 0 },
+      { text: 'Event discovery feed (Mapbox)', weeks: 1 },
+      { text: 'Vibe Feed MVP + AI recs (Claude API)', weeks: 3 },
+      { text: 'Squad Planning feature complete', weeks: 4 },
+      { text: 'Paystack ticketing + payments live', weeks: 5 },
+      { text: 'Mux live streaming integration', weeks: 7 },
+      { text: 'OneSignal push notifications', weeks: 8 },
+      { text: 'Closed beta: 50 organisers', weeks: 10 },
+      { text: 'Public launch: Durban → Joburg', weeks: 14 },
+    ]
+  },
+  tr: {
+    name: 'TRADINGSYSTEM',
+    tag: 'AUTOMATED MQL5 BOT · METATRADER 5',
+    cls: 'tr',
+    status: 'ACTIVE',
+    statusCls: 'status-active',
+    milestones: [
+      { text: 'Core MQL5 strategy logic coded', weeks: 0 },
+      { text: 'Backtesting: 2yr data, >60% winrate', weeks: 1 },
+      { text: 'Risk management module (SL/TP/lots)', weeks: 2 },
+      { text: 'Forward test on demo (4 weeks)', weeks: 3 },
+      { text: 'Optimisation pass: parameter tuning', weeks: 7 },
+      { text: 'Live account deploy (micro lots)', weeks: 9 },
+      { text: 'Monitoring dashboard + alerts', weeks: 10 },
+      { text: 'Scale to standard lots (60-day track)', weeks: 18 },
+    ]
+  }
+};
+
+const LIST_NAMES = {
+  backlog: ['backlog'],
+  week: ['this week', 'thisweek', 'this_week'],
+  progress: ['in progress', 'inprogress', 'in_progress', 'doing'],
+  blocked: ['blocked'],
+  done: ['done', 'complete', 'completed', 'finished'],
+};
+
+const DAYS = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+
+// ─── SMART SCHEDULE: PROJECT DAYS ────────────────────────────────────────────
+// Mon/Wed/Fri = MzansiAcademy (primary build), Tue/Thu = Pulsify, Sat/Sun = Trading
+const DAY_OWNERS = {
+  0: 'mz',  // MON
+  1: 'pu',  // TUE
+  2: 'mz',  // WED
+  3: 'pu',  // THU
+  4: 'mz',  // FRI
+  5: 'tr',  // SAT
+  6: 'tr',  // SUN
+};
+
+// ─── CREDENTIALS ─────────────────────────────────────────────────────────────
+function getKey() { return localStorage.getItem('trello_key') || ''; }
+function getToken() { return localStorage.getItem('trello_token') || ''; }
+
+function showCredentials() {
+  document.getElementById('configBanner').classList.add('show');
+  document.getElementById('inputKey').value = getKey();
+  document.getElementById('inputToken').value = getToken();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function saveCredentials() {
+  const k = document.getElementById('inputKey').value.trim();
+  const t = document.getElementById('inputToken').value.trim();
+  if (!k || !t) { showError('Both API Key and Token are required.'); return; }
+  localStorage.setItem('trello_key', k);
+  localStorage.setItem('trello_token', t);
+  document.getElementById('configBanner').classList.remove('show');
+  loadAll();
+}
+
+// ─── TRELLO API ───────────────────────────────────────────────────────────────
+async function fetchBoard(boardId) {
+  const key = getKey(), token = getToken();
+  const url = `https://api.trello.com/1/boards/${boardId}/cards?key=${key}&token=${token}&fields=name,idList,due,dateLastActivity&lists=open`;
+  const listsUrl = `https://api.trello.com/1/boards/${boardId}/lists?key=${key}&token=${token}&fields=name,id`;
+  const [cardsRes, listsRes] = await Promise.all([fetch(url), fetch(listsUrl)]);
+  if (!cardsRes.ok) throw new Error(`Trello API error ${cardsRes.status}: ${cardsRes.statusText}`);
+  const cards = await cardsRes.json();
+  const lists = await listsRes.json();
+  return { cards, lists };
+}
+
+function classifyCards(cards, lists) {
+  const listMap = {};
+  lists.forEach(l => { listMap[l.id] = l.name.trim().toLowerCase(); });
+
+  const result = { backlog: [], week: [], progress: [], blocked: [], done: [] };
+
+  cards.forEach(card => {
+    const ln = listMap[card.idList] || '';
+    if (LIST_NAMES.done.some(n => ln.includes(n))) result.done.push(card);
+    else if (LIST_NAMES.blocked.some(n => ln.includes(n))) result.blocked.push(card);
+    else if (LIST_NAMES.progress.some(n => ln.includes(n))) result.progress.push(card);
+    else if (LIST_NAMES.week.some(n => ln.includes(n))) result.week.push(card);
+    else result.backlog.push(card);
+  });
+
+  return result;
+}
+
+// ─── VELOCITY TRACKING ──────────────────────────────────────────────────────
+function getWeekKey(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const mondayOffset = day === 0 ? -6 : 1 - day;
+  const monday = new Date(d);
+  monday.setDate(d.getDate() + mondayOffset);
+  return monday.toISOString().slice(0, 10);
+}
+
+function loadVelocityData() {
+  try {
+    return JSON.parse(localStorage.getItem('tubs_velocity') || '{}');
+  } catch { return {}; }
+}
+
+function saveVelocityData(data) {
+  localStorage.setItem('tubs_velocity', JSON.stringify(data));
+}
+
+function updateVelocity(allData) {
+  const velocity = loadVelocityData();
+  const weekKey = getWeekKey(new Date());
+
+  // Count total done across all projects
+  let totalDone = 0;
+  Object.values(allData).forEach(c => {
+    if (c) totalDone += c.done.length;
+  });
+
+  // Store snapshot for this week
+  velocity[weekKey] = totalDone;
+
+  // Keep only last 8 weeks
+  const keys = Object.keys(velocity).sort().slice(-8);
+  const trimmed = {};
+  keys.forEach(k => { trimmed[k] = velocity[k]; });
+
+  saveVelocityData(trimmed);
+  return trimmed;
+}
+
+function renderVelocity(allData) {
+  const velocity = updateVelocity(allData);
+  const weeks = Object.keys(velocity).sort();
+
+  if (weeks.length === 0) return;
+
+  document.getElementById('velocitySection').style.display = '';
+
+  // Calculate weekly deltas (tasks completed per week)
+  const deltas = [];
+  for (let i = 0; i < weeks.length; i++) {
+    if (i === 0) {
+      deltas.push({ week: weeks[i], done: velocity[weeks[i]] });
+    } else {
+      deltas.push({ week: weeks[i], done: velocity[weeks[i]] - velocity[weeks[i-1]] });
+    }
+  }
+
+  // Ensure non-negative deltas
+  deltas.forEach(d => { if (d.done < 0) d.done = 0; });
+
+  const currentWeekDone = deltas.length > 0 ? deltas[deltas.length - 1].done : 0;
+  const prevWeekDone = deltas.length > 1 ? deltas[deltas.length - 2].done : 0;
+  const avgDone = deltas.length > 0 ? Math.round(deltas.reduce((s, d) => s + d.done, 0) / deltas.length * 10) / 10 : 0;
+
+  // Trend
+  let trend = 'FLAT', trendCls = 'vel-trend-flat';
+  if (deltas.length >= 2) {
+    if (currentWeekDone > prevWeekDone) { trend = '↑ ACCELERATING'; trendCls = 'vel-trend-up'; }
+    else if (currentWeekDone < prevWeekDone) { trend = '↓ DECELERATING'; trendCls = 'vel-trend-down'; }
+    else { trend = '→ STEADY'; trendCls = 'vel-trend-flat'; }
+  }
+
+  document.getElementById('velTrend').innerHTML = `<span class="${trendCls}">${trend}</span>`;
+
+  // Stats
+  document.getElementById('velStats').innerHTML = `
+    <div class="vel-stat">
+      <div class="vel-val" style="color:var(--accent-mz)">${currentWeekDone}</div>
+      <div class="vel-label">DONE THIS WEEK</div>
+    </div>
+    <div class="vel-stat">
+      <div class="vel-val" style="color:var(--text)">${prevWeekDone}</div>
+      <div class="vel-label">DONE LAST WEEK</div>
+    </div>
+    <div class="vel-stat">
+      <div class="vel-val" style="color:var(--accent-pu)">${avgDone}</div>
+      <div class="vel-label">AVG / WEEK</div>
+    </div>
+    <div class="vel-stat">
+      <div class="vel-val" style="color:var(--accent-tr)">${weeks.length}</div>
+      <div class="vel-label">WEEKS TRACKED</div>
+    </div>
+  `;
+
+  // Update command bar velocity stat
+  document.getElementById('stat-velocity').textContent = currentWeekDone;
+
+  // Chart
+  const maxDone = Math.max(...deltas.map(d => d.done), 1);
+  document.getElementById('velChart').innerHTML = deltas.map((d, i) => {
+    const h = Math.max((d.done / maxDone) * 65, 2);
+    const isCurrent = i === deltas.length - 1;
+    const weekLabel = d.week.slice(5); // MM-DD
+    return `
+      <div class="vel-bar-wrap">
+        <div class="vel-bar-count">${d.done}</div>
+        <div class="vel-bar ${isCurrent ? 'current' : ''}" style="height:${h}px"></div>
+        <div class="vel-bar-label">${isCurrent ? 'NOW' : weekLabel}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ─── DUE DATE HELPERS ────────────────────────────────────────────────────────
+function getDueStatus(dueStr) {
+  if (!dueStr) return null;
+  const due = new Date(dueStr);
+  const now = new Date();
+  const diffMs = due - now;
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 0) return { label: `${Math.abs(diffDays)}D OVERDUE`, cls: 'overdue', badgeCls: 'badge-overdue', priority: 0 };
+  if (diffDays <= 2) return { label: `DUE ${diffDays === 0 ? 'TODAY' : diffDays === 1 ? 'TOMORROW' : 'IN 2D'}`, cls: 'soon', badgeCls: 'badge-due-soon', priority: 1 };
+  if (diffDays <= 7) return { label: `DUE IN ${diffDays}D`, cls: 'normal', badgeCls: 'badge-due-week', priority: 2 };
+  return { label: `DUE ${due.toLocaleDateString('en-ZA', { day:'numeric', month:'short' })}`, cls: 'normal', badgeCls: '', priority: 3 };
+}
+
+function getDueAlerts(classified) {
+  const alerts = [];
+  const allActive = [...classified.week, ...classified.progress, ...classified.backlog];
+  allActive.forEach(card => {
+    const due = getDueStatus(card.due);
+    if (due && due.priority <= 2) {
+      alerts.push({ name: card.name, ...due });
+    }
+  });
+  alerts.sort((a, b) => a.priority - b.priority);
+  return alerts;
+}
+
+// ─── TODAY'S FOCUS PANEL ─────────────────────────────────────────────────────
+function renderFocus(allData) {
+  const now = new Date();
+  const dayIdx = now.getDay(); // 0=Sun
+  const schedIdx = dayIdx === 0 ? 6 : dayIdx - 1; // Mon=0 ... Sun=6
+  const primaryProject = DAY_OWNERS[schedIdx];
+  const dayName = DAYS[schedIdx];
+
+  const panel = document.getElementById('focusPanel');
+  panel.style.display = '';
+
+  // Badge
+  const badge = document.getElementById('focusDayBadge');
+  badge.textContent = `${dayName} → ${PROJECT_META[primaryProject].name}`;
+  badge.className = `focus-day ${primaryProject}`;
+
+  // Gather focus tasks: primary project's active tasks first, then any blocked/due items from other projects
+  let html = '';
+  const primaryData = allData[primaryProject];
+
+  if (primaryData) {
+    const primaryTasks = [...primaryData.progress, ...primaryData.week];
+    if (primaryTasks.length > 0) {
+      html += `<div class="focus-project-label ${primaryProject}">▸ ${PROJECT_META[primaryProject].name} — PRIMARY</div>`;
+      primaryTasks.slice(0, 5).forEach((t, i) => {
+        const due = getDueStatus(t.due);
+        html += `
+          <div class="focus-task ${primaryProject}">
+            <span class="focus-idx">${i + 1}.</span>
+            <span>${t.name}</span>
+            ${due ? `<span class="focus-due-flag ${due.cls === 'overdue' ? 'due-overdue' : due.cls === 'soon' ? 'due-soon' : 'due-ok'}">${due.label}</span>` : ''}
+          </div>`;
+      });
+    } else {
+      html += `<div class="focus-project-label ${primaryProject}">▸ ${PROJECT_META[primaryProject].name}</div>`;
+      html += `<div class="focus-empty">No active tasks for ${PROJECT_META[primaryProject].name}. Move cards to "This Week" or "In Progress".</div>`;
+    }
+  }
+
+  // Cross-project: show any overdue or due-soon from other projects
+  const crossAlerts = [];
+  Object.keys(allData).forEach(k => {
+    if (k === primaryProject || !allData[k]) return;
+    const alerts = getDueAlerts(allData[k]);
+    alerts.filter(a => a.priority <= 1).forEach(a => crossAlerts.push({ ...a, project: k }));
+
+    // Also show blocked items from other projects
+    if (allData[k].blocked.length > 0) {
+      allData[k].blocked.forEach(card => {
+        crossAlerts.push({ name: card.name, label: 'BLOCKED', cls: 'overdue', project: k, priority: -1 });
+      });
+    }
+  });
+
+  if (crossAlerts.length > 0) {
+    html += `<div class="focus-project-label" style="color:var(--danger); margin-top:14px;">▸ NEEDS ATTENTION</div>`;
+    crossAlerts.slice(0, 4).forEach(a => {
+      html += `
+        <div class="focus-task ${a.project}">
+          <span class="focus-idx" style="color:var(--danger)">!</span>
+          <span>${a.name}</span>
+          <span class="focus-due-flag due-overdue">${a.label}</span>
+        </div>`;
+    });
+  }
+
+  document.getElementById('focusBody').innerHTML = html || '<div class="focus-empty">No data loaded yet.</div>';
+}
+
+// ─── MILESTONES ───────────────────────────────────────────────────────────────
+function getMilestoneStatus(milestones, doneCount, totalCount) {
+  const pct = totalCount > 0 ? doneCount / totalCount : 0;
+  const activeIdx = Math.min(Math.floor(pct * milestones.length), milestones.length - 1);
+  return milestones.map((m, i) => ({
+    ...m,
+    state: i < activeIdx ? 'done' : i === activeIdx ? 'active' : 'pending'
+  }));
+}
+
+// ─── RENDER PROJECT CARD ──────────────────────────────────────────────────────
+function renderProjectCard(key, data, classified) {
+  const meta = PROJECT_META[key];
+  const total = Object.values(classified).flat().length;
+  const done = classified.done.length;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  const activeTasks = [
+    ...classified.progress.map(c => ({ ...c, pill: 'IN PROGRESS', pillCls: 'pill-progress' })),
+    ...classified.week.map(c => ({ ...c, pill: 'THIS WEEK', pillCls: 'pill-week' })),
+    ...classified.blocked.map(c => ({ ...c, pill: 'BLOCKED', pillCls: 'pill-blocked' })),
+  ].slice(0, 6);
+
+  const milestones = getMilestoneStatus(meta.milestones, done, total).slice(0, 5);
+
+  const statusCls = classified.blocked.length > 0 ? 'status-blocked' : meta.statusCls;
+  const statusText = classified.blocked.length > 0 ? `${classified.blocked.length} BLOCKED` : meta.status;
+
+  // Due date alerts for this project
+  const dueAlerts = getDueAlerts(classified);
+  const dueHtml = dueAlerts.length > 0 ? `
+    <div class="due-alerts show">
+      <div class="due-alerts-title">⏰ UPCOMING DEADLINES</div>
+      ${dueAlerts.slice(0, 3).map(a => `
+        <div class="due-alert-item">
+          <span class="due-badge ${a.badgeCls}">${a.label}</span>
+          <span>${a.name}</span>
+        </div>
+      `).join('')}
+    </div>` : '';
+
+  return `
+  <div class="project-card ${meta.cls}">
+    <div class="project-header">
+      <div>
+        <div class="project-name">${meta.name}</div>
+        <div class="project-tag">${meta.tag}</div>
+      </div>
+      <div class="project-status ${statusCls}">${statusText}</div>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-label">
+        <span>COMPLETION</span>
+        <span>${done} / ${total} TASKS &nbsp; ${pct}%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width: ${pct}%"></div>
+      </div>
+    </div>
+
+    <div class="task-breakdown">
+      <div class="task-col col-backlog">
+        <div class="count">${classified.backlog.length}</div>
+        <div class="col-label">BACKLOG</div>
+      </div>
+      <div class="task-col col-week">
+        <div class="count">${classified.week.length}</div>
+        <div class="col-label">THIS WK</div>
+      </div>
+      <div class="task-col col-progress">
+        <div class="count">${classified.progress.length}</div>
+        <div class="col-label">ACTIVE</div>
+      </div>
+      <div class="task-col col-blocked">
+        <div class="count">${classified.blocked.length}</div>
+        <div class="col-label">BLOCKED</div>
+      </div>
+      <div class="task-col col-done">
+        <div class="count">${done}</div>
+        <div class="col-label">DONE</div>
+      </div>
+    </div>
+
+    ${dueHtml}
+
+    <div class="milestone-section">
+      <div class="milestone-header">MILESTONES</div>
+      ${milestones.map(m => `
+        <div class="milestone-item">
+          <div class="milestone-dot ${m.state}"></div>
+          <div class="milestone-text ${m.state}">${m.text}</div>
+          <div class="milestone-eta">${m.state === 'active' ? '← NOW' : m.state === 'done' ? '✓' : `W+${m.weeks}`}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="tasks-section">
+      <div class="tasks-header">ACTIVE TASKS</div>
+      ${activeTasks.length > 0
+        ? activeTasks.map(t => {
+          const due = getDueStatus(t.due);
+          return `
+            <div class="task-item">
+              <span class="task-pill ${t.pillCls}">${t.pill}</span>
+              <span class="task-name">${t.name}</span>
+              ${due ? `<span class="task-due ${due.cls}">${due.label}</span>` : ''}
+            </div>`;
+        }).join('')
+        : '<div class="no-tasks">NO ACTIVE TASKS — add cards to "This Week" or "In Progress"</div>'
+      }
+    </div>
+  </div>`;
+}
+
+// ─── SMART SCHEDULE ──────────────────────────────────────────────────────────
+function renderSchedule(allData) {
+  const now = new Date();
+  const day = now.getDay();
+  const mondayOffset = day === 0 ? -6 : 1 - day;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + mondayOffset);
+
+  const schedule = DAYS.map((d, i) => {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i);
+    return { day: d, date, tasks: [], owner: DAY_OWNERS[i] };
+  });
+
+  // For each day, pull active tasks from the day's primary project
+  schedule.forEach(s => {
+    const k = s.owner;
+    if (!allData[k]) return;
+    const c = allData[k];
+    const active = [...c.progress, ...c.week];
+    active.forEach(t => s.tasks.push({ name: t.name, cls: k, due: t.due }));
+  });
+
+  // If a day has no tasks, show a note
+  schedule.forEach(s => {
+    if (s.tasks.length === 0) {
+      s.tasks.push({
+        name: `No active ${PROJECT_META[s.owner].name} tasks`,
+        cls: s.owner,
+        placeholder: true
+      });
+    }
+  });
+
+  const todayIdx = day === 0 ? 6 : day - 1;
+
+  const weekStart = monday.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
+  const weekEnd = schedule[6].date.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
+  document.getElementById('weekLabel').textContent = `${weekStart} – ${weekEnd}`;
+
+  document.getElementById('scheduleGrid').innerHTML = schedule.map((d, i) => `
+    <div class="day-col ${i === todayIdx ? 'is-today' : ''}">
+      <div class="day-label ${i === todayIdx ? 'today' : ''}">${d.day} ${i === todayIdx ? '← TODAY' : d.date.getDate()}</div>
+      <div class="day-owner ${d.owner}">${PROJECT_META[d.owner].name}</div>
+      ${d.tasks.map(t => {
+        const due = getDueStatus(t.due);
+        return `
+          <div class="schedule-task ${t.cls}" ${t.placeholder ? 'style="opacity:0.4; font-style:italic;"' : ''}>
+            <div class="proj-tag">${PROJECT_META[t.cls].name}</div>
+            ${t.name}
+            ${due && !t.placeholder ? `<div style="font-family:var(--mono);font-size:0.5rem;margin-top:3px;" class="task-due ${due.cls}">${due.label}</div>` : ''}
+          </div>`;
+      }).join('')}
+    </div>
+  `).join('');
+}
+
+// ─── ANALYST NOTES ────────────────────────────────────────────────────────────
+function renderAnalyst(allData) {
+  const notes = [];
+  const keys = ['mz', 'pu', 'tr'];
+
+  let totalBlocked = 0, totalActive = 0, emptyBoards = [];
+  let totalDone = 0, totalAll = 0;
+
+  keys.forEach(k => {
+    if (!allData[k]) return;
+    const c = allData[k];
+    const name = PROJECT_META[k].name;
+    const total = Object.values(c).flat().length;
+    const done = c.done.length;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+    totalBlocked += c.blocked.length;
+    totalActive += c.progress.length + c.week.length;
+    totalDone += done;
+    totalAll += total;
+
+    if (total === 0) emptyBoards.push(name);
+    if (c.blocked.length > 0) {
+      notes.push({ type: 'alert', icon: '🔴', text: `${name}: ${c.blocked.length} blocked task${c.blocked.length > 1 ? 's' : ''}. Unblock before adding more. What's the blocker?` });
+    }
+    if (c.progress.length === 0 && c.week.length === 0 && total > 0) {
+      notes.push({ type: 'warn', icon: '⚠️', text: `${name}: Nothing active. Move tasks to "In Progress" or "This Week" — you need a working lane.` });
+    }
+    if (pct === 100 && total > 0) {
+      notes.push({ type: 'good', icon: '✅', text: `${name}: Board cleared. Add your next sprint of tasks.` });
+    }
+    if (c.backlog.length > 15) {
+      notes.push({ type: 'warn', icon: '📋', text: `${name}: ${c.backlog.length} tasks in backlog. Prioritise ruthlessly — backlog rot is a focus killer.` });
+    }
+
+    // Due date alerts
+    const dueAlerts = getDueAlerts(c);
+    const overdue = dueAlerts.filter(a => a.priority === 0);
+    if (overdue.length > 0) {
+      notes.push({ type: 'alert', icon: '⏰', text: `${name}: ${overdue.length} overdue task${overdue.length > 1 ? 's' : ''}! Handle these first.` });
+    }
+  });
+
+  if (emptyBoards.length > 0) {
+    notes.push({ type: 'warn', icon: '📌', text: `${emptyBoards.join(', ')}: No tasks yet. Populate these boards — you can't track what isn't logged.` });
+  }
+  if (totalBlocked === 0 && totalActive > 0) {
+    notes.push({ type: 'good', icon: '🟢', text: `Zero blockers across all 3 projects. Clean lanes — keep the momentum.` });
+  }
+  if (totalActive === 0) {
+    notes.push({ type: 'alert', icon: '🔴', text: `Nothing is marked "In Progress" or "This Week" across any project. You are not executing — fix this now.` });
+  }
+
+  // Velocity insight
+  const velocity = loadVelocityData();
+  const weeks = Object.keys(velocity).sort();
+  if (weeks.length >= 2) {
+    const curr = velocity[weeks[weeks.length - 1]] - (velocity[weeks[weeks.length - 2]] || 0);
+    const prev = weeks.length >= 3 ? velocity[weeks[weeks.length - 2]] - (velocity[weeks[weeks.length - 3]] || 0) : curr;
+    if (curr > prev) {
+      notes.push({ type: 'good', icon: '📈', text: `Velocity trending up. ${curr} tasks done this week vs ${prev} last week. Good momentum.` });
+    } else if (curr < prev) {
+      notes.push({ type: 'warn', icon: '📉', text: `Velocity dropped: ${curr} this week vs ${prev} last week. What's eating your time?` });
+    }
+  }
+
+  // Smart schedule note
+  const dayIdx = new Date().getDay();
+  const schedIdx = dayIdx === 0 ? 6 : dayIdx - 1;
+  const todayProject = DAY_OWNERS[schedIdx];
+  notes.push({ type: 'info', icon: '🎯', text: `Today is ${PROJECT_META[todayProject].name} day. Deep focus on this project — don't context-switch until your tasks are done.` });
+
+  notes.push({ type: 'info', icon: '📍', text: `3 ventures simultaneously. Protect deep work blocks. Finish before flipping project.` });
+
+  document.getElementById('analystBody').innerHTML = notes.map(n => `
+    <div class="analyst-line ${n.type}">
+      <span class="analyst-icon">${n.icon}</span>
+      <span>${n.text}</span>
+    </div>
+  `).join('');
+}
+
+// ─── STATS BAR ────────────────────────────────────────────────────────────────
+function renderStats(allData) {
+  let total = 0, done = 0, active = 0, blocked = 0;
+  Object.values(allData).forEach(c => {
+    if (!c) return;
+    total += Object.values(c).flat().length;
+    done += c.done.length;
+    active += c.progress.length + c.week.length;
+    blocked += c.blocked.length;
+  });
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-active').textContent = active;
+  document.getElementById('stat-blocked').textContent = blocked;
+  document.getElementById('stat-pct').textContent = pct + '%';
+}
+
+// ─── MAIN LOAD ────────────────────────────────────────────────────────────────
+async function loadAll() {
+  if (!getKey() || !getToken()) {
+    document.getElementById('configBanner').classList.add('show');
+    return;
+  }
+  document.getElementById('configBanner').classList.remove('show');
+  hideError();
+
+  const btn = document.getElementById('syncBtn');
+  btn.classList.add('spinning');
+
+  const allData = {};
+
+  try {
+    const results = await Promise.allSettled([
+      fetchBoard(BOARD_IDS.mz),
+      fetchBoard(BOARD_IDS.pu),
+      fetchBoard(BOARD_IDS.tr),
+    ]);
+
+    const keys = ['mz', 'pu', 'tr'];
+    const errors = [];
+
+    results.forEach((res, i) => {
+      const k = keys[i];
+      if (res.status === 'fulfilled') {
+        allData[k] = classifyCards(res.value.cards, res.value.lists);
+      } else {
+        errors.push(`${PROJECT_META[k].name}: ${res.reason.message}`);
+        allData[k] = null;
+      }
+    });
+
+    if (errors.length > 0) {
+      showError(errors.join(' | '));
+      if (errors.some(e => e.includes('401'))) showCredentials();
+    }
+
+    // Render all sections
+    renderFocus(allData);
+    renderStats(allData);
+    renderVelocity(allData);
+
+    document.getElementById('projectsGrid').innerHTML = keys.map(k =>
+      allData[k]
+        ? renderProjectCard(k, null, allData[k])
+        : `<div class="project-card ${PROJECT_META[k].cls}">
+             <div class="project-header">
+               <div class="project-name">${PROJECT_META[k].name}</div>
+             </div>
+             <div class="tasks-section"><div class="no-tasks">FAILED TO LOAD — check API credentials</div></div>
+           </div>`
+    ).join('');
+
+    renderSchedule(allData);
+    renderAnalyst(allData);
+
+    const now = new Date();
+    document.getElementById('syncTime').textContent = `SYNCED ${now.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' })}`;
+    document.getElementById('footerDate').textContent = now.toLocaleDateString('en-ZA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  } catch (err) {
+    showError('Fatal: ' + err.message);
+  } finally {
+    btn.classList.remove('spinning');
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorBanner');
+  el.textContent = '⚠ ' + msg;
+  el.classList.add('show');
+}
+function hideError() {
+  document.getElementById('errorBanner').classList.remove('show');
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('footerDate').textContent = new Date().toLocaleDateString('en-ZA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  if (getKey() && getToken()) {
+    document.getElementById('configBanner').classList.remove('show');
+    loadAll();
+  } else {
+    document.getElementById('configBanner').classList.add('show');
+    document.getElementById('inputKey').value = getKey();
+    document.getElementById('inputToken').value = getToken();
+  }
+});
+</script>
+</body>
+</html>
