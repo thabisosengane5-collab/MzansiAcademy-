@@ -1,20 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export async function GET() {
+  const key = process.env.GROQ_API_KEY || "NOT_SET";
+  return NextResponse.json({ keyPrefix: key.substring(0, 8) + "...", keyLength: key.length });
+}
+
 export async function POST(req: NextRequest) {
   const { message, subject, grade } = await req.json();
 
-  const systemPrompt = `You are Amahle, a friendly and encouraging AI learning assistant for MzansiAcademy, a free educational platform for South African learners.
-
-You help Grade ${grade || "8-12"} learners with ${subject || "their subjects"}, aligned to the CAPS curriculum.
-
-Rules:
-- Always be encouraging and patient
-- Use simple, clear language appropriate for SA learners
-- Give step-by-step explanations
-- Use South African examples where relevant
-- If a learner is struggling, break the problem into smaller parts
-- Always end with encouragement or a follow-up question
-- Respond in English, but understand if learners mix in isiZulu, Afrikaans, or other SA languages`;
+  const systemPrompt = `You are Amahle, a friendly and encouraging AI learning assistant for MzansiAcademy, a free educational platform for South African learners. You help Grade ${grade || "8-12"} learners with ${subject || "their subjects"}, aligned to the CAPS curriculum. Always be encouraging, use simple language, give step-by-step explanations, and use South African examples where relevant.`;
 
   try {
     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
