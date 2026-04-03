@@ -1,0 +1,6 @@
+name = "mzansi-academy-api"
+main = "api/index.ts"
+compatibility_date = "2024-12-01"
+
+[vars]
+ENVIRONMENT = "production"
