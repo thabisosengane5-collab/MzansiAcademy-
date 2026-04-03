@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 
 interface Message {
   role: "user" | "assistant";
@@ -8,7 +9,7 @@ interface Message {
 
 export default function AmahleChat() {
   const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: "Sawubona! I'm Amahle, your learning assistant. Ask me anything about your subjects and I'll help you understand it step by step." }
+    { role: "assistant", content: "**Sawubona!** 👋\n\nI'm **Amahle**, your learning assistant.\n\nAsk me anything about your subjects and I'll help you understand it step by step." }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -40,22 +41,26 @@ export default function AmahleChat() {
   };
 
   return (
-    <div className="flex flex-col h-[500px] max-w-2xl mx-auto border border-gray-700 rounded-lg bg-gray-900">
+    <div className="flex flex-col h-[600px] max-w-2xl mx-auto border border-gray-700 rounded-lg bg-gray-900">
       <div className="px-4 py-3 border-b border-gray-700 bg-gray-800 rounded-t-lg">
-        <h2 className="text-emerald-400 font-bold text-lg">Amahle</h2>
+        <h2 className="text-emerald-400 font-bold text-lg">Amahle 🤖</h2>
         <p className="text-gray-400 text-xs">Your MzansiAcademy AI learning assistant</p>
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.map((m, i) => (
           <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[85%] px-4 py-2 rounded-2xl text-sm leading-relaxed ${m.role === "user" ? "bg-emerald-600 text-white rounded-br-sm" : "bg-gray-800 text-gray-200 rounded-bl-sm"}`}>
-              {m.content}
+            <div className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${m.role === "user" ? "bg-emerald-600 text-white rounded-br-sm" : "bg-gray-800 text-gray-200 rounded-bl-sm"}`}>
+              {m.role === "assistant" ? (
+                <div className="prose prose-invert prose-sm max-w-none prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5 prose-headings:text-emerald-400 prose-strong:text-emerald-300">
+                  <ReactMarkdown>{m.content}</ReactMarkdown>
+                </div>
+              ) : m.content}
             </div>
           </div>
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-gray-800 text-gray-400 px-4 py-2 rounded-2xl rounded-bl-sm text-sm">Amahle is thinking...</div>
+            <div className="bg-gray-800 text-gray-400 px-4 py-2 rounded-2xl rounded-bl-sm text-sm">Amahle is thinking... 💭</div>
           </div>
         )}
         <div ref={bottomRef} />

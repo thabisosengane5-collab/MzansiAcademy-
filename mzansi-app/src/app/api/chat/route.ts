@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
-  const key = process.env.GROQ_API_KEY || "NOT_SET";
-  return NextResponse.json({ keyPrefix: key.substring(0, 8) + "...", keyLength: key.length });
-}
-
 export async function POST(req: NextRequest) {
   const { message, subject, grade } = await req.json();
 
