@@ -9378,38 +9378,28 @@ async function sendAiMessage(){
   var inp=document.getElementById('aiInput');
   var msg=(inp?inp.value:'').trim();
   if(!msg) return;
-  if(inp) inp.value='';
-
-  // Add user message
+  if(inp){ inp.value=''; inp.style.height='auto'; }
   addAiMessage(msg,'user');
   var thinkId='think_'+Date.now();
-  addAiMessage('🤔 Thinking...','thinking',thinkId);
-
+  addAiMessage('\u{1f9ec} Nkosazane is thinking...','thinking',thinkId);
   AI_HISTORY.push({role:'user',content:msg});
-
   try{
-    var resp=await fetch('https://mzansiacademy.vercel.app/api/chat',{
+    var resp=await fetch(NKOSAZANE_API,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({message:msg,history:AI_HISTORY.slice(-8)})
-        model:'llama-3.3-70b-versatile',
-        messages:[{role:'system',content:AI_SYSTEM}].concat(AI_HISTORY.slice(-8)),
-        max_tokens:400,
-        temperature:0.7,
-      })
     });
     var data=await resp.json();
-    var reply=(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||'Sorry, I could not process that. Please try again.';
+    if(data.error){ var te=document.getElementById(thinkId); if(te) te.remove(); addAiMessage('\u26a0\ufe0f '+data.error,'ai'); return; }
+    var reply=data.reply||'Sorry, I could not process that. Please try again.';
     AI_HISTORY.push({role:'assistant',content:reply});
-    // Remove thinking, add real reply
-    var thinkEl=document.getElementById(thinkId);
-    if(thinkEl) thinkEl.remove();
+    var te=document.getElementById(thinkId); if(te) te.remove();
     addAiMessage(reply,'ai');
   }catch(e){
-    var thinkEl2=document.getElementById(thinkId);
-    if(thinkEl2) thinkEl2.remove();
-    addAiMessage('⚠️ Could not connect. Check your internet and try again.','ai');
+    var te2=document.getElementById(thinkId); if(te2) te2.remove();
+    addAiMessage('\u26a0\ufe0f Could not connect. Check your internet and try again.','ai');
   }
+}
 }
 
 function addAiMessage(text,type,id){
@@ -9427,6 +9417,18 @@ function addAiMessage(text,type,id){
   }
   msgs.appendChild(div);
   msgs.scrollTop=msgs.scrollHeight;
+}
+
+function formatAiResponse(text){
+  var d=document.createElement('div'); d.textContent=text; var html=d.innerHTML;
+  html=html.replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--dna-green)">$1</strong>');
+  html=html.replace(/`([^`]+)`/g,'<code style="background:var(--bg-4);padding:2px 6px;border-radius:4px;font-family:var(--mono);font-size:.82em;color:var(--dna-teal)">$1</code>');
+  html=html.replace(/^(\d+)\.\s+(.+)$/gm,'<div style="display:flex;gap:.5rem;margin:.25rem 0"><span style="color:var(--dna-gold);font-weight:700;font-family:var(--mono);min-width:1.2rem">$1.</span><span>$2</span></div>');
+  html=html.replace(/^[-\u2022]\s+(.+)$/gm,'<div style="display:flex;gap:.5rem;margin:.2rem 0"><span style="color:var(--dna-teal)">\u2022</span><span>$1</span></div>');
+  html=html.replace(/^##\s+(.+)$/gm,'<div style="font-weight:800;color:var(--dna-green);margin:.75rem 0 .375rem;font-size:.9rem">$1</div>');
+  html=html.replace(/\n\n/g,'<div style="height:.625rem"></div>');
+  html=html.replace(/\n/g,'<br>');
+  return html;
 }
 
 function formatAiResponse(text){
