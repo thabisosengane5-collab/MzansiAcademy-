@@ -1,0 +1,31 @@
+{
+  "subjects": [
+    {
+      "id": "mathematics",
+      "name": "Mathematics",
+      "icon": "📐",
+      "grades": ["8","9","10","11","12"],
+      "topics": {
+        "8": ["Whole numbers","Integers","Exponents","Numeric & geometric patterns","Functions & relationships","Algebraic expressions","Algebraic equations","Graphs","Geometry of 2D shapes","Geometry of 3D objects","Measurement","Data handling","Probability"]
+      }
+    },
+    {
+      "id": "physical-science",
+      "name": "Physical Science",
+      "icon": "⚛️",
+      "grades": ["8","9","10","11","12"],
+      "topics": {
+        "8": ["Introduction to matter","Particle model of matter","Chemical reactions","Atoms","Periodic table","Chemical bonding","Forces","Energy","Electric circuits"]
+      }
+    },
+    {
+      "id": "english-fal",
+      "name": "English FAL",
+      "icon": "📖",
+      "grades": ["8","9","10","11","12"],
+      "topics": {
+        "8": ["Reading comprehension","Summary writing","Visual literacy","Language structures","Essay writing","Transactional texts","Literature","Oral communication"]
+      }
+    }
+  ]
+}
