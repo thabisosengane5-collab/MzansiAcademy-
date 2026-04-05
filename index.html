@@ -9358,8 +9358,7 @@ function endBattleGame(){
 // ═══════════════════════════════════════════════════════════════
 // AI ASSISTANT — Groq (Llama 3.3)
 // ═══════════════════════════════════════════════════════════════
-// GROQ_KEY removed - secured via Vercel API
-var NKOSAZANE_API = "https://mzansiacademy.vercel.app/api/chat";
+var NKOSAZANE_API = 'https://mzansiacademy.vercel.app/api/chat';
 var AI_HISTORY = [];
 var AI_SYSTEM = 'You are Nkosazane, a warm, encouraging, and knowledgeable AI learning guide for MzansiAcademy — a free South African educational platform for Grade 8-12 learners. Your name Nkosazane means "Princess/young royalty" in Zulu, symbolising that every learner is valued and deserving of excellent education. You specialise in ALL CAPS curriculum subjects including Mathematics, Physical Sciences, Life Sciences, History, Geography, Accounting, Business Studies, Economics, English, Afrikaans, isiZulu, CAT, Technology, Visual Arts, Music, Life Orientation, Nautical Science, Consumer Studies, and more. Guidelines: (1) Always introduce yourself as Nkosazane on first message. (2) Explain concepts clearly using South African examples — Eskom tariffs for electricity, Gautrain for transport, JSE for economics, SA provinces for geography, rands and cents for maths. (3) Keep answers concise (under 250 words) unless a full step-by-step explanation is genuinely needed. (4) Be warm and encouraging — SA learners often face difficult circumstances and need motivation. (5) Respond in the same language as the learner — English, Afrikaans, or isiZulu. (6) Never give direct answers to assessments or tests — guide the learner to understand the method instead. (7) For complex topics, break explanations into numbered steps. (8) End responses with a brief encouragement or follow-up question to check understanding.';
 
@@ -9378,28 +9377,38 @@ async function sendAiMessage(){
   var inp=document.getElementById('aiInput');
   var msg=(inp?inp.value:'').trim();
   if(!msg) return;
-  if(inp){ inp.value=''; inp.style.height='auto'; }
+  if(inp) inp.value='';
+
+  // Add user message
   addAiMessage(msg,'user');
   var thinkId='think_'+Date.now();
-  addAiMessage('\u{1f9ec} Nkosazane is thinking...','thinking',thinkId);
+  addAiMessage('🤔 Thinking...','thinking',thinkId);
+
   AI_HISTORY.push({role:'user',content:msg});
+
   try{
     var resp=await fetch(NKOSAZANE_API,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({message:msg,history:AI_HISTORY.slice(-8)})
+      body:JSON.stringify({
+        model:'llama-3.3-70b-versatile',
+        messages:[{role:'system',content:AI_SYSTEM}].concat(AI_HISTORY.slice(-8)),
+        max_tokens:400,
+        temperature:0.7,
+      })
     });
     var data=await resp.json();
-    if(data.error){ var te=document.getElementById(thinkId); if(te) te.remove(); addAiMessage('\u26a0\ufe0f '+data.error,'ai'); return; }
-    var reply=data.reply||'Sorry, I could not process that. Please try again.';
+    var reply=(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||'Sorry, I could not process that. Please try again.';
     AI_HISTORY.push({role:'assistant',content:reply});
-    var te=document.getElementById(thinkId); if(te) te.remove();
+    // Remove thinking, add real reply
+    var thinkEl=document.getElementById(thinkId);
+    if(thinkEl) thinkEl.remove();
     addAiMessage(reply,'ai');
   }catch(e){
-    var te2=document.getElementById(thinkId); if(te2) te2.remove();
-    addAiMessage('\u26a0\ufe0f Could not connect. Check your internet and try again.','ai');
+    var thinkEl2=document.getElementById(thinkId);
+    if(thinkEl2) thinkEl2.remove();
+    addAiMessage('⚠️ Could not connect. Check your internet and try again.','ai');
   }
-}
 }
 
 function addAiMessage(text,type,id){
@@ -9408,39 +9417,9 @@ function addAiMessage(text,type,id){
   var div=document.createElement('div');
   div.className='ai-msg '+type;
   if(id) div.id=id;
-  if(type==='ai'){
-    div.innerHTML=formatAiResponse(text);
-  } else if(type==='thinking'){
-    div.innerHTML='<div style="display:flex;align-items:center;gap:.5rem"><div class="ai-thinking-dots"><span></span><span></span><span></span></div> '+text+'</div>';
-  } else {
-    div.textContent=text;
-  }
+  div.textContent=text;
   msgs.appendChild(div);
   msgs.scrollTop=msgs.scrollHeight;
-}
-
-function formatAiResponse(text){
-  var d=document.createElement('div'); d.textContent=text; var html=d.innerHTML;
-  html=html.replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--dna-green)">$1</strong>');
-  html=html.replace(/`([^`]+)`/g,'<code style="background:var(--bg-4);padding:2px 6px;border-radius:4px;font-family:var(--mono);font-size:.82em;color:var(--dna-teal)">$1</code>');
-  html=html.replace(/^(\d+)\.\s+(.+)$/gm,'<div style="display:flex;gap:.5rem;margin:.25rem 0"><span style="color:var(--dna-gold);font-weight:700;font-family:var(--mono);min-width:1.2rem">$1.</span><span>$2</span></div>');
-  html=html.replace(/^[-\u2022]\s+(.+)$/gm,'<div style="display:flex;gap:.5rem;margin:.2rem 0"><span style="color:var(--dna-teal)">\u2022</span><span>$1</span></div>');
-  html=html.replace(/^##\s+(.+)$/gm,'<div style="font-weight:800;color:var(--dna-green);margin:.75rem 0 .375rem;font-size:.9rem">$1</div>');
-  html=html.replace(/\n\n/g,'<div style="height:.625rem"></div>');
-  html=html.replace(/\n/g,'<br>');
-  return html;
-}
-
-function formatAiResponse(text){
-  var d=document.createElement('div'); d.textContent=text; var html=d.innerHTML;
-  html=html.replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--dna-green)">$1</strong>');
-  html=html.replace(/`([^`]+)`/g,'<code style="background:var(--bg-4);padding:2px 6px;border-radius:4px;font-family:var(--mono);font-size:.82em;color:var(--dna-teal)">$1</code>');
-  html=html.replace(/^(\d+)\.\s+(.+)$/gm,'<div style="display:flex;gap:.5rem;margin:.25rem 0"><span style="color:var(--dna-gold);font-weight:700;font-family:var(--mono);min-width:1.2rem">$1.</span><span>$2</span></div>');
-  html=html.replace(/^[-\u2022]\s+(.+)$/gm,'<div style="display:flex;gap:.5rem;margin:.2rem 0"><span style="color:var(--dna-teal)">\u2022</span><span>$1</span></div>');
-  html=html.replace(/^##\s+(.+)$/gm,'<div style="font-weight:800;color:var(--dna-green);margin:.75rem 0 .375rem;font-size:.9rem">$1</div>');
-  html=html.replace(/\n\n/g,'<div style="height:.625rem"></div>');
-  html=html.replace(/\n/g,'<br>');
-  return html;
 }
 
 // Init quiz page on load
