@@ -1,0 +1,122 @@
+[
+  {
+    "q": "RAM stands for:",
+    "opts": [
+      "Read Access Memory",
+      "Random Access Memory",
+      "Rapid Application Module",
+      "Read And Modify"
+    ],
+    "a": 1,
+    "em": "💻",
+    "et": "RAM: Random Access Memory — temporary, fast storage while computer runs."
+  },
+  {
+    "q": "A URL is:",
+    "opts": [
+      "A type of virus",
+      "A web address",
+      "A programming language",
+      "An email protocol"
+    ],
+    "a": 1,
+    "em": "🌐",
+    "et": "URL: Uniform Resource Locator — the address of a web page."
+  },
+  {
+    "q": "HTML stands for:",
+    "opts": [
+      "HyperText Markup Language",
+      "High Transfer Markup Language",
+      "Hyperlink and Text Management Language",
+      "Home Tool Markup Language"
+    ],
+    "a": 0,
+    "em": "🌐",
+    "et": "HTML: HyperText Markup Language — structures web pages."
+  },
+  {
+    "q": "Which of these is a spreadsheet formula?",
+    "opts": [
+      "=SUM(A1:A10)",
+      "<b>Total</b>",
+      "SELECT * FROM table",
+      "print(total)"
+    ],
+    "a": 0,
+    "em": "📊",
+    "et": "=SUM(A1:A10): Excel/Calc formula that adds values in cells A1 through A10."
+  },
+  {
+    "q": "A virus in computing is:",
+    "opts": [
+      "A hardware fault",
+      "Malicious software that self-replicates",
+      "A type of RAM",
+      "Internet connection"
+    ],
+    "a": 1,
+    "em": "🦠",
+    "et": "Computer virus: malicious code that replicates and spreads to damage systems or steal data."
+  },
+  {
+    "q": "What does CPU stand for?",
+    "opts": [
+      "Central Processing Unit",
+      "Computer Programming Unit",
+      "Core Processing Utility",
+      "Central Program Upload"
+    ],
+    "a": 0,
+    "em": "💻",
+    "et": "CPU: Central Processing Unit — the brain of the computer that executes instructions."
+  },
+  {
+    "q": "Cloud computing means:",
+    "opts": [
+      "Computing in foggy weather",
+      "Storing/processing data on remote servers",
+      "Using wireless only",
+      "A type of operating system"
+    ],
+    "a": 1,
+    "em": "☁️",
+    "et": "Cloud computing: storing, managing, and processing data on remote internet servers."
+  },
+  {
+    "q": "A database is used to:",
+    "opts": [
+      "Create graphics",
+      "Store and manage structured data",
+      "Connect to the internet",
+      "Write documents"
+    ],
+    "a": 1,
+    "em": "🗄️",
+    "et": "Database: organised collection of structured data — examples: MySQL, Microsoft Access."
+  },
+  {
+    "q": "Phishing is:",
+    "opts": [
+      "A sport",
+      "Fraudulent attempt to steal personal information",
+      "A programming language",
+      "File compression"
+    ],
+    "a": 1,
+    "em": "🎣",
+    "et": "Phishing: fake emails/websites trick users into revealing passwords and personal data."
+  },
+  {
+    "q": "What is a firewall?",
+    "opts": [
+      "Physical wall in server room",
+      "Security software/hardware blocking unauthorised access",
+      "Type of antivirus",
+      "Internet browser"
+    ],
+    "a": 1,
+    "em": "🔥",
+    "et": "Firewall: monitors and controls incoming/outgoing network traffic based on security rules."
+  }
+]

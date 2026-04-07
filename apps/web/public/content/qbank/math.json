@@ -1,0 +1,302 @@
+[
+  {
+    "q": "What is √144?",
+    "opts": [
+      "10",
+      "11",
+      "12",
+      "13"
+    ],
+    "a": 2,
+    "em": "🔢",
+    "et": "√144=12 because 12²=144."
+  },
+  {
+    "q": "Simplify: 2³ × 2⁴",
+    "opts": [
+      "2⁷",
+      "2¹²",
+      "4⁷",
+      "2⁶"
+    ],
+    "a": 0,
+    "em": "📐",
+    "et": "Same base: add exponents. 2³⁺⁴=2⁷=128."
+  },
+  {
+    "q": "Gradient of line through (0,3) and (2,7):",
+    "opts": [
+      "2",
+      "4",
+      "3",
+      "1.5"
+    ],
+    "a": 0,
+    "em": "📈",
+    "et": "m=(y₂−y₁)/(x₂−x₁)=(7−3)/(2−0)=2."
+  },
+  {
+    "q": "Solve: 2x + 5 = 17",
+    "opts": [
+      "x=6",
+      "x=7",
+      "x=5",
+      "x=11"
+    ],
+    "a": 0,
+    "em": "🎯",
+    "et": "2x=12 → x=6."
+  },
+  {
+    "q": "Factorise: x² − 9",
+    "opts": [
+      "(x−3)²",
+      "(x+3)(x−3)",
+      "(x−9)(x+1)",
+      "(x+3)²"
+    ],
+    "a": 1,
+    "em": "🔢",
+    "et": "Difference of squares: x²−9=(x+3)(x−3)."
+  },
+  {
+    "q": "f'(x) for f(x)=4x³:",
+    "opts": [
+      "12x²",
+      "12x³",
+      "4x²",
+      "8x²"
+    ],
+    "a": 0,
+    "em": "∫",
+    "et": "Power rule: 3×4×x²=12x²."
+  },
+  {
+    "q": "cos 60° =",
+    "opts": [
+      "√3/2",
+      "1/2",
+      "1",
+      "0"
+    ],
+    "a": 1,
+    "em": "📐",
+    "et": "Special angle: cos60°=1/2."
+  },
+  {
+    "q": "R5000 at 8% p.a. simple interest for 3 years:",
+    "opts": [
+      "R400",
+      "R1200",
+      "R1400",
+      "R600"
+    ],
+    "a": 1,
+    "em": "💰",
+    "et": "SI=P×r×t=5000×0.08×3=R1200."
+  },
+  {
+    "q": "4th term: a=2, r=3 geometric sequence",
+    "opts": [
+      "54",
+      "18",
+      "12",
+      "6"
+    ],
+    "a": 0,
+    "em": "🔢",
+    "et": "T₄=ar³=2×27=54."
+  },
+  {
+    "q": "Turning point of f(x)=(x−3)²+2:",
+    "opts": [
+      "(3,2)",
+      "(−3,2)",
+      "(3,−2)",
+      "(2,3)"
+    ],
+    "a": 0,
+    "em": "📊",
+    "et": "Vertex form: turning point is (p,q)=(3,2)."
+  },
+  {
+    "q": "y-intercept of y=3x−4:",
+    "opts": [
+      "3",
+      "−4",
+      "4",
+      "−3"
+    ],
+    "a": 1,
+    "em": "📊",
+    "et": "Set x=0: y=−4."
+  },
+  {
+    "q": "If √x = 7, then x =",
+    "opts": [
+      "14",
+      "49",
+      "√7",
+      "21"
+    ],
+    "a": 1,
+    "em": "🔢",
+    "et": "Square both sides: x=49."
+  },
+  {
+    "q": "Area of a circle with radius 5:",
+    "opts": [
+      "25π",
+      "10π",
+      "5π",
+      "50π"
+    ],
+    "a": 0,
+    "em": "⭕",
+    "et": "A=πr²=π×25=25π."
+  },
+  {
+    "q": "sin 30° =",
+    "opts": [
+      "√3/2",
+      "1/2",
+      "1",
+      "0"
+    ],
+    "a": 1,
+    "em": "📐",
+    "et": "sin30°=1/2. Remember SOHCAHTOA."
+  },
+  {
+    "q": "Solve: x²−5x+6=0",
+    "opts": [
+      "x=2 or x=3",
+      "x=−2 or x=−3",
+      "x=1 or x=6",
+      "x=−1 or x=−6"
+    ],
+    "a": 0,
+    "em": "🎯",
+    "et": "Factorise: (x−2)(x−3)=0."
+  },
+  {
+    "q": "Arithmetic sequence: 3,7,11,15... what is T₆?",
+    "opts": [
+      "23",
+      "19",
+      "27",
+      "21"
+    ],
+    "a": 0,
+    "em": "🔢",
+    "et": "Tₙ=a+(n−1)d=3+5×4=23."
+  },
+  {
+    "q": "log₂(8) =",
+    "opts": [
+      "2",
+      "3",
+      "4",
+      "16"
+    ],
+    "a": 1,
+    "em": "📊",
+    "et": "2³=8, so log₂(8)=3."
+  },
+  {
+    "q": "Volume of a cube with side 4cm:",
+    "opts": [
+      "16cm³",
+      "64cm³",
+      "48cm³",
+      "32cm³"
+    ],
+    "a": 1,
+    "em": "📦",
+    "et": "V=s³=4³=64cm³."
+  },
+  {
+    "q": "If P(A)=0.3, then P(not A)=",
+    "opts": [
+      "0.7",
+      "0.3",
+      "0.6",
+      "1.3"
+    ],
+    "a": 0,
+    "em": "🎲",
+    "et": "P(not A)=1−P(A)=1−0.3=0.7."
+  },
+  {
+    "q": "tan 45° =",
+    "opts": [
+      "0",
+      "1",
+      "√2",
+      "1/2"
+    ],
+    "a": 1,
+    "em": "📐",
+    "et": "tan45°=sin45°/cos45°=1."
+  },
+  {
+    "q": "Compound interest: R2000 at 10% for 2 years:",
+    "opts": [
+      "R2400",
+      "R2420",
+      "R2200",
+      "R2410"
+    ],
+    "a": 1,
+    "em": "💰",
+    "et": "A=P(1+r)ⁿ=2000(1.1)²=2420."
+  },
+  {
+    "q": "The gradient of a horizontal line is:",
+    "opts": [
+      "1",
+      "−1",
+      "undefined",
+      "0"
+    ],
+    "a": 3,
+    "em": "📈",
+    "et": "Horizontal line: rise=0, gradient=0."
+  },
+  {
+    "q": "Simplify: (3x²y)(2xy³)",
+    "opts": [
+      "6x³y⁴",
+      "5x³y⁴",
+      "6x²y³",
+      "5x²y⁴"
+    ],
+    "a": 0,
+    "em": "🔢",
+    "et": "Multiply coefficients: 3×2=6. Add exponents: x²⁺¹=x³, y¹⁺³=y⁴."
+  },
+  {
+    "q": "What is the median of: 3,7,2,9,5?",
+    "opts": [
+      "5",
+      "7",
+      "2",
+      "9"
+    ],
+    "a": 0,
+    "em": "📊",
+    "et": "Ordered: 2,3,5,7,9. Middle value=5."
+  },
+  {
+    "q": "The perpendicular bisector of a chord passes through:",
+    "opts": [
+      "The chord midpoint only",
+      "The circle centre",
+      "Any point",
+      "A tangent"
+    ],
+    "a": 1,
+    "em": "⭕",
+    "et": "Circle theorem: perpendicular bisector of chord passes through centre."
+  }
+]

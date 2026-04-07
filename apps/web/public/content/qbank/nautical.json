@@ -1,0 +1,122 @@
+[
+  {
+    "q": "One nautical mile =",
+    "opts": [
+      "1.0 km",
+      "1.5 km",
+      "1.852 km",
+      "2.0 km"
+    ],
+    "a": 2,
+    "em": "⚓",
+    "et": "1 NM = 1.852 km = 1 minute of arc of latitude."
+  },
+  {
+    "q": "Bowline knot forms:",
+    "opts": [
+      "A slip knot",
+      "A fixed non-slipping loop",
+      "A stopper knot",
+      "A joining knot"
+    ],
+    "a": 1,
+    "em": "🪢",
+    "et": "Bowline: forms a reliable fixed loop — most important knot at sea."
+  },
+  {
+    "q": "MAYDAY indicates:",
+    "opts": [
+      "Urgent safety message",
+      "Life-threatening emergency",
+      "Medical emergency",
+      "Navigation warning"
+    ],
+    "a": 1,
+    "em": "📻",
+    "et": "MAYDAY = life-threatening emergency. VHF Ch 16."
+  },
+  {
+    "q": "Variation is difference between:",
+    "opts": [
+      "True north and ship's head",
+      "True north and magnetic north",
+      "Magnetic and compass north",
+      "Grid and true north"
+    ],
+    "a": 1,
+    "em": "🧭",
+    "et": "Variation: angle between true north and magnetic north at any location."
+  },
+  {
+    "q": "The Plimsoll line shows:",
+    "opts": [
+      "Ship's name",
+      "Maximum safe loading",
+      "Water depth",
+      "Compass error"
+    ],
+    "a": 1,
+    "em": "🚢",
+    "et": "Plimsoll line: marks maximum safe loading depth in different sea conditions."
+  },
+  {
+    "q": "EPIRB stands for:",
+    "opts": [
+      "Electronic Position Indicating Radio Beacon",
+      "Emergency Position Indicating Radio Beacon",
+      "Emergency Proximity Instrument Radio Band",
+      "Electronic Proximity Indicating Radio Buoy"
+    ],
+    "a": 1,
+    "em": "📡",
+    "et": "EPIRB: Emergency Position Indicating Radio Beacon — automatically activates in emergencies."
+  },
+  {
+    "q": "The Agulhas Current is:",
+    "opts": [
+      "Cold, west coast",
+      "Warm, east coast",
+      "Cold, south coast",
+      "Warm, west coast"
+    ],
+    "a": 1,
+    "em": "🌊",
+    "et": "Agulhas: warm current along SA's east coast — notorious for rogue waves."
+  },
+  {
+    "q": "Beaufort Scale measures:",
+    "opts": [
+      "Water depth",
+      "Wind speed/strength",
+      "Wave height",
+      "Visibility"
+    ],
+    "a": 1,
+    "em": "🌬️",
+    "et": "Beaufort Scale: 0 (calm) to 12 (hurricane force) — measures wind strength."
+  },
+  {
+    "q": "A compass bearing of 090° points:",
+    "opts": [
+      "North",
+      "East",
+      "South",
+      "West"
+    ],
+    "a": 1,
+    "em": "🧭",
+    "et": "090° = due East. 000°/360°=North, 180°=South, 270°=West."
+  },
+  {
+    "q": "Knot (speed) =",
+    "opts": [
+      "1 km/h",
+      "1 NM/h",
+      "1 m/s",
+      "1 mile/h"
+    ],
+    "a": 1,
+    "em": "⚓",
+    "et": "1 knot = 1 nautical mile per hour = 1.852 km/h."
+  }
+]

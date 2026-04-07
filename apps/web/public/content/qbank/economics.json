@@ -1,0 +1,122 @@
+[
+  {
+    "q": "Opportunity cost is:",
+    "opts": [
+      "The price paid",
+      "Value of next best alternative foregone",
+      "Total economic cost",
+      "Government tax"
+    ],
+    "a": 1,
+    "em": "💡",
+    "et": "Opportunity cost: value of the best alternative you give up when making a choice."
+  },
+  {
+    "q": "GDP stands for:",
+    "opts": [
+      "Gross Domestic Product",
+      "General Development Plan",
+      "Government Deficit Payment",
+      "Gross Debt Per capita"
+    ],
+    "a": 0,
+    "em": "📊",
+    "et": "GDP: total value of all goods and services produced in a country in a year."
+  },
+  {
+    "q": "Inflation is:",
+    "opts": [
+      "Increase in money supply",
+      "Decrease in economic growth",
+      "General increase in price levels",
+      "Increase in GDP"
+    ],
+    "a": 2,
+    "em": "📈",
+    "et": "Inflation: sustained general increase in price levels over time. Measured by CPI."
+  },
+  {
+    "q": "The SA Reserve Bank controls:",
+    "opts": [
+      "Government spending",
+      "Monetary policy and interest rates",
+      "Exchange rates directly",
+      "Company taxes"
+    ],
+    "a": 1,
+    "em": "🏦",
+    "et": "SARB: controls monetary policy, sets repo rate, manages inflation target."
+  },
+  {
+    "q": "When demand increases and supply stays the same, price:",
+    "opts": [
+      "Falls",
+      "Stays the same",
+      "Rises",
+      "Becomes unpredictable"
+    ],
+    "a": 2,
+    "em": "📊",
+    "et": "Demand↑ + Supply constant → Price↑. Basic supply and demand principle."
+  },
+  {
+    "q": "Unemployment rate in SA is approximately:",
+    "opts": [
+      "15%",
+      "25%",
+      "33%",
+      "45%"
+    ],
+    "a": 2,
+    "em": "📊",
+    "et": "SA unemployment ≈33% (broad definition includes discouraged workers)."
+  },
+  {
+    "q": "A monopoly is when:",
+    "opts": [
+      "Many firms compete",
+      "One firm dominates the market",
+      "Two firms share market",
+      "Government controls prices"
+    ],
+    "a": 1,
+    "em": "🏭",
+    "et": "Monopoly: single seller with no close substitutes — dominates entire market."
+  },
+  {
+    "q": "Fiscal policy involves:",
+    "opts": [
+      "Interest rate changes",
+      "Government spending and taxation",
+      "Exchange rate management",
+      "Trade tariffs only"
+    ],
+    "a": 1,
+    "em": "🏛️",
+    "et": "Fiscal policy: government uses spending and taxation to influence the economy."
+  },
+  {
+    "q": "The multiplier effect means:",
+    "opts": [
+      "Prices multiply",
+      "Government spending leads to greater increase in GDP",
+      "Inflation multiplies",
+      "Taxes increase proportionally"
+    ],
+    "a": 1,
+    "em": "📊",
+    "et": "Multiplier: initial spending creates rounds of further spending — GDP grows by more than initial injection."
+  },
+  {
+    "q": "A progressive tax system means:",
+    "opts": [
+      "Everyone pays the same rate",
+      "Higher earners pay higher rate",
+      "Lower earners pay more",
+      "Flat rate for all"
+    ],
+    "a": 1,
+    "em": "💰",
+    "et": "Progressive tax: rate increases as income increases. SA personal income tax is progressive."
+  }
+]

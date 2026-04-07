@@ -1,0 +1,122 @@
+[
+  {
+    "q": "Which act protects SA consumers?",
+    "opts": [
+      "Competition Act",
+      "Consumer Protection Act",
+      "National Credit Act",
+      "Labour Relations Act"
+    ],
+    "a": 1,
+    "em": "🛒",
+    "et": "Consumer Protection Act (CPA) of 2008."
+  },
+  {
+    "q": "Body's primary energy source:",
+    "opts": [
+      "Protein",
+      "Fat",
+      "Carbohydrate",
+      "Vitamin C"
+    ],
+    "a": 2,
+    "em": "🍞",
+    "et": "Carbohydrates (glucose) are the body's preferred fuel."
+  },
+  {
+    "q": "Which fibre is natural?",
+    "opts": [
+      "Polyester",
+      "Nylon",
+      "Cotton",
+      "Acrylic"
+    ],
+    "a": 2,
+    "em": "👕",
+    "et": "Cotton comes from the cotton plant — natural cellulose fibre."
+  },
+  {
+    "q": "Fixed costs:",
+    "opts": [
+      "Change with production",
+      "Stay constant regardless of output",
+      "Include only marketing",
+      "Are paid once"
+    ],
+    "a": 1,
+    "em": "💰",
+    "et": "Fixed costs (rent, salaries) remain constant regardless of production level."
+  },
+  {
+    "q": "Universal design means:",
+    "opts": [
+      "Only for adults",
+      "Only without disabilities",
+      "People of all abilities",
+      "Only young people"
+    ],
+    "a": 2,
+    "em": "♿",
+    "et": "Universal design: usable by everyone regardless of age or ability."
+  },
+  {
+    "q": "Break-even point is when:",
+    "opts": [
+      "Profit is maximum",
+      "Revenue equals total costs",
+      "You start making a loss",
+      "Fixed costs are covered"
+    ],
+    "a": 1,
+    "em": "📊",
+    "et": "Break-even: total revenue = total costs. No profit, no loss."
+  },
+  {
+    "q": "Food safety \"CHILL\" means:",
+    "opts": [
+      "Cook everything",
+      "Refrigerate perishables within 2 hours",
+      "Freeze everything",
+      "Add ice"
+    ],
+    "a": 1,
+    "em": "❄️",
+    "et": "Chill: refrigerate perishables within 2 hours. Danger zone 5°C–60°C."
+  },
+  {
+    "q": "The 5Ps of marketing:",
+    "opts": [
+      "Product, Price, Place, Promotion, People",
+      "Product, Profit, Place, Promotion, People",
+      "Product, Price, Plan, Promotion, People",
+      "Product, Price, Place, Profit, People"
+    ],
+    "a": 0,
+    "em": "📊",
+    "et": "5Ps: Product, Price, Place, Promotion, People."
+  },
+  {
+    "q": "Post-purchase evaluation means:",
+    "opts": [
+      "Planning a purchase",
+      "Comparing prices",
+      "Assessing value after buying",
+      "Returning a product"
+    ],
+    "a": 2,
+    "em": "🤔",
+    "et": "Last step of decision-making: was the purchase worth it?"
+  },
+  {
+    "q": "VAT in SA =",
+    "opts": [
+      "10%",
+      "12%",
+      "14%",
+      "15%"
+    ],
+    "a": 3,
+    "em": "🧾",
+    "et": "SA VAT = 15% since April 2018."
+  }
+]

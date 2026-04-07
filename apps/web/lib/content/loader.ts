@@ -12,18 +12,16 @@ export async function loadSubjectMeta(): Promise<Record<string, SubjectMeta>> {
 
 export async function loadCourse(subjectId: string): Promise<Course | null> {
   try {
-    const data = await import(`@/content/courses/${subjectId}.json`)
-    return data.default as Course
-  } catch {
-    return null
-  }
+    const res = await fetch(`/api/course/${subjectId}`)
+    if (!res.ok) return null
+    return await res.json()
+  } catch { return null }
 }
 
 export async function loadQBank(subjectId: string): Promise<QuizQuestion[]> {
   try {
-    const data = await import(`@/content/qbank/${subjectId}.json`)
-    return data.default as QuizQuestion[]
-  } catch {
-    return []
-  }
+    const res = await fetch(`/api/qbank/${subjectId}`)
+    if (!res.ok) return []
+    return await res.json()
+  } catch { return [] }
 }

@@ -1,0 +1,122 @@
+[
+  {
+    "q": "HTML stands for:",
+    "opts": [
+      "HyperText Markup Language",
+      "HyperText Machine Language",
+      "HighText Markup Language",
+      "HyperText Modern Language"
+    ],
+    "a": 0,
+    "em": "🌐",
+    "et": "HyperText Markup Language — structures web pages."
+  },
+  {
+    "q": "CSS stands for:",
+    "opts": [
+      "Computer Style Sheets",
+      "Creative Style Syntax",
+      "Cascading Style Sheets",
+      "Colorful Style System"
+    ],
+    "a": 2,
+    "em": "🎨",
+    "et": "Cascading Style Sheets — controls visual presentation."
+  },
+  {
+    "q": "JavaScript console.log() outputs to:",
+    "opts": [
+      "The printer",
+      "Browser console",
+      "Creates alert",
+      "A file"
+    ],
+    "a": 1,
+    "em": "⚙️",
+    "et": "console.log() outputs to browser DevTools console (F12)."
+  },
+  {
+    "q": "Largest HTML heading:",
+    "opts": [
+      "<h6>",
+      "<h3>",
+      "<h1>",
+      "<head>"
+    ],
+    "a": 2,
+    "em": "📄",
+    "et": "<h1> is largest. Use one per page."
+  },
+  {
+    "q": "CSS property for text colour:",
+    "opts": [
+      "text-color",
+      "font-color",
+      "color",
+      "background-color"
+    ],
+    "a": 2,
+    "em": "🎨",
+    "et": "\"color\" sets text colour."
+  },
+  {
+    "q": "DOM stands for:",
+    "opts": [
+      "Domain Object Manager",
+      "Document Object Model",
+      "Data Output Method",
+      "Dynamic Object Manipulation"
+    ],
+    "a": 1,
+    "em": "🌐",
+    "et": "Document Object Model — browser's tree of HTML elements."
+  },
+  {
+    "q": "HTTP 404 means:",
+    "opts": [
+      "OK success",
+      "Redirect",
+      "Not Found",
+      "Server Error"
+    ],
+    "a": 2,
+    "em": "🌐",
+    "et": "404 = Not Found. 200=OK, 301=Redirect, 500=Server Error."
+  },
+  {
+    "q": "GitHub Pages provides:",
+    "opts": [
+      "Database hosting",
+      "Free static website hosting",
+      "Video streaming",
+      "Email service"
+    ],
+    "a": 1,
+    "em": "🚀",
+    "et": "Free hosting for static HTML/CSS/JS sites."
+  },
+  {
+    "q": "Flexbox is for:",
+    "opts": [
+      "Database queries",
+      "Responsive layouts",
+      "3D animations",
+      "Server code"
+    ],
+    "a": 1,
+    "em": "🎨",
+    "et": "Flexbox arranges elements in rows/columns with flexible sizing."
+  },
+  {
+    "q": "let x = 5 + 3 evaluates to:",
+    "opts": [
+      "53",
+      "8",
+      "5+3",
+      "undefined"
+    ],
+    "a": 1,
+    "em": "⚙️",
+    "et": "5+3=8 with numbers. With strings it would concatenate."
+  }
+]

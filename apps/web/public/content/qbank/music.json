@@ -1,0 +1,122 @@
+[
+  {
+    "q": "How many beats in a quarter note in 4/4?",
+    "opts": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "a": 0,
+    "em": "🎵",
+    "et": "4/4 time: quarter note = 1 beat."
+  },
+  {
+    "q": "Which scale has no sharps or flats?",
+    "opts": [
+      "G major",
+      "D major",
+      "C major",
+      "A major"
+    ],
+    "a": 2,
+    "em": "🎼",
+    "et": "C major: C D E F G A B C — no sharps or flats."
+  },
+  {
+    "q": "12-bar blues uses chords:",
+    "opts": [
+      "I, IV, V",
+      "I, II, III",
+      "I, VI, VII",
+      "II, V, I"
+    ],
+    "a": 0,
+    "em": "🎷",
+    "et": "I-IV-V progression is the foundation of blues, rock, and gospel."
+  },
+  {
+    "q": "Hugh Masekela played:",
+    "opts": [
+      "Piano",
+      "Trumpet",
+      "Guitar",
+      "Drums"
+    ],
+    "a": 1,
+    "em": "🎺",
+    "et": "Hugh Masekela: legendary SA trumpeter and jazz musician."
+  },
+  {
+    "q": "Polyrhythm means:",
+    "opts": [
+      "One rhythm played slowly",
+      "Two+ independent rhythms simultaneously",
+      "Rhythm without a beat",
+      "Changing time signature"
+    ],
+    "a": 1,
+    "em": "🥁",
+    "et": "Polyrhythm: two or more independent rhythms played at the same time."
+  },
+  {
+    "q": "Amapiano originated in:",
+    "opts": [
+      "Cape Town",
+      "Durban",
+      "Johannesburg townships",
+      "Pretoria suburbs"
+    ],
+    "a": 2,
+    "em": "🇿🇦",
+    "et": "Amapiano emerged from Gauteng townships in mid-2010s."
+  },
+  {
+    "q": "The treble clef marks which line as G?",
+    "opts": [
+      "1st",
+      "2nd",
+      "3rd",
+      "4th"
+    ],
+    "a": 1,
+    "em": "🎵",
+    "et": "Treble (G) clef curls around the 2nd line from bottom, marking it as G above middle C."
+  },
+  {
+    "q": "A major triad contains:",
+    "opts": [
+      "Root + minor 3rd + 5th",
+      "Root + major 3rd + 5th",
+      "Root + 2 perfect 5ths",
+      "Root + major 2nd + 5th"
+    ],
+    "a": 1,
+    "em": "🎹",
+    "et": "Major triad: root + major 3rd (4 semitones) + perfect 5th (7 semitones)."
+  },
+  {
+    "q": "DAW stands for:",
+    "opts": [
+      "Digital Audio Workstation",
+      "Direct Audio Wave",
+      "Digital Application Window",
+      "Dynamic Audio Writing"
+    ],
+    "a": 0,
+    "em": "🎧",
+    "et": "DAW: Digital Audio Workstation — software for recording and producing music."
+  },
+  {
+    "q": "Mbira is an instrument from:",
+    "opts": [
+      "West Africa",
+      "Southern Africa",
+      "North Africa",
+      "East Africa"
+    ],
+    "a": 1,
+    "em": "🎶",
+    "et": "Mbira (thumb piano) originates from southern Africa, especially Zimbabwe."
+  }
+]

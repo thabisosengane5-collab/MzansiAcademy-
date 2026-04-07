@@ -1,0 +1,302 @@
+[
+  {
+    "q": "Newton's Second Law: F_net =",
+    "opts": [
+      "mv",
+      "ma",
+      "mg",
+      "mv²"
+    ],
+    "a": 1,
+    "em": "🚀",
+    "et": "F_net=ma. Force=mass×acceleration."
+  },
+  {
+    "q": "Wave speed formula:",
+    "opts": [
+      "v=fλ",
+      "v=f/λ",
+      "v=λ/f",
+      "v=f²λ"
+    ],
+    "a": 0,
+    "em": "🌊",
+    "et": "v=fλ. Speed=frequency×wavelength."
+  },
+  {
+    "q": "Ohm's Law: V=",
+    "opts": [
+      "I/R",
+      "IR",
+      "I+R",
+      "I²R"
+    ],
+    "a": 1,
+    "em": "⚡",
+    "et": "V=IR. Voltage=Current×Resistance."
+  },
+  {
+    "q": "Two 10Ω resistors in parallel:",
+    "opts": [
+      "20Ω",
+      "10Ω",
+      "5Ω",
+      "1Ω"
+    ],
+    "a": 2,
+    "em": "⚡",
+    "et": "1/Rₜ=1/10+1/10=2/10 → Rₜ=5Ω."
+  },
+  {
+    "q": "pH of a neutral solution at 25°C:",
+    "opts": [
+      "0",
+      "7",
+      "14",
+      "10"
+    ],
+    "a": 1,
+    "em": "🧪",
+    "et": "pH7=neutral. <7=acid, >7=base."
+  },
+  {
+    "q": "Momentum p=",
+    "opts": [
+      "ma",
+      "mv",
+      "Ft",
+      "F/a"
+    ],
+    "a": 1,
+    "em": "💨",
+    "et": "p=mv. Unit: kg·m/s."
+  },
+  {
+    "q": "Unit of electrical power:",
+    "opts": [
+      "Joule",
+      "Volt",
+      "Watt",
+      "Ampere"
+    ],
+    "a": 2,
+    "em": "💡",
+    "et": "Power measured in Watts. P=IV."
+  },
+  {
+    "q": "Which particle carries negative charge?",
+    "opts": [
+      "Proton",
+      "Neutron",
+      "Electron",
+      "Positron"
+    ],
+    "a": 2,
+    "em": "⚛️",
+    "et": "Electrons: −1e charge."
+  },
+  {
+    "q": "Doppler Effect: apparent frequency change when",
+    "opts": [
+      "Amplitude changes",
+      "Source moves relative to observer",
+      "Wave speed changes",
+      "Wavelength doubles"
+    ],
+    "a": 1,
+    "em": "🚨",
+    "et": "Doppler: frequency changes when source/observer moves relative to each other."
+  },
+  {
+    "q": "The ideal gas law: PV =",
+    "opts": [
+      "nRT",
+      "nR/T",
+      "RT/n",
+      "nT/R"
+    ],
+    "a": 0,
+    "em": "🌡️",
+    "et": "PV=nRT. P=pressure, V=volume, n=moles, R=gas constant, T=temperature."
+  },
+  {
+    "q": "Coulomb's Law: Force between charges is:",
+    "opts": [
+      "Inversely proportional to r",
+      "Directly proportional to r²",
+      "Inversely proportional to r²",
+      "Independent of r"
+    ],
+    "a": 2,
+    "em": "⚡",
+    "et": "F∝q₁q₂/r². Force decreases with square of distance."
+  },
+  {
+    "q": "Unit of electric current:",
+    "opts": [
+      "Volt",
+      "Ohm",
+      "Ampere",
+      "Watt"
+    ],
+    "a": 2,
+    "em": "⚡",
+    "et": "Current is measured in Amperes (A). I=Q/t."
+  },
+  {
+    "q": "Electromagnetic radiation travels at:",
+    "opts": [
+      "340m/s",
+      "3×10⁸m/s",
+      "1500m/s",
+      "∞"
+    ],
+    "a": 1,
+    "em": "💡",
+    "et": "Speed of light: 3×10⁸m/s in vacuum."
+  },
+  {
+    "q": "Chemical formula of water:",
+    "opts": [
+      "HO",
+      "H₂O₂",
+      "H₂O",
+      "OH"
+    ],
+    "a": 2,
+    "em": "💧",
+    "et": "Water: two hydrogen atoms + one oxygen atom = H₂O."
+  },
+  {
+    "q": "In a series circuit, total resistance:",
+    "opts": [
+      "Decreases",
+      "Equals smallest R",
+      "Is the sum of all R",
+      "Stays constant"
+    ],
+    "a": 2,
+    "em": "⚡",
+    "et": "Series: Rₜ=R₁+R₂+R₃+..."
+  },
+  {
+    "q": "Acceleration due to gravity on Earth:",
+    "opts": [
+      "10 m/s",
+      "10 m/s²",
+      "9.8 N",
+      "9.8 m/s"
+    ],
+    "a": 1,
+    "em": "🌍",
+    "et": "g=9.8 m/s² (approx 10 m/s² for calculations)."
+  },
+  {
+    "q": "Conservation of momentum states:",
+    "opts": [
+      "Total momentum increases",
+      "Total momentum is constant in closed system",
+      "Momentum equals force",
+      "Momentum decreases over time"
+    ],
+    "a": 1,
+    "em": "💨",
+    "et": "In closed system: total momentum before = total momentum after collision."
+  },
+  {
+    "q": "Snell's Law relates:",
+    "opts": [
+      "Frequency and wavelength",
+      "Angles of incidence and refraction",
+      "Force and mass",
+      "Charge and voltage"
+    ],
+    "a": 1,
+    "em": "🔭",
+    "et": "Snell's Law: n₁sinθ₁=n₂sinθ₂. Relates angles when light changes medium."
+  },
+  {
+    "q": "What type of bond forms between Na and Cl?",
+    "opts": [
+      "Covalent",
+      "Ionic",
+      "Metallic",
+      "Hydrogen"
+    ],
+    "a": 1,
+    "em": "🧪",
+    "et": "Metal + non-metal = ionic bond. Na⁺ and Cl⁻ attract each other."
+  },
+  {
+    "q": "Work done = Force × ?",
+    "opts": [
+      "Mass",
+      "Velocity",
+      "Displacement",
+      "Acceleration"
+    ],
+    "a": 2,
+    "em": "⚙️",
+    "et": "W=F×d. Work=Force×displacement (in direction of force). Unit: Joule."
+  },
+  {
+    "q": "A convex lens causes light to:",
+    "opts": [
+      "Diverge",
+      "Converge",
+      "Travel in circles",
+      "Stop"
+    ],
+    "a": 1,
+    "em": "🔭",
+    "et": "Convex (converging) lens brings parallel rays to a focal point."
+  },
+  {
+    "q": "Valency of Carbon:",
+    "opts": [
+      "2",
+      "4",
+      "6",
+      "8"
+    ],
+    "a": 1,
+    "em": "⚛️",
+    "et": "Carbon has 4 valence electrons, so it forms 4 bonds. Valency=4."
+  },
+  {
+    "q": "Power = Voltage × ?",
+    "opts": [
+      "Resistance",
+      "Current",
+      "Charge",
+      "Time"
+    ],
+    "a": 1,
+    "em": "⚡",
+    "et": "P=VI. Power=Voltage×Current. Also P=I²R=V²/R."
+  },
+  {
+    "q": "The Greenhouse Effect is caused primarily by:",
+    "opts": [
+      "Oxygen",
+      "CO₂ and CH₄",
+      "Nitrogen",
+      "Ozone"
+    ],
+    "a": 1,
+    "em": "🌍",
+    "et": "CO₂, methane, and water vapour trap heat — the greenhouse effect."
+  },
+  {
+    "q": "Half-life refers to:",
+    "opts": [
+      "Time for substance to double",
+      "Time for half the atoms to decay",
+      "Half the energy released",
+      "Phase transition time"
+    ],
+    "a": 1,
+    "em": "☢️",
+    "et": "Half-life: time for half the radioactive nuclei in a sample to decay."
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "q": "SA's Bill of Rights is in the:",
+    "opts": [
+      "Freedom Charter",
+      "Constitution",
+      "White Paper",
+      "NDP"
+    ],
+    "a": 1,
+    "em": "🇿🇦",
+    "et": "Bill of Rights: Chapter 2 of SA's 1996 Constitution."
+  },
+  {
+    "q": "NSFAS provides funding for:",
+    "opts": [
+      "Private schools",
+      "Tertiary education",
+      "Internships",
+      "Driving lessons"
+    ],
+    "a": 1,
+    "em": "🎓",
+    "et": "NSFAS = National Student Financial Aid Scheme."
+  },
+  {
+    "q": "The most effective study technique is:",
+    "opts": [
+      "Highlighting",
+      "Summarising",
+      "Active recall",
+      "Re-reading"
+    ],
+    "a": 2,
+    "em": "📚",
+    "et": "Active recall (testing yourself) is 2-3× more effective than passive re-reading."
+  },
+  {
+    "q": "A healthy relationship includes:",
+    "opts": [
+      "Mutual respect",
+      "Jealousy",
+      "Control",
+      "Pressure"
+    ],
+    "a": 0,
+    "em": "💚",
+    "et": "Healthy relationships: mutual respect, trust, honesty, equality."
+  },
+  {
+    "q": "GBV is caused by:",
+    "opts": [
+      "Poverty alone",
+      "Gender inequality alone",
+      "Alcohol alone",
+      "Multiple factors"
+    ],
+    "a": 3,
+    "em": "✊",
+    "et": "GBV has multiple causes: gender inequality, patriarchal norms, poverty, alcohol."
+  },
+  {
+    "q": "Physical activity improves:",
+    "opts": [
+      "Only physical health",
+      "Only mental health",
+      "Both physical and mental health",
+      "Neither"
+    ],
+    "a": 2,
+    "em": "🏃",
+    "et": "Exercise releases endorphins and improves both physical and mental health."
+  },
+  {
+    "q": "Section 10 of the SA Constitution guarantees:",
+    "opts": [
+      "Housing",
+      "Education",
+      "Human dignity",
+      "Freedom of expression"
+    ],
+    "a": 2,
+    "em": "🇿🇦",
+    "et": "Section 10: \"Everyone has inherent dignity and the right to have their dignity respected.\""
+  },
+  {
+    "q": "RICE for sports injuries:",
+    "opts": [
+      "Run, Ice, Compress, Elevate",
+      "Rest, Ice, Compress, Elevate",
+      "Rest, Improve, Cool, Elevate",
+      "Run, Improve, Compress, Ease"
+    ],
+    "a": 1,
+    "em": "🏥",
+    "et": "RICE: Rest, Ice, Compression, Elevation for minor sports injuries."
+  },
+  {
+    "q": "Peer pressure is:",
+    "opts": [
+      "Adults influencing you",
+      "Influence from people your age",
+      "Teacher expectations",
+      "Social media pressure only"
+    ],
+    "a": 1,
+    "em": "👥",
+    "et": "Peer pressure: influence from people in your peer group to conform to their behaviour."
+  },
+  {
+    "q": "The NSC minimum for bachelor's degree entry:",
+    "opts": [
+      "30% in all subjects",
+      "50% in 4 subjects including Maths/Maths Lit",
+      "60% in all subjects",
+      "40% in 6 subjects"
+    ],
+    "a": 1,
+    "em": "🎓",
+    "et": "Bachelor's entry: 30% in Home Language + 50% in 4 other designated subjects."
+  }
+]
