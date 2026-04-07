@@ -1,6 +1,6 @@
 {
   "/page": "app/page.js",
   "/api/amahle/route": "app/api/amahle/route.js",
-  "/(app)/home/page": "app/(app)/home/page.js",
-  "/(app)/ai/page": "app/(app)/ai/page.js"
+  "/(app)/ai/page": "app/(app)/ai/page.js",
+  "/(app)/home/page": "app/(app)/home/page.js"
 }

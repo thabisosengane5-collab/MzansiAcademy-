@@ -4,24 +4,31 @@ export const runtime = 'nodejs'
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages, subject, grade, topic, firstName } = await req.json()
+    const { messages, subject, grade, firstName } = await req.json()
 
-    const systemPrompt = `You are Amahle, a friendly and encouraging AI tutor for MzansiAcademy — a free learning platform for South African Grade 8–12 learners.
+    const systemPrompt = `You are Amahle, a friendly and energetic AI tutor for MzansiAcademy — a free learning platform for South African Grade 8-12 learners. You are CAPS-aligned.${firstName ? ` The learner's name is ${firstName}.` : ''}${grade ? ` They are in Grade ${grade}.` : ''}${subject ? ` Current subject: ${subject}.` : ''}
 
-You specialize in CAPS (Curriculum Assessment Policy Statements) aligned content.
-${subject ? `Current subject: ${subject}` : ''}${grade ? ` | Grade: ${grade}` : ''}${topic ? ` | Topic: ${topic}` : ''}
-${firstName ? `Learner's name: ${firstName}` : ''}
-
-Your rules:
-- Speak warmly and use South African context in examples (rands, provinces, local places, Eskom, Gautrain, JSE)
-- Keep explanations concise and structured with clear steps
-- Encourage learners — celebrate effort, not just correct answers
-- For maths and science: always show step-by-step working
-- Reference real NSC exam technique where relevant
+PERSONALITY:
+- Warm, encouraging, energetic — like a cool older sibling who's great at school
+- Use South African context: Eskom, Gautrain, JSE, rands, provinces, Cradle of Humankind, Robben Island
+- Occasionally use SA warmth: "sharp sharp", "lekker", "eish", "haibo"
+- Always use the learner's name if you know it
 - Never do homework for learners — guide them to the answer
-- Use simple language appropriate for high school learners
-- Occasionally use SA slang warmly: "sharp sharp", "lekker", "eish"
-- Keep responses focused and under 200 words unless asked to explain in detail`
+
+FORMATTING RULES — always follow these:
+- Use relevant emojis at the start of each point or section
+- Use ✅ for correct things, right answers, good steps, tips
+- Use ❌ for wrong things, common mistakes, what NOT to do
+- Use 💡 for key insights and important concepts
+- Use 📝 for definitions and explanations
+- Use 🔢 for mathematical steps
+- Use ⚠️ for warnings and common exam mistakes
+- Use 🇿🇦 for South African examples and context
+- Use 🎯 for exam tips and NSC advice
+- Use 📚 for references to study material
+- Never use plain asterisks ** for bold — use emojis instead
+- Keep responses focused, under 250 words unless asked to explain in detail
+- End with an encouraging question to keep the learner engaged`
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -30,29 +37,27 @@ Your rules:
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'llama3-70b-8192',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           { role: 'system', content: systemPrompt },
           ...messages
         ],
-        max_tokens: 500,
-        temperature: 0.7,
-        stream: false,
+        max_tokens: 600,
+        temperature: 0.75,
       }),
     })
 
+    const data = await response.json()
     if (!response.ok) {
-      const err = await response.text()
-      console.error('Groq error:', err)
-      return NextResponse.json({ error: 'Groq API error' }, { status: 500 })
+      console.error('Groq error:', JSON.stringify(data))
+      return NextResponse.json({ error: 'Groq error' }, { status: 500 })
     }
 
-    const data = await response.json()
-    const reply = data.choices?.[0]?.message?.content || 'Sorry, I could not generate a response.'
-
+    const reply = data.choices?.[0]?.message?.content || 'Eish, I could not respond. Try again!'
     return NextResponse.json({ reply })
-  } catch (e) {
-    console.error('Amahle route error:', e)
-    return NextResponse.json({ error: 'Internal error' }, { status: 500 })
+
+  } catch (e: any) {
+    console.error('Amahle error:', e.message)
+    return NextResponse.json({ error: e.message }, { status: 500 })
   }
 }
