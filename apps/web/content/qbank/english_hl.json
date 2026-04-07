@@ -1,0 +1,122 @@
+[
+  {
+    "q": "A metaphor is:",
+    "opts": [
+      "Comparing using \"like\" or \"as\"",
+      "Direct comparison without \"like\"/\"as\"",
+      "Repeated consonant sounds",
+      "Exaggeration for effect"
+    ],
+    "a": 1,
+    "em": "✍️",
+    "et": "Metaphor: direct comparison (e.g. \"Life is a journey\"). No \"like\" or \"as\"."
+  },
+  {
+    "q": "A simile uses:",
+    "opts": [
+      "Metaphor",
+      "Personification",
+      "Like or as",
+      "Alliteration"
+    ],
+    "a": 2,
+    "em": "✍️",
+    "et": "Simile: comparison using \"like\" or \"as\" (e.g. \"brave as a lion\")."
+  },
+  {
+    "q": "Alliteration is:",
+    "opts": [
+      "Repetition of vowel sounds",
+      "Repetition of initial consonant sounds",
+      "Rhyming at end of lines",
+      "Repetition of whole words"
+    ],
+    "a": 1,
+    "em": "📝",
+    "et": "Alliteration: repetition of initial consonant sounds (e.g. \"Peter picked peppers\")."
+  },
+  {
+    "q": "Irony means:",
+    "opts": [
+      "Saying exactly what you mean",
+      "Saying the opposite of what you mean",
+      "Using very formal language",
+      "Repeating for emphasis"
+    ],
+    "a": 1,
+    "em": "✍️",
+    "et": "Irony: saying opposite of what is meant for effect (e.g. \"What lovely weather!\" in a storm)."
+  },
+  {
+    "q": "The theme of a text is:",
+    "opts": [
+      "The plot summary",
+      "The main message or idea",
+      "The setting",
+      "The characters"
+    ],
+    "a": 1,
+    "em": "📚",
+    "et": "Theme: the central message, idea, or lesson the author wants to convey."
+  },
+  {
+    "q": "A noun is a:",
+    "opts": [
+      "Describing word",
+      "Action word",
+      "Person, place, thing, or idea",
+      "Connecting word"
+    ],
+    "a": 2,
+    "em": "📝",
+    "et": "Noun: names a person (Sipho), place (Soweto), thing (book), or idea (freedom)."
+  },
+  {
+    "q": "Personification gives _____ to non-human things:",
+    "opts": [
+      "Names",
+      "Human qualities",
+      "Animal traits",
+      "Physical size"
+    ],
+    "a": 1,
+    "em": "✍️",
+    "et": "Personification: attributing human qualities to non-human things (e.g. \"The sun smiled\")."
+  },
+  {
+    "q": "An autobiography is written:",
+    "opts": [
+      "About someone else",
+      "By the person about themselves",
+      "As fiction",
+      "As a poem"
+    ],
+    "a": 1,
+    "em": "📚",
+    "et": "Autobiography: a person's life story written by themselves. Biography is written by someone else."
+  },
+  {
+    "q": "Onomatopoeia refers to words that:",
+    "opts": [
+      "Sound like what they describe",
+      "Rhyme with each other",
+      "Are very long",
+      "Are formal"
+    ],
+    "a": 0,
+    "em": "🔊",
+    "et": "Onomatopoeia: words that imitate sounds (e.g. buzz, crash, sizzle, hiss)."
+  },
+  {
+    "q": "The antagonist in a story is:",
+    "opts": [
+      "The main character",
+      "The character who opposes the hero",
+      "A minor character",
+      "The narrator"
+    ],
+    "a": 1,
+    "em": "📚",
+    "et": "Antagonist: opposes the protagonist/hero. Creates conflict in the narrative."
+  }
+]

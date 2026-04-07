@@ -1,0 +1,122 @@
+[
+  {
+    "q": "A sole trader is:",
+    "opts": [
+      "A company",
+      "A business owned by one person",
+      "A partnership",
+      "A cooperative"
+    ],
+    "a": 1,
+    "em": "🏪",
+    "et": "Sole trader: one person owns and runs the business. Unlimited liability."
+  },
+  {
+    "q": "BBBEE stands for:",
+    "opts": [
+      "Big Business Black Economic Empowerment",
+      "Broad-Based Black Economic Empowerment",
+      "Business Before Benefit Enhancement",
+      "Broad Benefits for Black Entrepreneurs"
+    ],
+    "a": 1,
+    "em": "🏢",
+    "et": "BBBEE: government policy to redress apartheid inequalities in SA business."
+  },
+  {
+    "q": "A franchise is:",
+    "opts": [
+      "A new business from scratch",
+      "License to operate using another brand's system",
+      "Government business",
+      "Non-profit organisation"
+    ],
+    "a": 1,
+    "em": "🍔",
+    "et": "Franchise: use another business's brand, products, and systems under license."
+  },
+  {
+    "q": "Marketing mix includes:",
+    "opts": [
+      "Product, Price, Place, Promotion",
+      "People, Plan, Profit, Process",
+      "Purchase, Payment, Proof, Packaging",
+      "Product, Profit, People, Plan"
+    ],
+    "a": 0,
+    "em": "📊",
+    "et": "4Ps of marketing: Product, Price, Place, Promotion."
+  },
+  {
+    "q": "Limited liability means:",
+    "opts": [
+      "Business can borrow limited money",
+      "Owners only lose what they invested",
+      "Company is limited in size",
+      "Profits are capped"
+    ],
+    "a": 1,
+    "em": "🛡️",
+    "et": "Limited liability: shareholders only lose their investment — personal assets protected."
+  },
+  {
+    "q": "The JSE is:",
+    "opts": [
+      "Johannesburg Services Exchange",
+      "Johannesburg Stock Exchange",
+      "Joint Stock Establishment",
+      "Junior Securities Exchange"
+    ],
+    "a": 1,
+    "em": "📈",
+    "et": "JSE: Johannesburg Stock Exchange — Africa's largest stock exchange."
+  },
+  {
+    "q": "A partnership has _____ partners:",
+    "opts": [
+      "Only 1",
+      "2 to 20",
+      "2 to 50",
+      "Unlimited"
+    ],
+    "a": 1,
+    "em": "🤝",
+    "et": "Partnership: 2 to 20 partners (or up to 50 for professional partnerships)."
+  },
+  {
+    "q": "Which is NOT a function of management?",
+    "opts": [
+      "Planning",
+      "Organising",
+      "Selling",
+      "Controlling"
+    ],
+    "a": 2,
+    "em": "🏢",
+    "et": "POAC management functions: Planning, Organising, Activating/Leading, Controlling. Selling is marketing."
+  },
+  {
+    "q": "Working capital is:",
+    "opts": [
+      "Total assets",
+      "Current assets−Current liabilities",
+      "Fixed assets",
+      "Total equity"
+    ],
+    "a": 1,
+    "em": "💰",
+    "et": "Working capital=Current Assets−Current Liabilities. Day-to-day operating funds."
+  },
+  {
+    "q": "A Pty (Ltd) is:",
+    "opts": [
+      "Public company",
+      "Private company",
+      "Sole trader",
+      "Partnership"
+    ],
+    "a": 1,
+    "em": "🏢",
+    "et": "Pty (Ltd)=Private Company. Limited liability, private shareholders, min 1 director."
+  }
+]

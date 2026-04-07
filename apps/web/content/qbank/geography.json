@@ -1,0 +1,302 @@
+[
+  {
+    "q": "High pressure systems cause:",
+    "opts": [
+      "Heavy rainfall",
+      "Clear settled weather",
+      "Thunderstorms",
+      "Dense fog"
+    ],
+    "a": 1,
+    "em": "🌤️",
+    "et": "Descending air in high pressure = dry, stable, clear."
+  },
+  {
+    "q": "Cape Town has _____ rainfall:",
+    "opts": [
+      "Summer",
+      "Winter",
+      "Year-round",
+      "Almost none"
+    ],
+    "a": 1,
+    "em": "🌧️",
+    "et": "Winter rainfall from westerly cold fronts."
+  },
+  {
+    "q": "Contour lines connect points of equal:",
+    "opts": [
+      "Rainfall",
+      "Temperature",
+      "Altitude",
+      "Distance from sea"
+    ],
+    "a": 2,
+    "em": "🗺️",
+    "et": "Contour lines = equal altitude above sea level."
+  },
+  {
+    "q": "Agulhas Current flows along SA's:",
+    "opts": [
+      "West coast",
+      "East coast",
+      "North coast",
+      "Southern coast"
+    ],
+    "a": 1,
+    "em": "🌊",
+    "et": "Warm Agulhas flows south along the east coast."
+  },
+  {
+    "q": "Scale 1:50 000 means 1cm =",
+    "opts": [
+      "50m",
+      "500m",
+      "5km",
+      "50km"
+    ],
+    "a": 1,
+    "em": "🗺️",
+    "et": "1:50000 → 1cm=500m=0.5km."
+  },
+  {
+    "q": "A cuesta's steep side is the:",
+    "opts": [
+      "Dip slope",
+      "Vale",
+      "Scarp slope",
+      "Pediment"
+    ],
+    "a": 2,
+    "em": "⛰️",
+    "et": "Scarp slope is the steep eroded face; dip slope is gentle."
+  },
+  {
+    "q": "Desertification is caused by:",
+    "opts": [
+      "Too much rain",
+      "Overgrazing and deforestation",
+      "Sea level rise",
+      "Urbanisation only"
+    ],
+    "a": 1,
+    "em": "🌵",
+    "et": "Desertification: fertile land becomes desert through overgrazing, deforestation, drought."
+  },
+  {
+    "q": "GIS stands for:",
+    "opts": [
+      "Global Internet System",
+      "Geographical Information System",
+      "Government Infrastructure Survey",
+      "Geo Imaging Satellite"
+    ],
+    "a": 1,
+    "em": "🛰️",
+    "et": "GIS: captures, stores, analyses geographic data."
+  },
+  {
+    "q": "The Benguela Current is:",
+    "opts": [
+      "Warm, east coast",
+      "Cold, west coast",
+      "Warm, south coast",
+      "Cold, east coast"
+    ],
+    "a": 1,
+    "em": "🌊",
+    "et": "Benguela: cold upwelling on west coast. Rich fishing, frequent fog."
+  },
+  {
+    "q": "SA's average annual rainfall is approximately:",
+    "opts": [
+      "264mm",
+      "464mm",
+      "664mm",
+      "864mm"
+    ],
+    "a": 1,
+    "em": "🌧️",
+    "et": "SA average ~464mm — well below global average of 860mm."
+  },
+  {
+    "q": "The Coriolis force causes winds to deflect:",
+    "opts": [
+      "Right in Southern Hemisphere",
+      "Left in Southern Hemisphere",
+      "Upward",
+      "Toward equator"
+    ],
+    "a": 1,
+    "em": "🌪️",
+    "et": "Coriolis: deflects left in Southern Hemisphere (opposite to Northern Hemisphere)."
+  },
+  {
+    "q": "A warm front brings:",
+    "opts": [
+      "Sharp showers and wind shift",
+      "Steady rain ahead of the front",
+      "Dry clear weather",
+      "Thunderstorms only"
+    ],
+    "a": 1,
+    "em": "🌦️",
+    "et": "Warm front: warm air rises over cold — steady prolonged rainfall."
+  },
+  {
+    "q": "Urbanisation means:",
+    "opts": [
+      "People moving to rural areas",
+      "People moving to cities",
+      "Population decrease",
+      "Industrial expansion only"
+    ],
+    "a": 1,
+    "em": "🏙️",
+    "et": "Urbanisation: population shift from rural to urban areas."
+  },
+  {
+    "q": "SA's Gini coefficient is approximately:",
+    "opts": [
+      "0.23",
+      "0.43",
+      "0.63",
+      "0.83"
+    ],
+    "a": 2,
+    "em": "📊",
+    "et": "SA Gini ~0.63 — one of the world's highest. Legacy of apartheid inequality."
+  },
+  {
+    "q": "A population pyramid with wide base indicates:",
+    "opts": [
+      "Ageing population",
+      "High birth rate, young population",
+      "Low birth rate",
+      "Declining population"
+    ],
+    "a": 1,
+    "em": "📊",
+    "et": "Wide base = many young people = high birth rate = developing country."
+  },
+  {
+    "q": "The HDI measures:",
+    "opts": [
+      "Wealth only",
+      "Income, education, and life expectancy",
+      "Military strength",
+      "GDP only"
+    ],
+    "a": 1,
+    "em": "📊",
+    "et": "HDI: Human Development Index — composite of income, education, life expectancy."
+  },
+  {
+    "q": "Day Zero in Cape Town (2018) nearly happened because:",
+    "opts": [
+      "Flooding",
+      "Dam levels fell to 13.5%",
+      "Industrial pollution",
+      "River diversion"
+    ],
+    "a": 1,
+    "em": "💧",
+    "et": "Cape Town's dams nearly ran dry at 13.5% capacity — averted by extreme restrictions."
+  },
+  {
+    "q": "The Drakensberg escarpment runs along:",
+    "opts": [
+      "Western SA",
+      "Eastern SA",
+      "Northern border",
+      "Southern coast"
+    ],
+    "a": 1,
+    "em": "⛰️",
+    "et": "The Great Escarpment runs along eastern SA — separating highveld plateau from coastal plains."
+  },
+  {
+    "q": "Which gas most contributes to the greenhouse effect?",
+    "opts": [
+      "Oxygen",
+      "CO₂",
+      "Nitrogen",
+      "Hydrogen"
+    ],
+    "a": 1,
+    "em": "🌍",
+    "et": "CO₂ from burning fossil fuels is the primary greenhouse gas driver."
+  },
+  {
+    "q": "Push factors in migration:",
+    "opts": [
+      "Better job opportunities",
+      "Attractive cities",
+      "Poverty and unemployment",
+      "Good schools"
+    ],
+    "a": 2,
+    "em": "🚶",
+    "et": "Push factors drive people AWAY from an area: poverty, unemployment, conflict."
+  },
+  {
+    "q": "The Lesotho Highlands Water Project transfers water to:",
+    "opts": [
+      "Cape Town",
+      "Durban",
+      "Gauteng",
+      "Bloemfontein"
+    ],
+    "a": 2,
+    "em": "💧",
+    "et": "LHWP transfers water from Lesotho highlands to Vaal Dam — supplying Gauteng."
+  },
+  {
+    "q": "A mesa is:",
+    "opts": [
+      "A river delta",
+      "A flat-topped hill with steep sides",
+      "A coastal bay",
+      "A mountain range"
+    ],
+    "a": 1,
+    "em": "⛰️",
+    "et": "Mesa: isolated flat-topped landform with resistant cap rock protecting softer rock below."
+  },
+  {
+    "q": "Global warming is primarily caused by:",
+    "opts": [
+      "Natural climate cycles only",
+      "Burning fossil fuels",
+      "Volcanic eruptions",
+      "Solar flares"
+    ],
+    "a": 1,
+    "em": "🌍",
+    "et": "Burning coal, oil, and gas releases CO₂ — the primary driver of anthropogenic warming."
+  },
+  {
+    "q": "Plate tectonics theory explains:",
+    "opts": [
+      "Weather patterns",
+      "River formation",
+      "Mountain building and earthquakes",
+      "Soil erosion"
+    ],
+    "a": 2,
+    "em": "🌍",
+    "et": "Tectonic plates move — collisions build mountains, separations form rift valleys."
+  },
+  {
+    "q": "South Africa has _____ official languages:",
+    "opts": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "a": 2,
+    "em": "🇿🇦",
+    "et": "SA has 11 official languages — the most of any country in Africa."
+  }
+]

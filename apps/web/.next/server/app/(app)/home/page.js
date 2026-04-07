@@ -19,9 +19,89 @@ exports.modules = {
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var map = {
+	"./accounting.json": [
+		"(ssr)/./content/courses/accounting.json",
+		"_ssr_content_courses_accounting_json"
+	],
+	"./adv_mech.json": [
+		"(ssr)/./content/courses/adv_mech.json",
+		"_ssr_content_courses_adv_mech_json"
+	],
+	"./afrikaans.json": [
+		"(ssr)/./content/courses/afrikaans.json",
+		"_ssr_content_courses_afrikaans_json"
+	],
+	"./arts.json": [
+		"(ssr)/./content/courses/arts.json",
+		"_ssr_content_courses_arts_json"
+	],
+	"./business.json": [
+		"(ssr)/./content/courses/business.json",
+		"_ssr_content_courses_business_json"
+	],
+	"./cat.json": [
+		"(ssr)/./content/courses/cat.json",
+		"_ssr_content_courses_cat_json"
+	],
+	"./consumer.json": [
+		"(ssr)/./content/courses/consumer.json",
+		"_ssr_content_courses_consumer_json"
+	],
+	"./economics.json": [
+		"(ssr)/./content/courses/economics.json",
+		"_ssr_content_courses_economics_json"
+	],
+	"./english_hl.json": [
+		"(ssr)/./content/courses/english_hl.json",
+		"_ssr_content_courses_english_hl_json"
+	],
+	"./geography.json": [
+		"(ssr)/./content/courses/geography.json",
+		"_ssr_content_courses_geography_json"
+	],
+	"./history.json": [
+		"(ssr)/./content/courses/history.json",
+		"_ssr_content_courses_history_json"
+	],
+	"./isizulu.json": [
+		"(ssr)/./content/courses/isizulu.json",
+		"_ssr_content_courses_isizulu_json"
+	],
+	"./lifeori.json": [
+		"(ssr)/./content/courses/lifeori.json",
+		"_ssr_content_courses_lifeori_json"
+	],
+	"./lifesci.json": [
+		"(ssr)/./content/courses/lifesci.json",
+		"_ssr_content_courses_lifesci_json"
+	],
 	"./math.json": [
 		"(ssr)/./content/courses/math.json",
 		"_ssr_content_courses_math_json"
+	],
+	"./math_lit.json": [
+		"(ssr)/./content/courses/math_lit.json",
+		"_ssr_content_courses_math_lit_json"
+	],
+	"./music.json": [
+		"(ssr)/./content/courses/music.json",
+		"_ssr_content_courses_music_json"
+	],
+	"./nautical.json": [
+		"(ssr)/./content/courses/nautical.json",
+		"_ssr_content_courses_nautical_json"
+	],
+	"./science.json": [
+		"(ssr)/./content/courses/science.json",
+		"_ssr_content_courses_science_json"
+	],
+	"./technology.json": [
+		"(ssr)/./content/courses/technology.json",
+		"_ssr_content_courses_technology_json"
+	],
+	"./webprog.json": [
+		"(ssr)/./content/courses/webprog.json",
+		"_ssr_content_courses_webprog_json"
 	]
 };
 function webpackAsyncContext(req) {
@@ -48,21 +128,91 @@ module.exports = webpackAsyncContext;
 /*!*************************************************************!*\
   !*** ./content/qbank/ lazy ^\.\/.*\.json$ namespace object ***!
   \*************************************************************/
-/***/ ((module) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-function webpackEmptyAsyncContext(req) {
-	// Here Promise.resolve().then() is used instead of new Promise() to prevent
-	// uncaught exception popping up in devtools
-	return Promise.resolve().then(() => {
-		var e = new Error("Cannot find module '" + req + "'");
-		e.code = 'MODULE_NOT_FOUND';
-		throw e;
+var map = {
+	"./accounting.json": [
+		"(ssr)/./content/qbank/accounting.json",
+		"_ssr_content_qbank_accounting_json"
+	],
+	"./adv_mech.json": [
+		"(ssr)/./content/qbank/adv_mech.json",
+		"_ssr_content_qbank_adv_mech_json"
+	],
+	"./business.json": [
+		"(ssr)/./content/qbank/business.json",
+		"_ssr_content_qbank_business_json"
+	],
+	"./cat.json": [
+		"(ssr)/./content/qbank/cat.json",
+		"_ssr_content_qbank_cat_json"
+	],
+	"./consumer.json": [
+		"(ssr)/./content/qbank/consumer.json",
+		"_ssr_content_qbank_consumer_json"
+	],
+	"./economics.json": [
+		"(ssr)/./content/qbank/economics.json",
+		"_ssr_content_qbank_economics_json"
+	],
+	"./english_hl.json": [
+		"(ssr)/./content/qbank/english_hl.json",
+		"_ssr_content_qbank_english_hl_json"
+	],
+	"./geography.json": [
+		"(ssr)/./content/qbank/geography.json",
+		"_ssr_content_qbank_geography_json"
+	],
+	"./history.json": [
+		"(ssr)/./content/qbank/history.json",
+		"_ssr_content_qbank_history_json"
+	],
+	"./lifeori.json": [
+		"(ssr)/./content/qbank/lifeori.json",
+		"_ssr_content_qbank_lifeori_json"
+	],
+	"./lifesci.json": [
+		"(ssr)/./content/qbank/lifesci.json",
+		"_ssr_content_qbank_lifesci_json"
+	],
+	"./math.json": [
+		"(ssr)/./content/qbank/math.json",
+		"_ssr_content_qbank_math_json"
+	],
+	"./music.json": [
+		"(ssr)/./content/qbank/music.json",
+		"_ssr_content_qbank_music_json"
+	],
+	"./nautical.json": [
+		"(ssr)/./content/qbank/nautical.json",
+		"_ssr_content_qbank_nautical_json"
+	],
+	"./science.json": [
+		"(ssr)/./content/qbank/science.json",
+		"_ssr_content_qbank_science_json"
+	],
+	"./webprog.json": [
+		"(ssr)/./content/qbank/webprog.json",
+		"_ssr_content_qbank_webprog_json"
+	]
+};
+function webpackAsyncContext(req) {
+	if(!__webpack_require__.o(map, req)) {
+		return Promise.resolve().then(() => {
+			var e = new Error("Cannot find module '" + req + "'");
+			e.code = 'MODULE_NOT_FOUND';
+			throw e;
+		});
+	}
+
+	var ids = map[req], id = ids[0];
+	return __webpack_require__.e(ids[1]).then(() => {
+		return __webpack_require__.t(id, 3 | 16);
 	});
 }
-webpackEmptyAsyncContext.keys = () => ([]);
-webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = "(ssr)/./content/qbank lazy recursive ^\\.\\/.*\\.json$";
-module.exports = webpackEmptyAsyncContext;
+webpackAsyncContext.keys = () => (Object.keys(map));
+webpackAsyncContext.id = "(ssr)/./content/qbank lazy recursive ^\\.\\/.*\\.json$";
+module.exports = webpackAsyncContext;
 
 /***/ }),
 

@@ -1,0 +1,122 @@
+[
+  {
+    "q": "Thread depth for metric V-thread ≈",
+    "opts": [
+      "0.5 × pitch",
+      "0.6 × pitch",
+      "1.0 × pitch",
+      "1.5 × pitch"
+    ],
+    "a": 1,
+    "em": "🔩",
+    "et": "Practical: depth ≈ 0.6 × pitch. Exact: 0.6495 × pitch."
+  },
+  {
+    "q": "DRO displays:",
+    "opts": [
+      "Workpiece hardness",
+      "Axis position coordinates",
+      "Spindle speed",
+      "Coolant temp"
+    ],
+    "a": 1,
+    "em": "🔧",
+    "et": "DRO=Digital Readout — axis position to 0.001mm."
+  },
+  {
+    "q": "Young's Modulus E=",
+    "opts": [
+      "Strain÷stress",
+      "Stress÷strain",
+      "Force÷area",
+      "Length÷extension"
+    ],
+    "a": 1,
+    "em": "⚙️",
+    "et": "E=σ/ε. For steel: E≈200GPa."
+  },
+  {
+    "q": "Star-delta starter:",
+    "opts": [
+      "Increases starting current",
+      "Reduces starting current to ~1/3",
+      "Doubles voltage",
+      "Has no effect on current"
+    ],
+    "a": 1,
+    "em": "⚡",
+    "et": "Star-delta reduces starting current to approximately 1/3 of DOL."
+  },
+  {
+    "q": "VSD controls motor speed by varying:",
+    "opts": [
+      "Voltage only",
+      "Current only",
+      "Supply frequency",
+      "Resistance"
+    ],
+    "a": 2,
+    "em": "🔌",
+    "et": "VSD: Variable Speed Drive changes supply frequency to control motor speed."
+  },
+  {
+    "q": "Pascal's Law: pressure in a fluid is:",
+    "opts": [
+      "Zero at centre",
+      "Greatest at top",
+      "Transmitted equally in all directions",
+      "Reduced with depth"
+    ],
+    "a": 2,
+    "em": "💧",
+    "et": "Pascal's Law: pressure transmits equally throughout confined fluid."
+  },
+  {
+    "q": "Vibration analysis detects:",
+    "opts": [
+      "Fluid leaks",
+      "Electrical shorts",
+      "Bearing wear & misalignment",
+      "PLC faults"
+    ],
+    "a": 2,
+    "em": "📊",
+    "et": "Vibration analysis detects bearing defects, misalignment, imbalance."
+  },
+  {
+    "q": "Normally open PLC contact symbol:",
+    "opts": [
+      "–]/[–",
+      "–] [–",
+      "–( )–",
+      "–[ ]–"
+    ],
+    "a": 1,
+    "em": "💻",
+    "et": "–] [– = normally open contact. Closes when coil energised."
+  },
+  {
+    "q": "Dye penetrant testing detects:",
+    "opts": [
+      "Internal voids",
+      "Surface-breaking cracks",
+      "Magnetic defects",
+      "Density variations"
+    ],
+    "a": 1,
+    "em": "🔍",
+    "et": "PT detects surface-breaking cracks by capillary action of dye."
+  },
+  {
+    "q": "Systematic fault-finding first step:",
+    "opts": [
+      "Replace parts",
+      "Test circuits",
+      "Gather information & symptoms",
+      "Switch off power"
+    ],
+    "a": 2,
+    "em": "🔧",
+    "et": "Always start: gather info — what are symptoms? When did it start? What changed?"
+  }
+]

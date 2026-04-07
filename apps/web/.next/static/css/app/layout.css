@@ -527,6 +527,9 @@ video {
 .sticky {
   position: sticky;
 }
+.block {
+  display: block;
+}
 .flex {
   display: flex;
 }
@@ -539,9 +542,15 @@ video {
 .border {
   border-width: 1px;
 }
+.uppercase {
+  text-transform: uppercase;
+}
 .antialiased {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.outline {
+  outline-style: solid;
 }
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);

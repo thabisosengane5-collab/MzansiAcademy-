@@ -1,0 +1,302 @@
+[
+  {
+    "q": "Apartheid formally began in:",
+    "opts": [
+      "1910",
+      "1948",
+      "1960",
+      "1976"
+    ],
+    "a": 1,
+    "em": "🏛️",
+    "et": "NP won 1948 election on apartheid platform."
+  },
+  {
+    "q": "Sharpeville Massacre:",
+    "opts": [
+      "21 Mar 1960",
+      "16 Jun 1976",
+      "11 Feb 1990",
+      "27 Apr 1994"
+    ],
+    "a": 0,
+    "em": "✊",
+    "et": "21 March 1960 — 69 protesters killed. Now Human Rights Day."
+  },
+  {
+    "q": "Freedom Charter adopted in:",
+    "opts": [
+      "1912",
+      "1944",
+      "1955",
+      "1960"
+    ],
+    "a": 2,
+    "em": "📜",
+    "et": "Adopted at Kliptown, 26 June 1955."
+  },
+  {
+    "q": "Mandela released from prison:",
+    "opts": [
+      "2 Feb 1990",
+      "11 Feb 1990",
+      "27 Apr 1994",
+      "1 Jun 1989"
+    ],
+    "a": 1,
+    "em": "🕊️",
+    "et": "11 February 1990 — after 27 years."
+  },
+  {
+    "q": "First democratic SA elections:",
+    "opts": [
+      "1990",
+      "1992",
+      "1994",
+      "1996"
+    ],
+    "a": 2,
+    "em": "🗳️",
+    "et": "27 April 1994 — now Freedom Day."
+  },
+  {
+    "q": "TRC was chaired by:",
+    "opts": [
+      "Mandela",
+      "Mbeki",
+      "Desmond Tutu",
+      "Sisulu"
+    ],
+    "a": 2,
+    "em": "🕊️",
+    "et": "Archbishop Desmond Tutu chaired the TRC 1996–1998."
+  },
+  {
+    "q": "\"Apartheid\" means:",
+    "opts": [
+      "Freedom",
+      "Separateness",
+      "Justice",
+      "Unity"
+    ],
+    "a": 1,
+    "em": "🇿🇦",
+    "et": "Apartheid = \"separateness\" in Afrikaans."
+  },
+  {
+    "q": "Soweto Uprising triggered by:",
+    "opts": [
+      "Food shortages",
+      "Afrikaans instruction",
+      "Pass law arrests",
+      "ANC banning"
+    ],
+    "a": 1,
+    "em": "✊",
+    "et": "16 June 1976 — students marched against Afrikaans."
+  },
+  {
+    "q": "Bantu Education Act passed:",
+    "opts": [
+      "1948",
+      "1950",
+      "1953",
+      "1960"
+    ],
+    "a": 2,
+    "em": "📚",
+    "et": "1953 — deliberately inferior education for Black learners."
+  },
+  {
+    "q": "MK (Umkhonto we Sizwe) was:",
+    "opts": [
+      "A party",
+      "ANC armed wing",
+      "A trade union",
+      "A student body"
+    ],
+    "a": 1,
+    "em": "✊",
+    "et": "Spear of the Nation — ANC armed wing, formed 1961."
+  },
+  {
+    "q": "The Union of South Africa was formed in:",
+    "opts": [
+      "1900",
+      "1910",
+      "1920",
+      "1948"
+    ],
+    "a": 1,
+    "em": "🇿🇦",
+    "et": "1910 — four colonies united: Cape, Natal, Transvaal, OFS."
+  },
+  {
+    "q": "Nelson Mandela's political party:",
+    "opts": [
+      "PAC",
+      "AZAPO",
+      "ANC",
+      "IFP"
+    ],
+    "a": 2,
+    "em": "🇿🇦",
+    "et": "ANC — African National Congress, founded 1912."
+  },
+  {
+    "q": "Pass laws required Black South Africans to:",
+    "opts": [
+      "Pay extra taxes",
+      "Carry identity documents at all times",
+      "Attend separate schools",
+      "Vote in separate elections"
+    ],
+    "a": 1,
+    "em": "📄",
+    "et": "Passbooks: Black South Africans had to carry documents showing work permits."
+  },
+  {
+    "q": "The CODESA negotiations were about:",
+    "opts": [
+      "Economic reform",
+      "Transitioning to democracy",
+      "War reparations",
+      "Land redistribution"
+    ],
+    "a": 1,
+    "em": "🤝",
+    "et": "CODESA 1991-93: Convention for a Democratic South Africa — negotiating transition."
+  },
+  {
+    "q": "Winnie Mandela was associated with:",
+    "opts": [
+      "Treason Trial",
+      "Soweto Uprisings",
+      "Anti-apartheid activism",
+      "Both B and C"
+    ],
+    "a": 3,
+    "em": "✊",
+    "et": "Winnie Mandela was a prominent anti-apartheid activist."
+  },
+  {
+    "q": "The Group Areas Act of 1950 did what?",
+    "opts": [
+      "Banned political parties",
+      "Separated residential areas by race",
+      "Created bantustans",
+      "Introduced pass laws"
+    ],
+    "a": 1,
+    "em": "🏘️",
+    "et": "Group Areas Act: forced racial separation of residential areas — led to mass removals."
+  },
+  {
+    "q": "Steve Biko was the leader of:",
+    "opts": [
+      "ANC",
+      "PAC",
+      "Black Consciousness Movement",
+      "SACP"
+    ],
+    "a": 2,
+    "em": "✊",
+    "et": "Steve Biko: Black Consciousness Movement — died in police custody 1977."
+  },
+  {
+    "q": "The Defiance Campaign of 1952 was:",
+    "opts": [
+      "A military uprising",
+      "Non-violent civil disobedience",
+      "Armed resistance",
+      "Economic boycott"
+    ],
+    "a": 1,
+    "em": "✊",
+    "et": "The Defiance Campaign: ANC-led non-violent protest against apartheid laws."
+  },
+  {
+    "q": "When did the Berlin Wall fall?",
+    "opts": [
+      "1985",
+      "1987",
+      "1989",
+      "1991"
+    ],
+    "a": 2,
+    "em": "🧱",
+    "et": "9 November 1989 — symbolising the end of the Cold War."
+  },
+  {
+    "q": "Mapungubwe was:",
+    "opts": [
+      "An apartheid law",
+      "An ancient SA kingdom",
+      "A homeland",
+      "A resistance movement"
+    ],
+    "a": 1,
+    "em": "👑",
+    "et": "Mapungubwe: ancient African kingdom (900–1300 CE) at SA/Botswana/Zimbabwe border."
+  },
+  {
+    "q": "The African National Congress was founded in:",
+    "opts": [
+      "1900",
+      "1910",
+      "1912",
+      "1920"
+    ],
+    "a": 2,
+    "em": "🇿🇦",
+    "et": "ANC founded January 8, 1912 in Bloemfontein as SANNC."
+  },
+  {
+    "q": "CODESA stands for:",
+    "opts": [
+      "Congress of Democratic SA",
+      "Convention for a Democratic SA",
+      "Council of Democratic Societies",
+      "Committee of Democratic Action"
+    ],
+    "a": 1,
+    "em": "🤝",
+    "et": "Convention for a Democratic South Africa — multi-party negotiations 1991-1993."
+  },
+  {
+    "q": "The TRC stood for:",
+    "opts": [
+      "Transitional Reconciliation Committee",
+      "Truth and Reconciliation Commission",
+      "Trade and Resource Council",
+      "Territorial Rights Committee"
+    ],
+    "a": 1,
+    "em": "🕊️",
+    "et": "Truth and Reconciliation Commission — chaired by Desmond Tutu, 1996-1998."
+  },
+  {
+    "q": "Nelson Mandela was imprisoned on:",
+    "opts": [
+      "Robben Island",
+      "Victor Verster",
+      "Pollsmoor",
+      "All three"
+    ],
+    "a": 3,
+    "em": "🔒",
+    "et": "Mandela was held at Robben Island, Pollsmoor Prison, and Victor Verster Prison."
+  },
+  {
+    "q": "The Freedom Charter begins: \"South Africa belongs to...\"",
+    "opts": [
+      "The ANC",
+      "The people who built it",
+      "All who live in it",
+      "The oppressed"
+    ],
+    "a": 2,
+    "em": "📜",
+    "et": "\"South Africa belongs to all who live in it, black and white.\" — Freedom Charter, 1955."
+  }
+]

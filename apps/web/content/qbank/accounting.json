@@ -1,0 +1,182 @@
+[
+  {
+    "q": "The accounting equation is:",
+    "opts": [
+      "Assets=Liabilities+Equity",
+      "Assets=Revenue−Expenses",
+      "Profit=Revenue+Costs",
+      "Equity=Assets+Liabilities"
+    ],
+    "a": 0,
+    "em": "📒",
+    "et": "Assets=Liabilities+Owner's Equity — the foundation of all accounting."
+  },
+  {
+    "q": "Debit means:",
+    "opts": [
+      "Money received",
+      "Left side of T-account",
+      "Money owed",
+      "Bank balance"
+    ],
+    "a": 1,
+    "em": "📒",
+    "et": "Debit = left side of T-account. Increases assets and expenses."
+  },
+  {
+    "q": "Gross profit =",
+    "opts": [
+      "Revenue−Operating costs",
+      "Revenue−Cost of sales",
+      "Net profit+Tax",
+      "Revenue+Expenses"
+    ],
+    "a": 1,
+    "em": "💰",
+    "et": "Gross profit=Revenue−Cost of Sales. Before operating expenses."
+  },
+  {
+    "q": "Depreciation is:",
+    "opts": [
+      "Increase in asset value",
+      "Decrease in asset value over time",
+      "Cash payment",
+      "A liability"
+    ],
+    "a": 1,
+    "em": "📉",
+    "et": "Depreciation: systematic decrease in asset value over useful life."
+  },
+  {
+    "q": "A creditor is someone who:",
+    "opts": [
+      "Owes you money",
+      "You owe money to",
+      "Has no financial dealings",
+      "Is a bank"
+    ],
+    "a": 1,
+    "em": "💳",
+    "et": "Creditor: person/business you OWE money to (accounts payable)."
+  },
+  {
+    "q": "The balance sheet shows:",
+    "opts": [
+      "Profit and loss",
+      "Assets, liabilities, and equity at a point in time",
+      "Cash flow",
+      "Revenue only"
+    ],
+    "a": 1,
+    "em": "📊",
+    "et": "Balance sheet = snapshot of financial position at a specific date."
+  },
+  {
+    "q": "VAT in South Africa is currently:",
+    "opts": [
+      "10%",
+      "14%",
+      "15%",
+      "20%"
+    ],
+    "a": 2,
+    "em": "🧾",
+    "et": "SA VAT = 15% (increased from 14% in April 2018)."
+  },
+  {
+    "q": "A debtor is:",
+    "opts": [
+      "Someone you owe money to",
+      "Someone who owes money to you",
+      "A bank",
+      "A supplier"
+    ],
+    "a": 1,
+    "em": "💳",
+    "et": "Debtor: someone who OWES you money (accounts receivable)."
+  },
+  {
+    "q": "Net profit =",
+    "opts": [
+      "Gross profit+Expenses",
+      "Gross profit−Expenses",
+      "Revenue−Cost of sales",
+      "Total assets−Liabilities"
+    ],
+    "a": 1,
+    "em": "💰",
+    "et": "Net profit=Gross profit−All operating expenses."
+  },
+  {
+    "q": "GAAP stands for:",
+    "opts": [
+      "Generally Accepted Accounting Principles",
+      "Government Accounting and Auditing Practice",
+      "Global Allocation of Accounting Procedures",
+      "Gross Asset Adjustment Protocol"
+    ],
+    "a": 0,
+    "em": "📚",
+    "et": "GAAP: Generally Accepted Accounting Principles — standard accounting rules."
+  },
+  {
+    "q": "The current ratio measures:",
+    "opts": [
+      "Profitability",
+      "Short-term liquidity",
+      "Asset turnover",
+      "Long-term solvency"
+    ],
+    "a": 1,
+    "em": "📊",
+    "et": "Current ratio=Current Assets÷Current Liabilities. Measures ability to pay short-term debts."
+  },
+  {
+    "q": "Fixed assets are:",
+    "opts": [
+      "Cash in bank",
+      "Assets held for long-term use",
+      "Stock on hand",
+      "Money owed to you"
+    ],
+    "a": 1,
+    "em": "🏭",
+    "et": "Fixed assets: land, buildings, machinery — held for long-term business use."
+  },
+  {
+    "q": "Petty cash is used for:",
+    "opts": [
+      "Large purchases",
+      "Small day-to-day expenses",
+      "Paying salaries",
+      "Bank deposits"
+    ],
+    "a": 1,
+    "em": "💵",
+    "et": "Petty cash: small amounts for minor expenses like stationery, postage, tea."
+  },
+  {
+    "q": "Retained earnings are:",
+    "opts": [
+      "Loans from the bank",
+      "Profits kept in the business",
+      "Owner's drawings",
+      "Tax paid"
+    ],
+    "a": 1,
+    "em": "📊",
+    "et": "Retained earnings: profits reinvested in the business rather than paid as dividends."
+  },
+  {
+    "q": "Double-entry bookkeeping means:",
+    "opts": [
+      "Writing entries twice",
+      "Every debit has an equal credit",
+      "Using two accountants",
+      "Keeping two sets of books"
+    ],
+    "a": 1,
+    "em": "📒",
+    "et": "Double entry: every transaction has equal debit and credit entries. Keeps books balanced."
+  }
+]

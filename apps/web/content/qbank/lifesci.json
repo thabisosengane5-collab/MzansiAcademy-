@@ -1,0 +1,302 @@
+[
+  {
+    "q": "DNA base pairing: Adenine pairs with:",
+    "opts": [
+      "Guanine",
+      "Cytosine",
+      "Thymine",
+      "Uracil"
+    ],
+    "a": 2,
+    "em": "🧬",
+    "et": "In DNA: A-T (2 H-bonds), G-C (3 H-bonds)."
+  },
+  {
+    "q": "Mitosis produces:",
+    "opts": [
+      "2 haploid cells",
+      "4 diploid cells",
+      "2 diploid cells",
+      "4 haploid cells"
+    ],
+    "a": 2,
+    "em": "🔬",
+    "et": "Mitosis: 2 genetically identical diploid daughter cells."
+  },
+  {
+    "q": "Photosynthesis products:",
+    "opts": [
+      "CO₂ only",
+      "Glucose + O₂",
+      "CO₂ + O₂",
+      "H₂O + CO₂"
+    ],
+    "a": 1,
+    "em": "🌿",
+    "et": "6CO₂+6H₂O+light→C₆H₁₂O₆+6O₂."
+  },
+  {
+    "q": "ATP is produced in:",
+    "opts": [
+      "Nucleus",
+      "Ribosome",
+      "Mitochondria",
+      "Chloroplast"
+    ],
+    "a": 2,
+    "em": "🔬",
+    "et": "Mitochondria = powerhouse of the cell. ATP via aerobic respiration."
+  },
+  {
+    "q": "Enzymes are biological:",
+    "opts": [
+      "Carbohydrates",
+      "Lipids",
+      "Protein catalysts",
+      "Nucleic acids"
+    ],
+    "a": 2,
+    "em": "🧪",
+    "et": "Enzymes are proteins that catalyse biochemical reactions."
+  },
+  {
+    "q": "Energy transfer between trophic levels ≈",
+    "opts": [
+      "100%",
+      "50%",
+      "10%",
+      "1%"
+    ],
+    "a": 2,
+    "em": "🌱",
+    "et": "~10% of energy passes to next trophic level."
+  },
+  {
+    "q": "Natural selection favours organisms that are:",
+    "opts": [
+      "Largest",
+      "Most offspring",
+      "Best adapted",
+      "Longest lived"
+    ],
+    "a": 2,
+    "em": "🦁",
+    "et": "Darwin: best adapted survive and reproduce."
+  },
+  {
+    "q": "Xylem transports:",
+    "opts": [
+      "Sugars",
+      "Water & minerals",
+      "Hormones",
+      "Oxygen"
+    ],
+    "a": 1,
+    "em": "🌿",
+    "et": "Xylem: water and minerals from roots upward."
+  },
+  {
+    "q": "Cradle of Humankind is in:",
+    "opts": [
+      "Western Cape",
+      "Gauteng",
+      "KwaZulu-Natal",
+      "Limpopo"
+    ],
+    "a": 1,
+    "em": "🦴",
+    "et": "UNESCO World Heritage Site in Gauteng — richest hominid fossil site."
+  },
+  {
+    "q": "Function of stomata:",
+    "opts": [
+      "Photosynthesis",
+      "Gas exchange",
+      "Water absorption",
+      "Support"
+    ],
+    "a": 1,
+    "em": "🌿",
+    "et": "Stomata allow CO₂ in, O₂ out, and water vapour out."
+  },
+  {
+    "q": "Heterozygous organism has:",
+    "opts": [
+      "Two identical alleles",
+      "Two different alleles",
+      "No alleles",
+      "Only recessives"
+    ],
+    "a": 1,
+    "em": "🧬",
+    "et": "Heterozygous=two different alleles (e.g. Bb)."
+  },
+  {
+    "q": "Meiosis produces:",
+    "opts": [
+      "2 diploid cells",
+      "4 diploid cells",
+      "2 haploid cells",
+      "4 haploid cells"
+    ],
+    "a": 3,
+    "em": "🔬",
+    "et": "Meiosis: 4 haploid cells for gamete formation."
+  },
+  {
+    "q": "The green pigment in plants is:",
+    "opts": [
+      "Carotene",
+      "Chlorophyll",
+      "Haemoglobin",
+      "Melanin"
+    ],
+    "a": 1,
+    "em": "🌿",
+    "et": "Chlorophyll absorbs light energy for photosynthesis."
+  },
+  {
+    "q": "Which organ filters blood in humans?",
+    "opts": [
+      "Liver",
+      "Lungs",
+      "Kidneys",
+      "Heart"
+    ],
+    "a": 2,
+    "em": "🫁",
+    "et": "Kidneys filter 180L of blood daily, producing ~1.5L of urine."
+  },
+  {
+    "q": "Transpiration is:",
+    "opts": [
+      "Water absorption by roots",
+      "Evaporation of water from leaves",
+      "Photosynthesis at night",
+      "Glucose transport"
+    ],
+    "a": 1,
+    "em": "🌿",
+    "et": "Transpiration: evaporation of water from leaf surfaces through stomata."
+  },
+  {
+    "q": "Which blood type is the universal donor?",
+    "opts": [
+      "A",
+      "B",
+      "AB",
+      "O negative"
+    ],
+    "a": 3,
+    "em": "🩸",
+    "et": "O negative has no A, B, or Rh antigens — safe for all recipients."
+  },
+  {
+    "q": "Biodiversity is maintained by:",
+    "opts": [
+      "Monoculture farming",
+      "Deforestation",
+      "Conservation and ecosystems",
+      "Urbanisation"
+    ],
+    "a": 2,
+    "em": "🌍",
+    "et": "Conservation protects species diversity within functioning ecosystems."
+  },
+  {
+    "q": "A food chain always begins with:",
+    "opts": [
+      "A herbivore",
+      "A carnivore",
+      "A producer (plant)",
+      "A decomposer"
+    ],
+    "a": 2,
+    "em": "🌱",
+    "et": "Producers (plants) capture solar energy — always at start of food chain."
+  },
+  {
+    "q": "Which organelle contains chlorophyll?",
+    "opts": [
+      "Mitochondria",
+      "Ribosome",
+      "Chloroplast",
+      "Vacuole"
+    ],
+    "a": 2,
+    "em": "🌿",
+    "et": "Chloroplasts contain chlorophyll and are the site of photosynthesis."
+  },
+  {
+    "q": "The theory of evolution was proposed by:",
+    "opts": [
+      "Gregor Mendel",
+      "Charles Darwin",
+      "Louis Pasteur",
+      "Isaac Newton"
+    ],
+    "a": 1,
+    "em": "🦁",
+    "et": "Charles Darwin proposed natural selection as the mechanism of evolution in 1859."
+  },
+  {
+    "q": "Diffusion is movement of molecules:",
+    "opts": [
+      "Against concentration gradient",
+      "Down concentration gradient",
+      "Using energy (ATP)",
+      "Through protein pumps only"
+    ],
+    "a": 1,
+    "em": "🔬",
+    "et": "Diffusion: passive movement from high to low concentration."
+  },
+  {
+    "q": "HIV stands for:",
+    "opts": [
+      "Human Influenza Virus",
+      "Human Immunodeficiency Virus",
+      "High Infection Virus",
+      "Hepatitis Infection Virus"
+    ],
+    "a": 1,
+    "em": "🩺",
+    "et": "HIV=Human Immunodeficiency Virus. Attacks CD4 T-cells."
+  },
+  {
+    "q": "Which nutrient provides the most energy per gram?",
+    "opts": [
+      "Carbohydrates",
+      "Protein",
+      "Fat",
+      "Fibre"
+    ],
+    "a": 2,
+    "em": "🍞",
+    "et": "Fat provides 9 kcal/g vs carbohydrates/protein at 4 kcal/g."
+  },
+  {
+    "q": "Ozone layer protects Earth from:",
+    "opts": [
+      "Infrared radiation",
+      "UV radiation",
+      "Radio waves",
+      "Cosmic rays"
+    ],
+    "a": 1,
+    "em": "🌍",
+    "et": "The ozone layer (O₃) absorbs harmful UV-B and UV-C radiation."
+  },
+  {
+    "q": "Insulin is produced by the:",
+    "opts": [
+      "Liver",
+      "Stomach",
+      "Pancreas",
+      "Kidneys"
+    ],
+    "a": 2,
+    "em": "🩺",
+    "et": "Beta cells in the pancreatic islets of Langerhans produce insulin."
+  }
+]
