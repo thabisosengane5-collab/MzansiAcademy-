@@ -1,0 +1,23 @@
+[
+  {"id":"math",       "label":"Mathematics",           "icon":"➗","color":"#00D68F"},
+  {"id":"math_lit",   "label":"Mathematical Literacy",  "icon":"📊","color":"#00C2D4"},
+  {"id":"science",    "label":"Physical Sciences",      "icon":"⚗️","color":"#3B9EFF"},
+  {"id":"lifesci",    "label":"Life Sciences",          "icon":"🧬","color":"#00D68F"},
+  {"id":"history",    "label":"History",                "icon":"📜","color":"#FFB800"},
+  {"id":"geography",  "label":"Geography",              "icon":"🌍","color":"#00C2D4"},
+  {"id":"accounting", "label":"Accounting",             "icon":"💰","color":"#FFB800"},
+  {"id":"business",   "label":"Business Studies",       "icon":"💼","color":"#FF6B35"},
+  {"id":"economics",  "label":"Economics",              "icon":"📈","color":"#00C2D4"},
+  {"id":"lifeori",    "label":"Life Orientation",       "icon":"🌱","color":"#00D68F"},
+  {"id":"english_hl", "label":"English Home Language",  "icon":"📖","color":"#7C5CFC"},
+  {"id":"afrikaans",  "label":"Afrikaans",              "icon":"🗣️","color":"#FF6B35"},
+  {"id":"isizulu",    "label":"isiZulu",                "icon":"🌿","color":"#00D68F"},
+  {"id":"technology", "label":"Technology",             "icon":"🔧","color":"#3B9EFF"},
+  {"id":"cat",        "label":"CAT",                    "icon":"💻","color":"#7C5CFC"},
+  {"id":"webprog",    "label":"Web Programming",        "icon":"🌐","color":"#6366F1"},
+  {"id":"adv_mech",   "label":"Adv Mechanical Tech",    "icon":"⚙️","color":"#FF6B35"},
+  {"id":"arts",       "label":"Visual Arts",            "icon":"🎨","color":"#A855F7"},
+  {"id":"music",      "label":"Music",                  "icon":"🎵","color":"#EC4899"},
+  {"id":"consumer",   "label":"Consumer Studies",       "icon":"🏠","color":"#F59E0B"},
+  {"id":"nautical",   "label":"Nautical Science",       "icon":"⚓","color":"#0EA5E9"}
+]

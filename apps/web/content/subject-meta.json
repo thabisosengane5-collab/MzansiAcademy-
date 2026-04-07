@@ -1,0 +1,23 @@
+{
+  "math":       {"grades":[8,9,10,11,12],"desc":"Algebra, geometry, trigonometry and calculus for SA learners."},
+  "math_lit":   {"grades":[10,11,12],    "desc":"Real-world maths for everyday life and financial decisions."},
+  "science":    {"grades":[8,9,10,11,12],"desc":"Physics and chemistry aligned to the CAPS curriculum."},
+  "lifesci":    {"grades":[8,9,10,11,12],"desc":"Biology, ecology and human physiology."},
+  "history":    {"grades":[8,9,10,11,12],"desc":"SA and world history from colonialism to democracy."},
+  "geography":  {"grades":[8,9,10,11,12],"desc":"Physical and human geography with SA focus."},
+  "accounting": {"grades":[8,9,10,11,12],"desc":"Financial statements, bookkeeping and business accounting."},
+  "business":   {"grades":[10,11,12],    "desc":"Entrepreneurship, business functions and management."},
+  "economics":  {"grades":[10,11,12],    "desc":"Micro and macroeconomics in the South African context."},
+  "lifeori":    {"grades":[8,9,10,11,12],"desc":"Personal development, health and civic education."},
+  "english_hl": {"grades":[8,9,10,11,12],"desc":"Language, literature and communication skills."},
+  "afrikaans":  {"grades":[8,9,10,11,12],"desc":"Taal, letterkunde en kommunikasie."},
+  "isizulu":    {"grades":[8,9,10,11,12],"desc":"Ulimi, imibhalo kanye nokuxhumana."},
+  "technology": {"grades":[8,9],         "desc":"Design, systems and technological processes."},
+  "cat":        {"grades":[10,11,12],    "desc":"Computer Applications Technology — Office and internet skills."},
+  "webprog":    {"grades":[10,11,12],    "desc":"HTML, CSS, JavaScript and web development projects."},
+  "adv_mech":   {"grades":[10,11,12],    "desc":"Advanced mechanical technology and engineering systems."},
+  "arts":       {"grades":[8,9,10,11,12],"desc":"Drawing, painting, design and visual culture."},
+  "music":      {"grades":[8,9,10,11,12],"desc":"Music theory, performance and SA musical heritage."},
+  "consumer":   {"grades":[10,11,12],    "desc":"Food, clothing, housing and consumer rights."},
+  "nautical":   {"grades":[10,11,12],    "desc":"Navigation, seamanship and maritime studies."}
+}

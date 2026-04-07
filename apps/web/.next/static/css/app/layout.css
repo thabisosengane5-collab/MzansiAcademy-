@@ -1,3 +1,29 @@
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[3].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[14].oneOf[3].use[2]!./node_modules/next/font/local/target.css?{"path":"app/layout.tsx","import":"","arguments":[{"src":"./fonts/GeistVF.woff","variable":"--font-geist-sans","weight":"100 900"}],"variableName":"geistSans"} ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+@font-face {
+font-family: '__geistSans_1e4310';
+src: url(/_next/static/media/4473ecc91f70f139-s.p.woff) format('woff');
+font-display: swap;
+font-weight: 100 900;
+}@font-face {font-family: '__geistSans_Fallback_1e4310';src: local("Arial");ascent-override: 85.83%;descent-override: 20.52%;line-gap-override: 9.33%;size-adjust: 107.19%
+}.__className_1e4310 {font-family: '__geistSans_1e4310', '__geistSans_Fallback_1e4310'
+}.__variable_1e4310 {--font-geist-sans: '__geistSans_1e4310', '__geistSans_Fallback_1e4310'
+}
+
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[3].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[14].oneOf[3].use[2]!./node_modules/next/font/local/target.css?{"path":"app/layout.tsx","import":"","arguments":[{"src":"./fonts/GeistMonoVF.woff","variable":"--font-geist-mono","weight":"100 900"}],"variableName":"geistMono"} ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+@font-face {
+font-family: '__geistMono_c3aa02';
+src: url(/_next/static/media/463dafcda517f24f-s.p.woff) format('woff');
+font-display: swap;
+font-weight: 100 900;
+}@font-face {font-family: '__geistMono_Fallback_c3aa02';src: local("Arial");ascent-override: 69.97%;descent-override: 16.73%;line-gap-override: 7.61%;size-adjust: 131.49%
+}.__className_c3aa02 {font-family: '__geistMono_c3aa02', '__geistMono_Fallback_c3aa02'
+}.__variable_c3aa02 {--font-geist-mono: '__geistMono_c3aa02', '__geistMono_Fallback_c3aa02'
+}
+
 /*!*************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css ***!
   \*************************************************************************************************************************************************************************************************************************************************************/
@@ -498,20 +524,21 @@ video {
 .fixed {
   position: fixed;
 }
-.block {
-  display: block;
-}
 .flex {
   display: flex;
 }
-.hidden {
-  display: none;
+.grid {
+  display: grid;
 }
 .border {
   border-width: 1px;
 }
-.outline {
-  outline-style: solid;
+.antialiased {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 .transition {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -519,55 +546,21 @@ video {
   transition-duration: 150ms;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;600;700&display=swap');
-
 :root {
-  --dna-green:  #00D68F;
-  --dna-teal:   #00C2D4;
-  --dna-gold:   #FFB800;
-  --dna-orange: #FF6B35;
-  --dna-purple: #7C5CFC;
-  --dna-red:    #FF4757;
-  --dna-blue:   #3B9EFF;
-  --bg-root:  #080D1A;
-  --bg-1:     #0D1424;
-  --bg-2:     #111B2E;
-  --bg-3:     #162038;
-  --bg-4:     #1E2D47;
-  --bg-5:     #243558;
-  --surface:  #0F1929;
-  --border:      rgba(255,255,255,0.07);
-  --border-2:    rgba(255,255,255,0.12);
-  --border-glow: rgba(0,214,143,0.25);
-  --txt:   #F0F4FF;
-  --txt-2: #A8B8D8;
-  --txt-3: #5A7099;
-  --txt-4: #2E4066;
-  --font:  'Plus Jakarta Sans', sans-serif;
-  --serif: 'Fraunces', Georgia, serif;
-  --mono:  'JetBrains Mono', monospace;
-  --nav-h:      60px;
-  --bottom-nav: 68px;
-  --radius:     16px;
-  --radius-sm:  10px;
-  --radius-lg:  24px;
-  --shadow:     0 4px 24px rgba(0,0,0,0.4);
-  --shadow-lg:  0 8px 48px rgba(0,0,0,0.6);
-  --glow-green: 0 0 32px rgba(0,214,143,0.2);
-  --glow-gold:  0 0 32px rgba(255,184,0,0.2);
+  --background: #ffffff;
+  --foreground: #171717;
 }
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent;}
-body{font-family:var(--font);background:var(--bg-root);color:var(--txt);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-track{background:var(--bg-1);}
-::-webkit-scrollbar-thumb{background:var(--bg-5);border-radius:2px;}
-::-webkit-scrollbar-thumb:hover{background:var(--dna-green);}
-h1,h2,h3{font-family:var(--serif);line-height:1.15;letter-spacing:-0.02em;}
-p{line-height:1.75;color:var(--txt-2);}
-a{color:var(--dna-green);text-decoration:none;}
-strong{color:var(--txt);font-weight:700;}
-code{font-family:var(--mono);font-size:0.85em;background:var(--bg-4);padding:2px 7px;border-radius:5px;color:var(--dna-teal);}
-.grad-text{background:linear-gradient(135deg,var(--dna-green),var(--dna-teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.grad-text-gold{background:linear-gradient(135deg,var(--dna-gold),var(--dna-orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
 

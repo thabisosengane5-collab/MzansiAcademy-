@@ -1,0 +1,85 @@
+{
+  "id": "math",
+  "title": "Mathematics",
+  "icon": "➗",
+  "color": "#00D68F",
+  "modules": [
+    {
+      "id": "m0",
+      "title": "Algebra & Functions",
+      "icon": "📐",
+      "topics": [
+        {
+          "title": "Solving Linear Equations",
+          "emoji": "🎯",
+          "subtitle": "The foundation of all algebra",
+          "intro": "A <strong>linear equation</strong> has one variable raised to the power of 1. Solving it means finding the value that makes the equation true.",
+          "concepts": [
+            {
+              "type": "green",
+              "title": "🔑 The Golden Rule",
+              "body": "Whatever you do to one side of the equation, you <strong>must do to the other side</strong>. Add, subtract, multiply or divide — always both sides equally."
+            },
+            {
+              "type": "teal",
+              "title": "📋 Step-by-Step Method",
+              "body": "<strong>Step 1:</strong> Move all variable terms to one side.<br><strong>Step 2:</strong> Move all constants to the other side.<br><strong>Step 3:</strong> Divide both sides by the coefficient.<br><strong>Step 4:</strong> Check your answer by substituting back."
+            },
+            {
+              "type": "gold",
+              "title": "🇿🇦 SA Context Example",
+              "body": "Sipho earns R150 per hour. He wants to earn R1 800. How many hours must he work?<br>150h = 1800 → h = 12 hours."
+            }
+          ],
+          "keyterms": [
+            {"word": "Variable",    "definition": "A letter representing an unknown value, e.g. x or h"},
+            {"word": "Coefficient", "definition": "The number multiplied by the variable, e.g. 3 in 3x"},
+            {"word": "Constant",    "definition": "A fixed number with no variable, e.g. the 8 in x + 8 = 12"}
+          ],
+          "formula": "ax + b = c → x = (c - b) / a",
+          "activity": "A taxi from Durban to Pietermaritzburg costs R15 plus R2.50 per km. If the total fare was R90, how many km was the trip? Set up and solve the equation.",
+          "examTip": "Always show your working line by line. NSC markers award method marks even if your final answer is wrong. Never skip steps.",
+          "illustration": null
+        }
+      ]
+    },
+    {
+      "id": "m1",
+      "title": "Geometry & Measurement",
+      "icon": "📏",
+      "topics": [
+        {
+          "title": "Pythagoras Theorem",
+          "emoji": "📐",
+          "subtitle": "Right-angled triangles and beyond",
+          "intro": "The <strong>Pythagorean Theorem</strong> states that in a right-angled triangle, the square of the hypotenuse equals the sum of squares of the other two sides.",
+          "concepts": [
+            {
+              "type": "green",
+              "title": "🔑 The Formula",
+              "body": "a² + b² = c² where <strong>c is always the hypotenuse</strong> (the longest side, opposite the right angle)."
+            },
+            {
+              "type": "teal",
+              "title": "📋 Finding the Hypotenuse",
+              "body": "c = √(a² + b²)<br>Example: a=3, b=4 → c = √(9+16) = √25 = <strong>5</strong>"
+            },
+            {
+              "type": "gold",
+              "title": "🇿🇦 Real World Use",
+              "body": "A builder in Soweto wants to check if a corner is square. He measures 3m along one wall and 4m along another. The diagonal should be exactly 5m. This is the <strong>3-4-5 rule</strong> used daily on SA building sites."
+            }
+          ],
+          "keyterms": [
+            {"word": "Hypotenuse", "definition": "The longest side of a right-angled triangle, always opposite the 90° angle"},
+            {"word": "Right angle", "definition": "An angle of exactly 90°, shown by a small square in diagrams"}
+          ],
+          "formula": "a² + b² = c²\nc = √(a² + b²)\na = √(c² - b²)",
+          "activity": "A ladder leans against a wall. The foot of the ladder is 1.5m from the wall and the ladder reaches 2m up the wall. How long is the ladder? Show full working.",
+          "examTip": "Always identify the hypotenuse FIRST before substituting. Label your triangle in the diagram — examiners give marks for correct diagrams.",
+          "illustration": null
+        }
+      ]
+    }
+  ]
+}
