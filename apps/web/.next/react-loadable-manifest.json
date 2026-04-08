@@ -1,14 +1,18 @@
 {
   "lib/content/loader.ts -> @/content/subject-meta.json": {
-    "id": "lib/content/loader.ts -> @/content/subject-meta.json",
+    "id": 3336,
     "files": [
-      "static/chunks/_app-pages-browser_content_subject-meta_json.js"
+      "static/chunks/336.6c03842ce3cb5114.js"
     ]
   },
   "lib/content/loader.ts -> @/content/subjects.json": {
-    "id": "lib/content/loader.ts -> @/content/subjects.json",
+    "id": 4399,
     "files": [
-      "static/chunks/_app-pages-browser_content_subjects_json.js"
+      "static/chunks/399.d0bf7033f2b0cae8.js"
     ]
+  },
+  "lib/firestore/friends.ts -> firebase/firestore": {
+    "id": 6943,
+    "files": []
   }
 }

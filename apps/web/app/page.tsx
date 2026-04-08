@@ -1,2 +1,5 @@
 import { redirect } from 'next/navigation'
-export default function Root() { redirect('/home') }
+
+export default function RootPage() {
+  redirect('/home')
+}
