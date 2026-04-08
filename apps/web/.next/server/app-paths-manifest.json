@@ -2,19 +2,19 @@
   "/_not-found/page": "app/_not-found/page.js",
   "/(auth)/onboarding/page": "app/(auth)/onboarding/page.js",
   "/api/course/[sid]/route": "app/api/course/[sid]/route.js",
+  "/api/qbank/[sid]/route": "app/api/qbank/[sid]/route.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/page": "app/page.js",
-  "/api/qbank/[sid]/route": "app/api/qbank/[sid]/route.js",
   "/api/amahle/route": "app/api/amahle/route.js",
-  "/(app)/ai/page": "app/(app)/ai/page.js",
+  "/(app)/course/[sid]/[mi]/[ti]/page": "app/(app)/course/[sid]/[mi]/[ti]/page.js",
   "/(app)/browse/page": "app/(app)/browse/page.js",
   "/(app)/course/[sid]/page": "app/(app)/course/[sid]/page.js",
   "/(app)/friends/page": "app/(app)/friends/page.js",
-  "/(app)/leaderboard/page": "app/(app)/leaderboard/page.js",
   "/(app)/home/page": "app/(app)/home/page.js",
   "/(app)/profile/page": "app/(app)/profile/page.js",
+  "/(app)/ai/page": "app/(app)/ai/page.js",
   "/(app)/quiz/[sid]/page": "app/(app)/quiz/[sid]/page.js",
   "/(app)/quiz/page": "app/(app)/quiz/page.js",
   "/(app)/rooms/page": "app/(app)/rooms/page.js",
-  "/(app)/course/[sid]/[mi]/[ti]/page": "app/(app)/course/[sid]/[mi]/[ti]/page.js"
+  "/(app)/leaderboard/page": "app/(app)/leaderboard/page.js"
 }
