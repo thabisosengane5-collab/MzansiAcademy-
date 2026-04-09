@@ -9403,7 +9403,7 @@ async function sendAiMessage(){
     // Remove thinking, add real reply
     var thinkEl=document.getElementById(thinkId);
     if(thinkEl) thinkEl.remove();
-    addAiMessage(reply,'ai');
+    addAiMessage(reply.replace(/\n/g,"<br>"),'ai');
   }catch(e){
     var thinkEl2=document.getElementById(thinkId);
     if(thinkEl2) thinkEl2.remove();
