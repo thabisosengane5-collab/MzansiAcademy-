@@ -6016,6 +6016,9 @@ function renderProfile(){
   var dn=document.getElementById('setDisplayName'); if(dn) dn.value=u.displayName||'';
   var sp=document.getElementById('setProvince'); if(sp) sp.value=u.province||'';
   var sg=document.getElementById('setGrade'); if(sg) sg.value=u.grade||'';
+  var re=document.getElementById('reminderEnabled'); if(re) re.checked=u.reminderEnabled||false;
+  var rt=document.getElementById('reminderTime'); if(rt) rt.value=u.reminderTime||'18:00';
+  var rrow=document.getElementById('reminderTimeRow'); if(rrow) rrow.style.display=(u.reminderEnabled?'flex':'none');
   var sm=document.getElementById('setMatricYear'); if(sm) sm.value=u.matricYear||'';
   var ss=document.getElementById('setSchool'); if(ss) ss.value=u.school||'';
   var st=document.getElementById('setMantra'); if(st){st.value=u.mantra||'';updateCharCount(st,'mantraCount');}
