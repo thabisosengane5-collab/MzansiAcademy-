@@ -517,7 +517,7 @@ async function renderAnnouncements(){
       +'<div class="form-group"><label class="form-label">Message *</label><textarea class="form-textarea" id="annMsg" placeholder="Full announcement text..."></textarea></div>'
       +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">'
       +'<div class="form-group"><label class="form-label">Target Audience</label><select class="form-select" id="annTarget"><option value="all">All Learners</option><option value="Grade 12">Grade 12</option><option value="Grade 11">Grade 11</option><option value="Grade 10">Grade 10</option><option value="Grade 9">Grade 9</option><option value="Grade 8">Grade 8</option></select></div>'
-      +'<div style="display:flex;align-items:flex-end"><button class="btn btn-green" style="width:100%" onclick="postAnnouncement()">📢 Post Announcement</button></div>'
+      +'<div style="margin:.75rem 0"><label style="display:flex;align-items:center;gap:.5rem;cursor:pointer"><input type="checkbox" id="pushNotifyToggle" style="width:1rem;height:1rem;accent-color:#00c896"> <span style="font-size:.9rem">🔔 Push notify all learners</span></label></div><div style="display:flex;align-items:flex-end"><button class="btn btn-green" style="width:100%" onclick="postAnnouncement()">📢 Post Announcement</button></div>'
       +'</div></div>'
       +'<div class="data-table-wrap"><table class="data-table">'
       +'<thead><tr><th>Title</th><th>Message</th><th>Type</th><th>Date</th><th></th></tr></thead>'
@@ -534,6 +534,19 @@ async function postAnnouncement(){
   if(!title||!msg){showToast('Title and message required','error');return;}
   try{
     await FB.addDoc(FB.collection(FB.db,'announcements'),{title,message:msg,type,target,createdAt:FB.serverTimestamp(),createdBy:(window.adminUser&&window.adminUser.email)||'admin'});
+    var pushToggle=document.getElementById('pushNotifyToggle');
+    if(pushToggle&&pushToggle.checked){
+      try{
+        var tokensSnap=await FB.getDocs(FB.collection(FB.db,'fcmTokens'));
+        var sends=[];
+        tokensSnap.forEach(function(d){
+          if(d.data().token){
+            sends.push(fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:d.data().token,title:'📢 '+title,body:msg,data:{type:'announcement'}})}));
+          }
+        });
+        await Promise.allSettled(sends);
+      }catch(pe){console.warn('Push notify failed:',pe);}
+    }
     showToast('Announcement posted! 📢','success');
     renderAnnouncements();
   }catch(e){showToast('Error: '+e.message,'error');}
