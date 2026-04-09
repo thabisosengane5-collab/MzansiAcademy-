@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><script>
+// Mobile console overlay - remove after debugging
+(function(){
+  var log = [], orig = {log:console.log, warn:console.warn, error:console.error};
+  function capture(type){ return function(){
+    var msg = Array.from(arguments).join(' ');
+    log.push('['+type+'] '+msg);
+    orig[type].apply(console, arguments);
+    var el = document.getElementById('_dbg');
+    if(el) el.innerHTML = log.slice(-20).join('<br>');
+  };}
+  console.log = capture('LOG');
+  console.warn = capture('WARN');
+  console.error = capture('ERR');
+  window.addEventListener('load', function(){
+    var d = document.createElement('div');
+    d.id = '_dbg';
+    d.style.cssText = 'position:fixed;bottom:0;left:0;right:0;max-height:40vh;overflow-y:auto;background:rgba(0,0,0,.92);color:#0f0;font-size:11px;padding:8px;z-index:99999;font-family:monospace;white-space:pre-wrap;';
+    document.body.appendChild(d);
+  });
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>MzansiAcademy – It's in our DNA 🧬</title>
