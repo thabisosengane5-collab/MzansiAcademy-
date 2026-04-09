@@ -10255,7 +10255,7 @@ async function acceptFriendReq(reqId, fromUid){
       })
     ]);
     showToast('You and '+(r.displayName||'them')+' are now friends! 🎉','success');
-  }catch(e){showToast('Error accepting request','error');console.warn(e);}
+  }catch(e){showToast('Error: '+((e&&e.message)||String(e)),'error');console.warn(e);}
 }
 
 async function declineFriendReq(reqId){
