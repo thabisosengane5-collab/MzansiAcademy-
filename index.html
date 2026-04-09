@@ -9417,8 +9417,7 @@ function addAiMessage(text,type,id){
   var div=document.createElement('div');
   div.className='ai-msg '+type;
   if(id) div.id=id;
-  div.innerHTML=text.replace(/
-/g,"<br>");
+  div.textContent=text;
   msgs.appendChild(div);
   msgs.scrollTop=msgs.scrollHeight;
 }
