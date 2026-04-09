@@ -59,19 +59,29 @@ let messaging;
 try { messaging = getMessaging(app); } catch(e) {}
 
 async function initPushNotifications(uid) {
-  if (!messaging || !('Notification' in window)) return;
+  console.log('[FCM] initPushNotifications called, uid:', uid);
+  if (!messaging) { console.warn('[FCM] messaging not initialized'); return; }
+  if (!('Notification' in window)) { console.warn('[FCM] Notifications not supported'); return; }
   try {
+    console.log('[FCM] Registering service worker...');
     const sw = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+    console.log('[FCM] SW registered:', sw.scope);
     const permission = await Notification.requestPermission();
-    if (permission !== 'granted') return;
+    console.log('[FCM] Permission:', permission);
+    if (permission !== 'granted') { console.warn('[FCM] Permission denied'); return; }
+    console.log('[FCM] Getting token...');
     const token = await getToken(messaging, {
       vapidKey: 'BL3qHOC4PjRNs7KL4mfDbhsoFzXfEJnZ6awbbyMYJ7xjJaV9vEsRDoTorhySRIQMiiFioNm8BBtPz3BNqM71_qw',
       serviceWorkerRegistration: sw
     });
+    console.log('[FCM] Token:', token ? token.substring(0,20)+'...' : 'NULL');
     if (token && uid) {
       await setDoc(doc(db, 'fcmTokens', uid), {
         token, uid, updatedAt: new Date().toISOString()
       }, { merge: true });
+      console.log('[FCM] Token saved for uid:', uid);
+    } else {
+      console.warn('[FCM] No token or uid. token:', !!token, 'uid:', uid);
     }
     onMessage(messaging, (payload) => {
       const n = payload.notification;
@@ -83,7 +93,7 @@ async function initPushNotifications(uid) {
         setTimeout(() => toast.remove(), 5000);
       }
     });
-  } catch(e) { console.warn('FCM:', e); }
+  } catch(e) { console.error('[FCM] Error:', e.code, e.message); }
 }
 
 async function sendPushNotification(token, title, body, data) {
