@@ -1,0 +1,21 @@
+{
+  "name": "MzansiAcademy",
+  "short_name": "MzansiAcademy",
+  "description": "Free CAPS-aligned learning for Grade 8-12",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#081420",
+  "theme_color": "#00D68F",
+  "icons": [
+    {
+      "src": "https://ui-avatars.com/api/?name=MA&size=192&background=00D68F&color=000&bold=true",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://ui-avatars.com/api/?name=MA&size=512&background=00D68F&color=000&bold=true",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
