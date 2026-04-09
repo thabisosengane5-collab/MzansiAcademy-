@@ -154,6 +154,8 @@ onAuthStateChanged(auth, async (fbUser) => {
       }
     } catch(e) { console.warn('Firestore fetch:', e.message); }
     if (typeof onUserLoaded === 'function') onUserLoaded();
+        initPushNotifications(fbUser.uid);
+        scheduleStudyReminder(fbUser.uid);
   } else {
     window.currentUser = null;
     if (typeof onUserSignedOut === 'function') onUserSignedOut();
@@ -3861,7 +3863,18 @@ body.in-course .ai-fab:hover { transform:translateY(50%) scale(1.08); }
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-          <button class="settings-save-btn" onclick="saveProfileSettings()" id="saveProfileBtn">&#x1F4BE; Save Changes</button>
+          <div style="margin-bottom:1.25rem">
+  <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--txt-3);margin-bottom:.625rem">🔔 Study Reminder</div>
+  <label style="display:flex;align-items:center;gap:.75rem;cursor:pointer;margin-bottom:.75rem">
+    <input type="checkbox" id="reminderEnabled" onchange="toggleReminderTime()" style="width:1.1rem;height:1.1rem;accent-color:var(--dna-green)">
+    <span style="font-size:.9rem">Enable daily study reminder</span>
+  </label>
+  <div id="reminderTimeRow" style="display:none;align-items:center;gap:.75rem">
+    <span style="font-size:.85rem;color:var(--txt-3)">Remind me at:</span>
+    <input type="time" id="reminderTime" value="18:00" style="background:var(--card);border:1px solid var(--border);border-radius:.5rem;padding:.4rem .75rem;color:var(--txt-1);font-size:.9rem">
+  </div>
+</div>
+<button class="settings-save-btn" onclick="saveProfileSettings()" id="saveProfileBtn">&#x1F4BE; Save Changes</button>
           <div id="saveStatus" style="font-size:.8rem;color:var(--dna-green);display:none">&#x2705; Saved!</div>
         </div>
       </div>
@@ -6102,6 +6115,33 @@ function closeProfileSheet(){
   var bd=document.getElementById('profileSheetBackdrop');
   if(bd) bd.classList.remove('open');
 }
+function toggleReminderTime(){
+  var cb=document.getElementById('reminderEnabled');
+  var row=document.getElementById('reminderTimeRow');
+  if(row) row.style.display=cb&&cb.checked?'flex':'none';
+}
+
+async function scheduleStudyReminder(uid){
+  try{
+    const snap=await getDoc(doc(db,'users',uid));
+    if(!snap.exists())return;
+    const d=snap.data();
+    if(!d.reminderEnabled||!d.reminderTime)return;
+    const [h,m]=d.reminderTime.split(':').map(Number);
+    const now=new Date();
+    const next=new Date();
+    next.setHours(h,m,0,0);
+    if(next<=now)next.setDate(next.getDate()+1);
+    const ms=next-now;
+    setTimeout(async()=>{
+      const tokenSnap=await getDoc(doc(db,'fcmTokens',uid));
+      if(tokenSnap.exists()){
+        await sendPushNotification(tokenSnap.data().token,'📚 Study Time!','Your daily study reminder — open MzansiAcademy and keep that streak going! 🔥',{type:'study_reminder'});
+      }
+    },ms);
+  }catch(e){console.warn('Reminder:',e);}
+}
+
 async function saveProfileSettings(){
   var dn=document.getElementById('setDisplayName').value.trim();
   var prov=document.getElementById('setProvince').value;
@@ -6118,7 +6158,12 @@ async function saveProfileSettings(){
   if(btn){ btn.textContent='⏳ Saving...'; btn.style.opacity='0.7'; }
   var school=(document.getElementById('setSchool')&&document.getElementById('setSchool').value.trim())||'';
   var data={displayName:dn,province:prov,grade:grade,matricYear:matric,school:school,avatar:APP.selectedAvatar||'av0',subjects:APP.selectedSubjects,mantra:mantra};
+  var reminderEnabled=document.getElementById('reminderEnabled');
+  var reminderTime=document.getElementById('reminderTime');
+  if(reminderEnabled)data.reminderEnabled=reminderEnabled.checked;
+  if(reminderTime)data.reminderTime=reminderTime.value||'18:00';
   if(window.DB) await window.DB.saveProfile(uid,data);
+  if(data.reminderEnabled)scheduleStudyReminder(uid);
   window.currentUser=Object.assign({},window.currentUser,data);
   setEl('topUserAv',APP.selectedAvatar);
   setEl('topUserName',dn.split(' ')[0]);
