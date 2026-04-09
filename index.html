@@ -9403,7 +9403,7 @@ async function sendAiMessage(){
     // Remove thinking, add real reply
     var thinkEl=document.getElementById(thinkId);
     if(thinkEl) thinkEl.remove();
-    addAiMessage(reply.replace(/\n/g,"<br>"),'ai');
+    addAiMessage(reply,'ai');
   }catch(e){
     var thinkEl2=document.getElementById(thinkId);
     if(thinkEl2) thinkEl2.remove();
@@ -9417,7 +9417,8 @@ function addAiMessage(text,type,id){
   var div=document.createElement('div');
   div.className='ai-msg '+type;
   if(id) div.id=id;
-  div.textContent=text;
+  div.innerHTML=text.replace(/
+/g,"<br>");
   msgs.appendChild(div);
   msgs.scrollTop=msgs.scrollHeight;
 }
