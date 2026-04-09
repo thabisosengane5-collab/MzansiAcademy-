@@ -2,7 +2,7 @@ importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js'
 importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js');
 
 firebase.initializeApp({
-  apiKey: "AIzaSyCS6LZeWX0qmi3O1BN9dD4u8yGVu9NOFi8",
+  apiKey: "AIzaSyCS6LZeWXOqmi3O1BN9dD4u8yGVu9NOFi8",
   authDomain: "edusa-a6efe.firebaseapp.com",
   projectId: "edusa-a6efe",
   storageBucket: "edusa-a6efe.appspot.com",
@@ -16,9 +16,7 @@ messaging.onBackgroundMessage(function(payload) {
   const title = payload.notification.title || 'MzansiAcademy';
   const options = {
     body: payload.notification.body,
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
-    data: payload.data
+    tag: 'mzansi-push'
   };
   self.registration.showNotification(title, options);
 });
