@@ -21,6 +21,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({message:{token,notification:{title,body},data:data||{}}})
     });
     const result = await response.json();
+    console.log('FCM result:', JSON.stringify(result));
     res.status(200).json(result);
   } catch(err) {
     res.status(500).json({error:err.message});
