@@ -10072,7 +10072,8 @@ async function moderateMessage(msg){
 // FRIENDS SYSTEM
 // ═══════════════════════════════════════════════════════════════
 // ── Friends: real Firebase state ────────────────────────────────
-var _friends=[];           // loaded from Firestore friends/{uid}/list
+var _friends=[];
+var _friendsLoaded=false;           // loaded from Firestore friends/{uid}/list
 var _friendRequests=[];    // loaded from Firestore friendRequests/{uid}/incoming
 var _activeDmFriend=null;
 var _dmUnsubscribe=null;
@@ -10087,7 +10088,8 @@ function listenFriends(){
     window.FB.collection(window.FB.db,'users',uid,'friends'),
     function(snap){
       _friends=snap.docs.map(function(d){return Object.assign({uid:d.id},d.data());});
-      renderFriendsList();
+      _friendsLoaded=true;
+ renderFriendsList();
       setEl('friendsOnlineCount',_friends.filter(function(f){return f.status==='online';}).length+' online now');
     },
     function(e){console.warn('friends listen:',e);}
@@ -10159,6 +10161,7 @@ function renderFriendsList(){
   if(!el) return;
   var u=window.currentUser;
   if(!u){ el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--txt-4);font-size:.82rem">Sign in to see your friends</div>'; return; }
+  if(!_friendsLoaded){ el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--txt-4)">Loading...</div>'; return; }
   if(!_friends.length){
     el.innerHTML='<div style="text-align:center;padding:3rem 1rem;color:var(--txt-4)"><div style="font-size:2.5rem;margin-bottom:.875rem">👥</div><p>No friends yet.<br>Search for learners to add!</p></div>';
     return;
