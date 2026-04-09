@@ -1,5 +1,25 @@
 {
   "dependencies": {
-    "@supabase/supabase-js": "^2.101.1"
-  }
+    "@supabase/supabase-js": "^2.101.1",
+    "google-auth-library": "^10.6.2"
+  },
+  "name": "mzansiacademy-",
+  "version": "1.0.0",
+  "description": "",
+  "main": "firebase-messaging-sw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thabisosengane5-collab/MzansiAcademy-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/thabisosengane5-collab/MzansiAcademy-/issues"
+  },
+  "homepage": "https://github.com/thabisosengane5-collab/MzansiAcademy-#readme"
 }
