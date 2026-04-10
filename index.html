@@ -2724,17 +2724,10 @@ body { overflow-x:hidden; max-width:100vw; }
 
   <div class="topnav-spacer"></div>
 
-  <!-- Logged-in user pill (hidden until auth) -->
-  <div id="userBtn" class="user-btn" style="display:none" onclick="goTo('profile')">
-    <div class="user-avatar" id="topUserAv">🧬</div>
-    <div style="display:flex;flex-direction:column;line-height:1.2;min-width:0">
-      <span class="user-name" id="topUserName">Learner</span>
-      <span class="user-pts" id="topUserPts">0⭐</span>
-    </div>
-  </div>
+  <div id="userBtn" style="display:none"></div>
 
   <!-- Sign in button (shown when logged out) -->
-  <button class="btn btn-primary btn-sm" id="signInNavBtn" onclick="openModal('authModal','signin')">Sign In</button>
+  <button id="signInNavBtn" onclick="openModal('authModal','signin')" style="background:none;border:1px solid var(--border-2);color:var(--txt-2);font-size:.68rem;font-weight:700;padding:.3rem .6rem;border-radius:8px;cursor:pointer;font-family:var(--font);white-space:nowrap;line-height:1">Sign In / Sign Up</button>
 
   <!-- Hamburger (mobile) -->
   <button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
@@ -2956,12 +2949,12 @@ body { overflow-x:hidden; max-width:100vw; }
             <div style="position:absolute;top:0;left:0;width:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(180deg);background:var(--bg-2);border-radius:12px;padding:1rem">
               <div style="font-size:.72rem;font-weight:800;color:var(--dna-green);margin-bottom:.625rem">📎 Important Links</div>
               <div style="display:flex;flex-direction:column;gap:.375rem">
-                <a href="https://www.cao.ac.za" target="_blank" style="font-size:.72rem;color:var(--dna-teal);text-decoration:none;padding:.3rem .5rem;background:var(--bg-3);border-radius:6px;display:block">📋 CAO — Central Applications Office</a>
-                <a href="https://www.umalusi.org.za" target="_blank" style="font-size:.72rem;color:var(--dna-teal);text-decoration:none;padding:.3rem .5rem;background:var(--bg-3);border-radius:6px;display:block">✅ uMalusi — Certificate Verification</a>
-                <a href="https://www.nsfas.org.za" target="_blank" style="font-size:.72rem;color:var(--dna-teal);text-decoration:none;padding:.3rem .5rem;background:var(--bg-3);border-radius:6px;display:block">💰 NSFAS — Student Financial Aid</a>
-                <a href="https://www.saqa.org.za" target="_blank" style="font-size:.72rem;color:var(--dna-teal);text-decoration:none;padding:.3rem .5rem;background:var(--bg-3);border-radius:6px;display:block">📜 SAQA — Qualifications Authority</a>
-                <a href="https://www.dbe.gov.za" target="_blank" style="font-size:.72rem;color:var(--dna-teal);text-decoration:none;padding:.3rem .5rem;background:var(--bg-3);border-radius:6px;display:block">🏫 DBE — Dept of Basic Education</a>
-                <a href="https://www.tvetcolleges.co.za" target="_blank" style="font-size:.72rem;color:var(--dna-teal);text-decoration:none;padding:.3rem .5rem;background:var(--bg-3);border-radius:6px;display:block">🔧 TVET Colleges Directory</a>
+                <a href="https://www.cao.ac.za" target="_blank" style="font-size:.68rem;color:var(--dna-teal);text-decoration:none;padding:.35rem .5rem;background:var(--bg-3);border-radius:6px;display:block;line-height:1.4">📋 <b>CAO — Central Applications Office</b><br><span style="color:var(--txt-4);font-size:.6rem">Apply to multiple universities with one form</span></a>
+                <a href="https://www.umalusi.org.za" target="_blank" style="font-size:.68rem;color:var(--dna-teal);text-decoration:none;padding:.35rem .5rem;background:var(--bg-3);border-radius:6px;display:block;line-height:1.4">✅ <b>uMalusi — Certificate Verification</b><br><span style="color:var(--txt-4);font-size:.6rem">Verify your matric results &amp; request statement of results</span></a>
+                <a href="https://www.nsfas.org.za" target="_blank" style="font-size:.68rem;color:var(--dna-teal);text-decoration:none;padding:.35rem .5rem;background:var(--bg-3);border-radius:6px;display:block;line-height:1.4">💰 <b>NSFAS — Student Financial Aid</b><br><span style="color:var(--txt-4);font-size:.6rem">Apply for bursaries &amp; loans to fund your tertiary studies</span></a>
+                <a href="https://www.saqa.org.za" target="_blank" style="font-size:.68rem;color:var(--dna-teal);text-decoration:none;padding:.35rem .5rem;background:var(--bg-3);border-radius:6px;display:block;line-height:1.4">📜 <b>SAQA — Qualifications Authority</b><br><span style="color:var(--txt-4);font-size:.6rem">Check if your qualification is nationally recognised</span></a>
+                <a href="https://www.dhet.gov.za" target="_blank" style="font-size:.68rem;color:var(--dna-teal);text-decoration:none;padding:.35rem .5rem;background:var(--bg-3);border-radius:6px;display:block;line-height:1.4">🏫 <b>DHET — Higher Education &amp; Training</b><br><span style="color:var(--txt-4);font-size:.6rem">Official dept for universities, TVET &amp; adult education</span></a>
+                <a href="https://www.tvetcolleges.co.za" target="_blank" style="font-size:.68rem;color:var(--dna-teal);text-decoration:none;padding:.35rem .5rem;background:var(--bg-3);border-radius:6px;display:block;line-height:1.4">🔧 <b>TVET Colleges Directory</b><br><span style="color:var(--txt-4);font-size:.6rem">Find accredited technical &amp; vocational colleges near you</span></a>
               </div>
             </div>
           </div>
