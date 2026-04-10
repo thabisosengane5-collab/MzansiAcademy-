@@ -10252,7 +10252,7 @@ async function acceptFriendReq(reqId, fromUid){
         message:(window.currentUser.displayName||'Someone')+' accepted your friend request! 🎉',
         read:false,
         createdAt:window.FB.serverTimestamp()
-      })
+      }).catch(function(){})
     ]);
     showToast('You and '+(r.displayName||'them')+' are now friends! 🎉','success');
   }catch(e){showToast('Error: '+((e&&e.message)||String(e)),'error');console.warn(e);}
