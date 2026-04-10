@@ -2397,7 +2397,8 @@ body.in-course .ai-fab:hover { transform:translateY(50%) scale(1.08); }
 .friend-aka { font-size:.62rem; color:var(--dna-teal); font-style:italic; }
 .friend-mood { font-size:.68rem; color:var(--txt-4); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px; }
 .friend-actions { display:flex; gap:.375rem; flex-shrink:0; }
-.friend-action-btn { width:32px; height:32px; border-radius:8px; border:1px solid var(--border-2); background:var(--bg-3); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.875rem; }
+.friend-action-btn { min-width:32px; height:32px; border-radius:8px; border:1px solid var(--border-2); background:var(--bg-3); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.875rem; padding:0 8px; }
+.friend-actions { display:flex; gap:.5rem; flex-shrink:0; align-items:center; }
 .friend-action-btn:hover { border-color:var(--dna-green); background:rgba(0,214,143,.08); }
 
 /* ═══ DM CHAT ═══ */
@@ -3659,9 +3660,10 @@ body.in-course .ai-fab:hover { transform:translateY(50%) scale(1.08); }
       </div>
       <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.625rem">
         <div class="period-tabs" style="gap:.25rem">
-          <button class="period-tab active" id="lbTop3Btn" onclick="setLBLimit(3,this)">Top 3</button>
-          <button class="period-tab" id="lbTop10Btn" onclick="setLBLimit(10,this)">Top 10</button>
+          <button class="period-tab active" id="lbTop10Btn" onclick="setLBLimit(10,this)">Top 10</button>
+          <button class="period-tab" id="lbTop20Btn" onclick="setLBLimit(20,this)">Top 20</button>
           <button class="period-tab" id="lbTop30Btn" onclick="setLBLimit(30,this)">Top 30</button>
+          <button class="period-tab" id="lbTop100Btn" onclick="setLBLimit(100,this)">Top 100</button>
         </div>
         <select class="lb-filter-select" id="lbGradeFilter" onchange="loadLeaderboard()">
           <option value="">All Grades</option>
@@ -3680,19 +3682,9 @@ body.in-course .ai-fab:hover { transform:translateY(50%) scale(1.08); }
       </div>
     </div>
 
-    <!-- Podium -->
-    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
-      <div class="sa-flag-float"><div class="sa-flag-animated" style="width:48px;height:8px;border-radius:3px"><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
-      <span style="font-size:.72rem;color:var(--txt-3);font-weight:600">South Africa &#x1F1FF;&#x1F1E6;</span>
-      <div class="sa-flag-float" style="animation-delay:.8s"><div class="sa-flag-animated" style="width:48px;height:8px;border-radius:3px"><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
-    </div>
-    <div class="podium" id="lbPodium">
-      <div class="loading-center"><div class="spinner"></div></div>
-    </div>
-
     <!-- Table -->
     <div class="card" style="padding:0;overflow:hidden">
-      <div class="lb-table" id="lbTable">
+      <div id="lbTable">
         <div class="loading-center"><div class="spinner"></div></div>
       </div>
     </div>
@@ -7977,7 +7969,7 @@ function setLBPeriod(period,btn){
 var _lbLimit = 10;
 function setLBLimit(n, btn){
   _lbLimit = n;
-  document.querySelectorAll('#lbTop3Btn,#lbTop10Btn,#lbTop30Btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('#lbTop10Btn,#lbTop20Btn,#lbTop30Btn,#lbTop100Btn').forEach(function(b){ b.classList.remove('active'); });
   if(btn) btn.classList.add('active');
   loadLeaderboard();
 }
