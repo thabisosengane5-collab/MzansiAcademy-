@@ -10166,7 +10166,11 @@ function renderFriendsList(){
     el.innerHTML='<div style="text-align:center;padding:3rem 1rem;color:var(--txt-4)"><div style="font-size:2.5rem;margin-bottom:.875rem">👥</div><p>No friends yet.<br>Search for learners to add!</p></div>';
     return;
   }
-  el.innerHTML=_friends.map(function(f){
+  var _fq=(document.getElementById('friendSearchInput')&&document.getElementById('friendSearchInput').value||'').toLowerCase().trim();
+  var _filtered=_fq?_friends.filter(function(f){return (f.displayName||'').toLowerCase().includes(_fq)||(f.username||'').toLowerCase().includes(_fq);}):_friends;
+  el.innerHTML='<div style="margin-bottom:.75rem"><input id="friendSearchInput" type="text" placeholder="🔍 Search friends..." oninput="renderFriendsList()" style="width:100%;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--border);background:var(--bg-3);color:var(--txt);font-size:.78rem;box-sizing:border-box" value="'+(_fq||'')+'"></div>';
+  if(!_filtered.length){el.innerHTML+='<div style="text-align:center;padding:2rem;color:var(--txt-4);font-size:.78rem">'+(  _fq?'No friends match your search.':'No friends yet. Search for learners to add!')+'</div>';return;}
+  el.innerHTML+=_filtered.map(function(f){
     var statusColor={online:'#22C55E',away:'#FFB800',busy:'#EF4444',offline:'#555'}[f.status]||'#555';
     var statusLabel={online:'Online',away:'Away',busy:'Busy',offline:'Offline'}[f.status]||'Offline';
     var safeUid=(f.uid||'').replace(/'/g,"\\'");
@@ -10176,12 +10180,12 @@ function renderFriendsList(){
       +'<div class="friend-name">'+(f.displayName||f.firstName||'Learner')+'</div>'
       +(f.username?'<div class="friend-aka">@'+f.username+'</div>':'')
       +(f.mood?'<div class="friend-mood">💭 '+f.mood+'</div>':'')
-      +'<div style="font-size:.6rem;margin-top:2px;color:'+statusColor+'">● '+statusLabel+(f.grade?' · Grade '+f.grade:'')+( f.province?' · '+f.province:'')+'</div>'
+      +'<div style="font-size:.6rem;margin-top:2px;color:'+statusColor+'">● '+statusLabel+(f.grade?' · Grade '+f.grade:'')+( f.province?' · '+f.province:'')+'</div>'+(f.school?'<div style="font-size:.6rem;color:var(--txt-4)">🏫 '+f.school+'</div>':'')
       +'</div>'
       +'<div class="friend-actions">'
       +'<button class="friend-action-btn" onclick="openFriendInfoModal(\''+safeUid+'\')" title="Info" style="font-size:.7rem;color:var(--dna-teal)">ℹ️</button>'
       +'<button class="friend-action-btn" onclick="openDm(\''+safeUid+'\',true)" title="Message">💬</button>'
-      +'<button class="friend-action-btn" onclick="removeFriend(\''+safeUid+'\',\''+(f.displayName||'Friend').replace(/'/g,"\\'")+'\')" title="Remove" style="color:var(--dna-red)">✕</button>'
+      +'<button class="friend-action-btn" onclick="confirmUnfriend(\''+safeUid+'\',\''+(f.displayName||'Friend').replace(/'/g,"\\'")+'\')" title="Unfriend" style="color:var(--dna-red);font-size:.6rem;font-weight:700">Unfriend</button>'
       +'</div></div>';
   }).join('');
 }
@@ -10266,6 +10270,11 @@ async function declineFriendReq(reqId){
   }catch(e){console.warn(e);}
 }
 
+function confirmUnfriend(uid, name){
+  if(confirm('Remove '+name+' as a friend?')){
+    removeFriend(uid, name);
+  }
+}
 async function removeFriend(uid, name){
   var myUid=window.currentUser&&window.currentUser.uid; if(!myUid||!window.FB) return;
   try{
