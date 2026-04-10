@@ -2306,27 +2306,27 @@ body { overflow-x:hidden; max-width:100vw; }
 /* ═══ AI ASSISTANT STYLES ═══ */
 .ai-fab {
   position:fixed;
-  /* Centered above bottom nav — doesn't block left or right content */
-  bottom:calc(var(--bottom-nav) + .75rem);
-  left:50%;
-  transform:translateX(-50%);
-  right:auto;
-  width:44px; height:44px; border-radius:50%; z-index:600;
+  top:calc(var(--nav-h) + .625rem);
+  right:1rem;
+  bottom:auto;
+  left:auto;
+  transform:none;
+  z-index:900;
+  width:48px; height:48px;
+  border-radius:50%;
   background:linear-gradient(135deg,var(--dna-green),var(--dna-teal));
-  border:2px solid rgba(255,255,255,.12); cursor:pointer;
+  border:none; cursor:pointer;
   display:flex; align-items:center; justify-content:center;
-  box-shadow:0 3px 16px rgba(0,214,143,.4), 0 1px 6px rgba(0,0,0,.35);
-  transition:all .2s; opacity:.9;
+  box-shadow:0 3px 16px rgba(0,214,143,.4);
+  transition:transform .2s, box-shadow .2s;
+  opacity:1;
 }
-.ai-fab:hover { transform:translateX(-50%) scale(1.1); box-shadow:0 5px 24px rgba(0,214,143,.55); opacity:1; }
+.ai-fab:hover { transform:scale(1.1); box-shadow:0 5px 24px rgba(0,214,143,.55); }
 /* In course view — right side so it doesn't block lesson text */
-body.in-course .ai-fab {
-  left:auto; right:.75rem; bottom:50%; transform:translateY(50%);
-}
-body.in-course .ai-fab:hover { transform:translateY(50%) scale(1.08); }
+
+
 @media(min-width:768px){
-  .ai-fab { bottom:1.5rem; left:50%; transform:translateX(-50%); }
-  body.in-course .ai-fab { left:auto; right:1rem; bottom:50%; transform:translateY(50%); }
+  .ai-fab { top:calc(var(--nav-h) + .625rem); right:.75rem; }
 }
 .ai-panel {
   position:fixed; bottom:calc(var(--bottom-nav) + 4.5rem); right:.5rem;
@@ -2889,6 +2889,27 @@ body.in-course .ai-fab:hover { transform:translateY(50%) scale(1.08); }
   <!-- ── Announcement Pane ── -->
   <div id="annHomePane"></div>
 
+  <!-- 3 Quick Action Panes -->
+  <section style="padding:1rem 1rem 0;max-width:1200px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.625rem">
+      <div onclick="goTo('courses')" style="background:linear-gradient(135deg,rgba(0,214,143,.12),rgba(0,194,212,.08));border:1px solid rgba(0,214,143,.25);border-radius:12px;padding:.875rem .75rem;text-align:center;cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(0,214,143,.2)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(0,214,143,.12),rgba(0,194,212,.08))'">
+        <div style="font-size:1.4rem;margin-bottom:.25rem">📚</div>
+        <div style="font-size:.72rem;font-weight:800;color:var(--dna-green)">Start Learning</div>
+        <div style="font-size:.58rem;color:var(--txt-4);margin-top:2px">21 CAPS subjects</div>
+      </div>
+      <div onclick="goTo('quizzes')" style="background:linear-gradient(135deg,rgba(255,184,0,.12),rgba(255,107,53,.08));border:1px solid rgba(255,184,0,.25);border-radius:12px;padding:.875rem .75rem;text-align:center;cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(255,184,0,.2)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(255,184,0,.12),rgba(255,107,53,.08))'">
+        <div style="font-size:1.4rem;margin-bottom:.25rem">⚔️</div>
+        <div style="font-size:.72rem;font-weight:800;color:var(--dna-gold)">Battle Trivia</div>
+        <div style="font-size:.58rem;color:var(--txt-4);margin-top:2px">Live vs learners</div>
+      </div>
+      <div onclick="goTo('leaderboard')" style="background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(0,194,212,.08));border:1px solid rgba(168,85,247,.25);border-radius:12px;padding:.875rem .75rem;text-align:center;cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(168,85,247,.2)'" onmouseout="this.style.background='linear-gradient(135deg,rgba(168,85,247,.12),rgba(0,194,212,.08))'">
+        <div style="font-size:1.4rem;margin-bottom:.25rem">🏆</div>
+        <div style="font-size:.72rem;font-weight:800;color:#A855F7">Rankings</div>
+        <div style="font-size:.58rem;color:var(--txt-4);margin-top:2px">Top 100 nationally</div>
+      </div>
+    </div>
+  </section>
+
   <!-- Features -->
   <section class="features-section">
     <div style="max-width:1200px;margin:0 auto">
@@ -2920,14 +2941,30 @@ body.in-course .ai-fab:hover { transform:translateY(50%) scale(1.08); }
           <p class="feature-desc">Join subject-specific rooms. Chat, share flashcards, explain concepts to each other. Learning together works.</p>
         </div>
         <div class="feature-card">
-          <span class="feature-icon">🏆</span>
-          <h3 class="feature-title">Leaderboards</h3>
-          <p class="feature-desc">Daily, weekly, monthly and yearly rankings. Filter by province, grade or subject. See where you stand nationally.</p>
+          <span class="feature-icon">🤝</span>
+          <h3 class="feature-title">Friends & Study Groups</h3>
+          <p class="feature-desc">Add friends, send direct messages, and join subject study groups. Learning is better together — build your academic circle.</p>
         </div>
-        <div class="feature-card">
-          <span class="feature-icon">🎓</span>
-          <h3 class="feature-title">Digital Certificates</h3>
-          <p class="feature-desc">Pass your final exams to earn printable PDF certificates you can share anywhere. Your achievement, forever recorded.</p>
+        <div class="feature-card" style="perspective:800px;cursor:pointer;min-height:160px" onclick="this.querySelector('.flip-inner').style.transform=this.querySelector('.flip-inner').style.transform?'':'rotateY(180deg)'">
+          <div class="flip-inner" style="position:relative;width:100%;transition:transform 0.6s;transform-style:preserve-3d">
+            <div style="backface-visibility:hidden;-webkit-backface-visibility:hidden">
+              <span class="feature-icon">🎓</span>
+              <h3 class="feature-title">Grade 11 & 12 Learners</h3>
+              <p class="feature-desc">Are you planning for university or college? Tap to see important links you'll need — from CAO forms to uMalusi and university applications.</p>
+              <div style="font-size:.65rem;color:var(--dna-teal);margin-top:.5rem;font-weight:700">TAP TO FLIP →</div>
+            </div>
+            <div style="position:absolute;top:0;left:0;width:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(180deg);background:var(--bg-2);border-radius:12px;padding:1rem">
+              <div style="font-size:.72rem;font-weight:800;color:var(--dna-green);margin-bottom:.625rem">📎 Important Links</div>
+              <div style="display:flex;flex-direction:column;gap:.375rem">
+                <a href="https://www.cao.ac.za" target="_blank" style="font-size:.72rem;color:var(--dna-teal);text-decoration:none;padding:.3rem .5rem;background:var(--bg-3);border-radius:6px;display:block">📋 CAO — Central Applications Office</a>
+                <a href="https://www.umalusi.org.za" target="_blank" style="font-size:.72rem;color:var(--dna-teal);text-decoration:none;padding:.3rem .5rem;background:var(--bg-3);border-radius:6px;display:block">✅ uMalusi — Certificate Verification</a>
+                <a href="https://www.nsfas.org.za" target="_blank" style="font-size:.72rem;color:var(--dna-teal);text-decoration:none;padding:.3rem .5rem;background:var(--bg-3);border-radius:6px;display:block">💰 NSFAS — Student Financial Aid</a>
+                <a href="https://www.saqa.org.za" target="_blank" style="font-size:.72rem;color:var(--dna-teal);text-decoration:none;padding:.3rem .5rem;background:var(--bg-3);border-radius:6px;display:block">📜 SAQA — Qualifications Authority</a>
+                <a href="https://www.dbe.gov.za" target="_blank" style="font-size:.72rem;color:var(--dna-teal);text-decoration:none;padding:.3rem .5rem;background:var(--bg-3);border-radius:6px;display:block">🏫 DBE — Dept of Basic Education</a>
+                <a href="https://www.tvetcolleges.co.za" target="_blank" style="font-size:.72rem;color:var(--dna-teal);text-decoration:none;padding:.3rem .5rem;background:var(--bg-3);border-radius:6px;display:block">🔧 TVET Colleges Directory</a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -7989,7 +8026,7 @@ async function loadLeaderboard(){
       var q=window.FB.query(
         window.FB.collection(window.FB.db,'leaderboard'),
         window.FB.orderBy('pts','desc'),
-        window.FB.limit(30)
+        window.FB.limit(_lbLimit||100)
       );
       var snap=await window.FB.getDocs(q);
       if(!snap.empty){
