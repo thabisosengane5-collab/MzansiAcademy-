@@ -67,7 +67,24 @@ Unless the user names `apps/web` or `mzansi-app`, "the website" means root `inde
 - Firebase web `apiKey` in HTML is public by design — that's fine. Anything server-side
   (service accounts, Groq key) is not.
 
-## 7. Hard rules
+## 7. Course content
+
+- Subjects → modules → topic titles live in `COURSE_DATA` (`index.html`).
+- Lesson text: `getLesson()` uses a hand-written lesson from `LESSON_DB[sid]['m'+mi][ti]`
+  if one exists, otherwise a **generic template** (the same paragraphs with the topic
+  name swapped in). Replacing template lessons with real ones is ongoing.
+- Real lessons for a subject go in `content/lessons/<sid>.js` (assigns
+  `LESSON_DB.<sid>.m<N> = {…}`) and the subject id is added to `LESSON_FILES` in
+  `index.html`. The file loads on demand when the course opens. `math` is done (42/42).
+- Lesson shape: see any entry in `content/lessons/math.js`. Every lesson needs a
+  real-life South African `hook`, worked `examples` with answers, `mistakes`,
+  `activity` + `activityAnswer`, `examTip`, `keyterms` and a 3-question `quiz`
+  (`{q,opts,a,et}`, same shape as `QBANK`). Module quizzes draw from these.
+- Check numbers in examples by calculation before committing; keep the CAPS grade in
+  `subtitle`; mark anything beyond CAPS as enrichment.
+- Validate a content file: `node -e "global.LESSON_DB={};require('./content/lessons/math.js')"`.
+
+## 8. Hard rules
 
 1. **Never commit secrets.** No service-account JSON, private keys, `GROQ_API_KEY` or
    `.env*` files. Server code reads `process.env.*`; set values in Vercel env vars.
@@ -83,7 +100,7 @@ Unless the user names `apps/web` or `mzansi-app`, "the website" means root `inde
    asking — it would replace the live site with one of the Next.js rebuilds.
 7. All Python helper scripts use `encoding='utf-8'`.
 
-## 8. Workflow
+## 9. Workflow
 
 - Branch → commit → push → draft PR. There's no GitHub Actions workflow; production
   deploys come from Vercel's Git integration on `main`.
