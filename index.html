@@ -168,8 +168,9 @@ onAuthStateChanged(auth, async (fbUser) => {
         initPushNotifications(fbUser.uid);
         scheduleStudyReminder(fbUser.uid);
   } else {
+    var wasSignedIn = !!window.currentUser;
     window.currentUser = null;
-    if (typeof onUserSignedOut === 'function') onUserSignedOut();
+    if (typeof onUserSignedOut === 'function') onUserSignedOut(wasSignedIn);
   }
 });
 
@@ -3015,7 +3016,7 @@ body { overflow-x:hidden; max-width:100vw; }
       <span style="color:var(--txt-4)">·</span>
       <a href="https://x.com/mzansiacademy" target="_blank" rel="noopener" style="font-size:.72rem;color:var(--txt-4);text-decoration:none">X (Twitter)</a>
     </div>
-    <p style="font-size:.68rem;color:var(--txt-4);margin-top:.5rem">© 2025 MzansiAcademy · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0861666e6748657269667b61696b696c6d6571266b67267269">[email&#160;protected]</a></p>
+    <p style="font-size:.68rem;color:var(--txt-4);margin-top:.5rem">© 2025 MzansiAcademy · <a href="mailto:info@mzansiacademy.co.za">info@mzansiacademy.co.za</a></p>
   </footer>
 </div>
 
@@ -3199,8 +3200,8 @@ body { overflow-x:hidden; max-width:100vw; }
       <div class="footer-links">
         <span class="footer-link" onclick="showToast('Privacy Policy — coming soon','info')">Privacy Policy</span>
         <span class="footer-link" onclick="showToast('Terms of Use — coming soon','info')">Terms of Use</span>
-        <a class="footer-link" href="/cdn-cgi/l/email-protection#7704020707180503371a0d1619041e16141613121a0e591418590d16"><span class="__cf_email__" data-cfemail="483b3d3838273a3c08253229263b21292b292c2d2531662b27663229">[email&#160;protected]</span></a>
-        <a class="footer-link" href="/cdn-cgi/l/email-protection#4920272f2609243328273a20282a282d2c2430672a26673328"><span class="__cf_email__" data-cfemail="abc2c5cdc4ebc6d1cac5d8c2cac8cacfcec6d285c8c485d1ca">[email&#160;protected]</span></a>
+        <a class="footer-link" href="mailto:support@mzansiacademy.co.za">support@mzansiacademy.co.za</a>
+        <a class="footer-link" href="mailto:info@mzansiacademy.co.za">info@mzansiacademy.co.za</a>
       </div>
       <p style="font-size:.65rem;color:var(--txt-4)">© 2026 MzansiAcademy · Free CAPS-Aligned Education · Grade 8–12 · South Africa 🇿🇦</p>
     </footer>
@@ -3228,7 +3229,7 @@ body { overflow-x:hidden; max-width:100vw; }
       <div class="footer-links">
         <span class="footer-link" onclick="showToast('Privacy Policy — coming soon','info')">Privacy Policy</span>
         <span class="footer-link" onclick="showToast('Terms of Use — coming soon','info')">Terms of Use</span>
-        <a class="footer-link" href="/cdn-cgi/l/email-protection#bfcccacfcfd0cdcbffd2c5ded1ccd6dedcdedbdad2c691dcd091c5de"><span class="__cf_email__" data-cfemail="790a0c0909160b0d39140318170a10181a181d1c1400571a16570318">[email&#160;protected]</span></a>
+        <a class="footer-link" href="mailto:support@mzansiacademy.co.za">support@mzansiacademy.co.za</a>
       </div>
       <p style="font-size:.65rem;color:var(--txt-4)">© 2026 MzansiAcademy · Free CAPS-Aligned Education · South Africa 🇿🇦</p>
     </footer>
@@ -4332,7 +4333,7 @@ body { overflow-x:hidden; max-width:100vw; }
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ═══════════════════════════════════════════════════════
 //  MZANSIacademy — COMPLETE APPLICATION JAVASCRIPT
 //  "It's in our DNA" 🧬
@@ -5742,7 +5743,7 @@ function onUserLoaded(){
   }
 }
 
-function onUserSignedOut(){
+function onUserSignedOut(wasSignedIn){
   // Clear presence
   if(window.rtdb && window.currentUser && window.currentUser.uid){
     window.rtSet(window.dbRef(window.rtdb,'presence/'+window.currentUser.uid),
@@ -5759,6 +5760,8 @@ function onUserSignedOut(){
   el=document.getElementById('signInNavBtn'); if(el) el.style.display='flex';
   el=document.getElementById('drawerSignIn'); if(el) el.style.display='flex';
   el=document.getElementById('drawerSignOut'); if(el) el.style.display='none';
+  // Visitors who were never signed in shouldn't get a goodbye or be sent home
+  if(!wasSignedIn) return;
   showToast('Signed out. See you soon! 👋');
   goTo('home');
 }
@@ -6453,10 +6456,10 @@ function buildSubjectCard(s, pct, mySubjs, compact){
     +'<div class="subject-card-name">'+s.label+'</div>'
     +(meta.desc?'<div class="subject-card-desc">'+meta.desc+'</div>':'')
     +'<div class="subject-meta2" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.625rem">'
-    +'<span style="font-size:.6rem;color:var(--txt-4);background:var(--bg-3);border:1px solid var(--border);border-radius:20px;padding:2px 7px">📚 '+totalM+' modules</span>'
-    +'<span style="font-size:.6rem;color:var(--txt-4);background:var(--bg-3);border:1px solid var(--border);border-radius:20px;padding:2px 7px">📝 '+totalT+' topics</span>'
-    +(meta.time?'<span style="font-size:.6rem;color:var(--txt-4);background:var(--bg-3);border:1px solid var(--border);border-radius:20px;padding:2px 7px">⏱ '+meta.time+'</span>':'')
-    +'<span style="font-size:.6rem;color:var(--txt-4);background:var(--bg-3);border:1px solid var(--border);border-radius:20px;padding:2px 7px">🎓 '+gradeRange+'</span>'
+    +'<span style="font-size:.68rem;color:var(--txt-3);background:var(--bg-3);border:1px solid var(--border);border-radius:20px;padding:2px 7px">📚 '+totalM+' modules</span>'
+    +'<span style="font-size:.68rem;color:var(--txt-3);background:var(--bg-3);border:1px solid var(--border);border-radius:20px;padding:2px 7px">📝 '+totalT+' topics</span>'
+    +(meta.time?'<span style="font-size:.68rem;color:var(--txt-3);background:var(--bg-3);border:1px solid var(--border);border-radius:20px;padding:2px 7px">⏱ '+meta.time+'</span>':'')
+    +'<span style="font-size:.68rem;color:var(--txt-3);background:var(--bg-3);border:1px solid var(--border);border-radius:20px;padding:2px 7px">🎓 '+gradeRange+'</span>'
     +'</div>'
     +'<div class="subject-card-progress">'
     +'<div class="subject-progress-label"><span>Progress</span><span style="color:'+s.color+';font-weight:700">'+pct+'%</span></div>'
@@ -10971,7 +10974,7 @@ function updateCharCount(textarea, countId) {
       <p style="font-size:.82rem;color:var(--txt-2);line-height:1.75;margin-bottom:1.1rem">If you are a company, investor, or organisation that shares our belief in accessible education, we would love your support. Every rand invested in MzansiAcademy is a rand invested in a South African learner’s future.</p>
       <div style="display:flex;gap:.75rem;flex-wrap:wrap">
         <button class="btn btn-primary" onclick="goTo('vision');setTimeout(function(){document.getElementById('sponsorSection').scrollIntoView({behavior:'smooth'})},200)">💼 Partner With Us</button>
-        <a href="/cdn-cgi/l/email-protection#ea83848c85aa87908b8499838b898b8e8f8793c48985c4908b" class="btn btn-secondary">📬 <span class="__cf_email__" data-cfemail="c4adaaa2ab84a9bea5aab7ada5a7a5a0a1a9bdeaa7abeabea5">[email&#160;protected]</span></a>
+        <a href="mailto:info@mzansiacademy.co.za" class="btn btn-secondary">📬 info@mzansiacademy.co.za</a>
       </div>
     </div>
 
