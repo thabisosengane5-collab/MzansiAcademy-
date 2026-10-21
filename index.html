@@ -6672,7 +6672,7 @@ function showLesson(sid,mi,ti){
 
   var lesson=getLesson(sid,mi,ti);
   var svg=getSubjectSVG(sid);
-  var topicSvg=getTopicSVG(sid,mi,ti)||svg;
+  var topicSvg=lesson.svg||getTopicSVG(sid,mi,ti)||svg;
   var noteKey=sid+'-'+mi+'-'+ti;
   var savedNote=APP.userNotes[noteKey]||'';
 
