@@ -119,6 +119,22 @@ this repo (or behind auth) and add a `.vercelignore`.
 
 ---
 
+## 📚 Course content
+
+21. **96% of lessons were template text.** Of 504 topics, only 22 had hand-written
+    lessons; the rest come from one generic template per subject with the topic name
+    swapped in — the same paragraphs on every page. Mathematics is now fully written
+    (42 lessons in `content/lessons/math.js`); 19 subjects (~440 lessons) remain.
+22. **5 subjects quiz learners on Maths.** `math_lit`, `afrikaans`, `isizulu`,
+    `technology` and `arts` have no questions, and `index.html` fills them with the
+    Maths bank (`QBANK[s.id]=QBANK.math`).
+23. **Module quizzes weren't about the module** — they drew 8 random questions from the
+    whole subject. Fixed for subjects with per-lesson quizzes (Maths so far).
+24. **10-second timer on module quiz questions** is too short for calculation questions
+    (and the speed bonus divides by 20, not 10).
+
+---
+
 ## Suggested order
 1. Rotate the service-account key and the Groq key (items 1-2) — today, in the consoles.
 2. One PR: env-var the service account, lock down `/api/notify` and `/api/chat`, add
