@@ -6613,8 +6613,39 @@ function switchUvTab(el,tab){
   } else { buildSidebar(APP.activeSid); }
 }
 
+// ── Lesson content files (content/lessons/<sid>.js, loaded on demand) ──
+var LESSON_FILES={math:1};
+var _lessonFilesLoaded={};
+function ensureLessons(sid,cb){
+  if(!LESSON_FILES[sid]||_lessonFilesLoaded[sid]) return cb();
+  var s=document.createElement('script');
+  s.src='/content/lessons/'+sid+'.js';
+  s.onload=s.onerror=function(){_lessonFilesLoaded[sid]=true;cb();};
+  document.head.appendChild(s);
+}
+
+// ── Lesson Quick Check: first correct answer per question earns +10 pts ──
+function lqAnswer(key,qi,oi){
+  var p=key.split('-'), q=(getLesson(p[0],+p[1],+p[2]).quiz||[])[qi]; if(!q) return;
+  var box=document.getElementById('lq-'+key+'-'+qi); if(!box||box.dataset.done) return;
+  box.dataset.done='1';
+  var ok=oi===q.a;
+  box.querySelectorAll('.quiz-opt').forEach(function(b,i){b.disabled=true;if(i===q.a)b.classList.add('correct');else if(i===oi)b.classList.add('wrong');});
+  var x=document.getElementById('lqx-'+key+'-'+qi); if(x) x.className='quiz-explanation show'+(ok?'':' wrong-exp');
+  if(!ok) return;
+  if(!window.currentUser||!window.DB){ showToast('Correct! Sign in to earn points','info'); return; }
+  var seen={}; try{seen=JSON.parse(localStorage.getItem('ma_lq')||'{}');}catch(e){}
+  if(seen[key+'-'+qi]) return;
+  seen[key+'-'+qi]=1; try{localStorage.setItem('ma_lq',JSON.stringify(seen));}catch(e){}
+  window.currentUser.pts=(window.currentUser.pts||0)+10;
+  setEl('topUserPts',window.currentUser.pts+'⭐');
+  window.DB.addPoints(window.currentUser.uid,10,'lesson_check');
+  showToast('+10 pts ⚡','success');
+}
+
 // ── Show Lesson ───────────────────────────────────────
 function showLesson(sid,mi,ti){
+  if(LESSON_FILES[sid]&&!_lessonFilesLoaded[sid]){ensureLessons(sid,function(){showLesson(sid,mi,ti);});return;}
   APP.activeSid=sid; APP.activeMi=mi; APP.activeTi=ti;
   if(typeof trackLessonView==='function') trackLessonView(sid);
   buildSidebar(sid);
@@ -6641,7 +6672,7 @@ function showLesson(sid,mi,ti){
 
   var lesson=getLesson(sid,mi,ti);
   var svg=getSubjectSVG(sid);
-  var topicSvg=getTopicSVG(sid,mi,ti)||svg;
+  var topicSvg=lesson.svg||getTopicSVG(sid,mi,ti)||svg;
   var noteKey=sid+'-'+mi+'-'+ti;
   var savedNote=APP.userNotes[noteKey]||'';
 
@@ -6670,6 +6701,12 @@ function showLesson(sid,mi,ti){
     +'<div class="uv-illus-h">'+topic+'</div>'
     +'<div class="uv-illus-q">'+lesson.illusText+'</div>'
     +'</div></div>';
+
+  // ── 0. REAL-LIFE HOOK ──
+  if(lesson.hook){
+    html2+='<div class="uv-section-label">🎬 Real Life First</div>';
+    html2+='<div class="uv-block orange"><h4>'+lesson.hook.title+'</h4><p>'+lesson.hook.body+'</p></div>';
+  }
 
   // ── 1. INTRODUCTION ──
   html2+='<div class="uv-section-label">📌 Introduction</div>';
@@ -6703,6 +6740,12 @@ function showLesson(sid,mi,ti){
     html2+='</div>';
   }
 
+  // ── 3b. COMMON MISTAKES ──
+  if(lesson.mistakes&&lesson.mistakes.length){
+    html2+='<div class="uv-section-label">⚠️ Common Mistakes</div>';
+    html2+='<div class="uv-block purple">'+lesson.mistakes.map(function(m){return '<p>❌ '+m+'</p>';}).join('')+'</div>';
+  }
+
   // ── 4. SA CONTEXT ──
   if(lesson.callout){
     html2+='<div class="uv-section-label">🇿🇦 South African Context</div>';
@@ -6728,6 +6771,26 @@ function showLesson(sid,mi,ti){
     html2+='<div class="uv-activity"><div class="uv-activity-tag">Activity</div><p>'+lesson.activity+'</p>'
       +(lesson.activityAnswer?'<details style="margin-top:.75rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--dna-teal);font-weight:700">Show Answer</summary><div style="margin-top:.5rem;font-size:.85rem;color:var(--txt-2)">'+lesson.activityAnswer+'</div></details>':'')
       +'</div>';
+  }
+
+  // ── 6b. QUICK CHECK (per-lesson quiz) ──
+  if(lesson.quiz&&lesson.quiz.length){
+    html2+='<div class="uv-section-label">⚡ Quick Check · +10 pts each</div>';
+    lesson.quiz.forEach(function(q,qi){
+      html2+='<div class="quiz-card" style="margin-bottom:.75rem"><div class="quiz-question"><div class="quiz-q-text">'+(qi+1)+'. '+q.q+'</div></div>'
+        +'<div class="quiz-options" id="lq-'+noteKey+'-'+qi+'">'
+        +q.opts.map(function(o,oi){return '<button class="quiz-opt" onclick="lqAnswer(\''+noteKey+'\','+qi+','+oi+')"><span class="opt-letter">'+'ABCD'[oi]+'</span>'+o+'</button>';}).join('')
+        +'</div><div class="quiz-explanation" id="lqx-'+noteKey+'-'+qi+'"><div class="quiz-exp-text">'+q.et+'</div></div></div>';
+    });
+  }
+
+  // ── 6c. EXAM TIP + KEY TERMS ──
+  if(lesson.examTip){
+    html2+='<div class="uv-section-label">📝 Exam Tip</div><div class="uv-block gold"><p>'+lesson.examTip+'</p></div>';
+  }
+  if(lesson.keyterms&&lesson.keyterms.length){
+    html2+='<div class="uv-section-label">📖 Key Terms</div><div class="uv-block teal">'
+      +lesson.keyterms.map(function(k){return '<p><strong>'+k.w+'</strong> — '+k.d+'</p>';}).join('')+'</div>';
   }
 
   // ── 7. CONCLUSION ──
@@ -7740,7 +7803,10 @@ function calcSubjectPct(sid){
 var mq={qs:[],idx:0,score:0,answered:false,sid:'',mi:0,timer:null,timeLeft:20};
 function openModuleQuiz(sid,mi){
   APP.activeSid=sid; APP.activeMi=mi; APP.activeTi=-1;
-  var pool=QBANK[sid]||QBANK.math;
+  // Prefer this module's own lesson questions; fall back to the subject bank
+  var mdb=LESSON_DB[sid]&&LESSON_DB[sid]['m'+mi], mpool=[];
+  if(mdb) Object.keys(mdb).forEach(function(k){ if(mdb[k].quiz) mpool=mpool.concat(mdb[k].quiz); });
+  var pool=mpool.length>=4?mpool:(QBANK[sid]||QBANK.math);
   mq.qs=[].concat(pool).sort(function(){return Math.random()-.5;}).slice(0,Math.min(8,pool.length));
   mq.idx=0; mq.score=0; mq.sid=sid; mq.mi=mi; mq.answered=false;
   var cd=COURSE_DATA[sid], mod=cd&&cd.modules[mi];
