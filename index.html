@@ -6,14 +6,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>MzansiAcademy – It's in our DNA 🧬</title>
 <meta name="application-name" content="MzansiAcademy">
-<meta name="description" content="MzansiAcademy – It's in our DNA. Free CAPS-aligned learning for Grade 8–12 learners across South Africa.">
+<meta name="description" content="MzansiAcademy – It's in our DNA. Free CAPS-aligned learning for Grade 10–12 learners across South Africa.">
 <meta name="theme-color" content="#080D1A">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MzansiAcademy">
 <meta property="og:title" content="MzansiAcademy – It's in our DNA 🧬">
-<meta property="og:description" content="Free CAPS-aligned gamified learning for South African Grade 8–12 learners.">
+<meta property="og:description" content="Free CAPS-aligned gamified learning for South African Grade 10–12 learners.">
 <meta property="og:type" content="website">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%277%27%20fill%3D%27%2523080D1A%27%2F%3E%3Ctext%20x%3D%2716%27%20y%3D%2723%27%20font-size%3D%2718%27%20text-anchor%3D%27middle%27%3E%F0%9F%A7%AC%3C%2Ftext%3E%3C%2Fsvg%3E">
 <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22MzansiAcademy%22%2C%22short_name%22%3A%22MzansiAcademy%22%2C%22description%22%3A%22Free%20CAPS-aligned%20learning%20for%20SA%20Grade%208-12%20learners%22%2C%22start_url%22%3A%22/%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23080D1A%22%2C%22theme_color%22%3A%22%2300D68F%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage/png%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk%2BM9QDwADhgGAWjR9awAAAABJRU5ErkJggg%3D%3D%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image/png%22%7D%5D%7D">
@@ -182,7 +182,7 @@ window.DB = {
       // Mirror public fields to leaderboard
       if (data.displayName || data.pts !== undefined || data.grade || data.province) {
         await setDoc(doc(db,'leaderboard',uid), {
-          displayName: data.displayName || window.currentUser?.displayName || 'Learner',
+          displayName: (function(n){var p=String(n||'Learner').trim().split(/\s+/);return p[0]+(p.length>1?' '+p[p.length-1].charAt(0)+'.':'');})(data.displayName || window.currentUser?.displayName),
           avatar: data.avatar || '🧬',
           pts: data.pts || 0,
           grade: data.grade || '',
@@ -1169,6 +1169,8 @@ code { font-family:var(--mono); font-size:0.85em; background:var(--bg-4); paddin
   position:absolute;inset:0;width:100%;height:100%;
   pointer-events:none;z-index:1;
 }
+/* Phones: the floating subject labels sit behind the headline and hurt readability */
+@media(max-width:600px){ #heroCanvas { display:none; } }
 
 .hero-inner {
   position:relative; z-index:2;
@@ -2210,7 +2212,7 @@ body { overflow-x:hidden; max-width:100vw; }
   .uv-content { padding:1rem 1rem 9rem !important; }
   .uv-tip-row { grid-template-columns:1fr !important; }
   .uv-kp-grid { grid-template-columns:1fr !important; }
-  .uv-illus-art { height:140px !important; }
+  .uv-illus-art { height:auto !important; aspect-ratio:400/220; } /* lesson SVGs are 400×220 */
 }
 
 /* Quiz card doesn't overflow */
@@ -2307,12 +2309,12 @@ body { overflow-x:hidden; max-width:100vw; }
 /* ═══ AI ASSISTANT STYLES ═══ */
 .ai-fab {
   position:fixed;
-  top:calc(var(--nav-h) + .625rem);
-  right:1rem;
-  bottom:auto;
+  top:auto;
+  right:.75rem;
+  bottom:calc(var(--bottom-nav) + .75rem);
   left:auto;
   transform:none;
-  z-index:900;
+  z-index:650; /* above bottom nav + AI panel, below DM panel and modals */
   width:48px; height:48px;
   border-radius:50%;
   background:linear-gradient(135deg,var(--dna-green),var(--dna-teal));
@@ -2326,8 +2328,10 @@ body { overflow-x:hidden; max-width:100vw; }
 /* In course view — right side so it doesn't block lesson text */
 
 
+/* Phones: clear the lesson Prev / Mark Complete / Next bar */
+body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem); }
 @media(min-width:768px){
-  .ai-fab { top:calc(var(--nav-h) + .625rem); right:.75rem; }
+  .ai-fab, body:has(#pgCourseView.active) .ai-fab { top:calc(var(--nav-h) + .625rem); bottom:auto; right:.75rem; }
 }
 .ai-panel {
   position:fixed; bottom:calc(var(--bottom-nav) + 4.5rem); right:.5rem;
@@ -2821,7 +2825,7 @@ body { overflow-x:hidden; max-width:100vw; }
     <div class="hero-inner animate-in">
       <div class="hero-badge animate-in animate-in-delay-1">
         <span class="hero-badge-dot"></span>
-        Free · CAPS-Aligned · Grade 8–12 · South Africa
+        Free · CAPS-Aligned · Grade 10–12 · South Africa
       </div>
       <div style="display:flex;justify-content:center;gap:8px;margin-top:1rem">
         <div class="sa-flag-animated" style="width:56px;height:7px;border-radius:3px"><div></div><div></div><div></div><div></div><div></div><div></div></div>
@@ -2910,7 +2914,7 @@ body { overflow-x:hidden; max-width:100vw; }
       <div class="section-header">
         <div class="section-tag">🎮 Gamified Learning</div>
         <h2 class="section-title">Everything you need to <em class="grad-text">pass matric</em></h2>
-        <p class="section-sub">From Grade 8 to Grade 12, we've got every CAPS subject covered with interactive lessons, progressive quizzes, and live competitions.</p>
+        <p class="section-sub">From Grade 10 to Grade 12 (Grade 8–9 coming soon), we cover the CAPS subjects with interactive lessons, progressive quizzes, and live competitions.</p>
       </div>
 
       <div class="features-grid">
@@ -3008,7 +3012,7 @@ body { overflow-x:hidden; max-width:100vw; }
     <div class="flag-strip" style="width:80px;margin:0 auto .875rem;border-radius:3px"><div></div><div></div><div></div><div></div><div></div><div></div></div>
     <div style="font-family:var(--serif);font-size:1.1rem;color:var(--txt);margin-bottom:.375rem">MzansiAcademy</div>
     <div style="font-style:italic;color:var(--dna-gold);font-family:var(--serif);font-size:.85rem;margin-bottom:.875rem">"It's in our DNA" 🧬</div>
-    <p style="font-size:.75rem;color:var(--txt-3)">Free CAPS-Aligned Education · Grade 8–12 · South Africa 🇿🇦</p>
+    <p style="font-size:.75rem;color:var(--txt-3)">Free CAPS-Aligned Education · Grade 10–12 · South Africa 🇿🇦</p>
     <div style="display:flex;justify-content:center;gap:1rem;margin-top:.875rem;flex-wrap:wrap">
       <a href="https://www.tiktok.com/@mzansiacademy" target="_blank" rel="noopener" style="font-size:.72rem;color:var(--txt-4);text-decoration:none">TikTok</a>
       <span style="color:var(--txt-4)">·</span>
@@ -3203,7 +3207,7 @@ body { overflow-x:hidden; max-width:100vw; }
         <a class="footer-link" href="mailto:support@mzansiacademy.co.za">support@mzansiacademy.co.za</a>
         <a class="footer-link" href="mailto:info@mzansiacademy.co.za">info@mzansiacademy.co.za</a>
       </div>
-      <p style="font-size:.65rem;color:var(--txt-4)">© 2026 MzansiAcademy · Free CAPS-Aligned Education · Grade 8–12 · South Africa 🇿🇦</p>
+      <p style="font-size:.65rem;color:var(--txt-4)">© 2026 MzansiAcademy · Free CAPS-Aligned Education · Grade 10–12 · South Africa 🇿🇦</p>
     </footer>
   </div>
 </div>
@@ -3712,6 +3716,8 @@ body { overflow-x:hidden; max-width:100vw; }
         </select>
       </div>
     </div>
+
+    <div id="lbPodium"></div>
 
     <!-- Table -->
     <div class="card" style="padding:0;overflow:hidden">
@@ -5998,7 +6004,7 @@ async function resendVerificationEmail(){
 
 var FAQ_DATA = [
   {q:'Is MzansiAcademy really free?', a:'Yes — 100% free. No hidden fees, no premium tiers, no credit card required. Every subject, every lesson, every quiz is available to all learners at no cost.'},
-  {q:'Which grades does MzansiAcademy cover?', a:'We cover Grade 8 through Grade 12, following the South African CAPS curriculum across all 21 subjects.'},
+  {q:'Which grades does MzansiAcademy cover?', a:'Lessons cover Grade 10 to Grade 12 (FET phase), following the South African CAPS curriculum. Grade 8–9 content is coming soon.'},
   {q:'How do I earn points?', a:'Complete topics (10pts), pass checkpoint quizzes every 10% (25pts), pass the mid-test at 50% (50pts), pass the final exam at 98% (200pts), and win Battle Trivia (500pts).'},
   {q:'Does the app work without internet?', a:'Many features work offline after first load — lessons, quick quizzes, and offline Battle Trivia vs AI bots. Sign in, leaderboard, and online battle require internet.'},
   {q:'How do I change my avatar or name?', a:'Tap Settings on this profile page. You can update your display name, avatar, province, grade, and study mantra at any time.'},
@@ -6143,7 +6149,7 @@ function openProfileSheet(r,rank){
   if(!bd) return;
   var avEl=document.getElementById('sheetAv');
   if(avEl) avEl.innerHTML=getAvatarSvg(r.avatar);
-  setEl('sheetName',r.displayName||'Learner');
+  setEl('sheetName',lbName(r.displayName));
   setEl('sheetSub','Grade '+(r.grade||'?')+' · '+(r.province||'?'));
   setEl('sheetPts',(r.pts||0).toLocaleString());
   setEl('sheetWins',r.battleWins||0);
@@ -6362,6 +6368,13 @@ function renderDashboard(){
   }).join('');
   loadLeaderboardPreview();
 }
+// Leaderboards are public and most learners are minors: show first name +
+// surname initial only, HTML-escaped (names are user-entered).
+function lbName(n){
+  var p=String(n||'Learner').trim().split(/\s+/);
+  var s=p[0]+(p.length>1?' '+p[p.length-1].charAt(0)+'.':'');
+  return s.replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+}
 async function loadLeaderboardPreview(){
   var demoData=[
     {displayName:'Sipho M',avatar:'🦁',grade:'12',province:'Gauteng',pts:4820},
@@ -6380,7 +6393,7 @@ async function loadLeaderboardPreview(){
     var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
     return '<div class="lb-row"><span class="lb-rank">'+medal+'</span>'
       +'<div class="lb-av" style="background:var(--bg-4)">'+( r.avatar||'🧬')+'</div>'
-      +'<div><div style="font-weight:700;font-size:.85rem;color:var(--txt)">'+(r.displayName||'Learner')+'</div>'
+      +'<div><div style="font-weight:700;font-size:.85rem;color:var(--txt)">'+lbName(r.displayName)+'</div>'
       +'<div style="font-size:.68rem;color:var(--txt-3)">Gr '+(r.grade||'?')+' · '+(r.province||'?')+'</div></div>'
       +'<span class="lb-pts">'+(r.pts||0).toLocaleString()+'⭐</span></div>';
   }).join('');
@@ -6391,23 +6404,23 @@ var _activeGrade=0;
 
 // ── Subject metadata ─────────────────────────────────────────────
 var SUBJECT_META = {
-  math:     {desc:"Solve real-world problems – from taxi maths to investment growth. NSC aligned.",  grades:[8,9,10,11,12], time:"~12 hrs", badge:"popular"},
+  math:     {desc:"Solve real-world problems – from taxi maths to investment growth. NSC aligned.",  grades:[10,11,12], time:"~12 hrs", badge:"popular"},
   math_lit: {desc:"Real-world maths for everyday life – budgets, loans, data, and measurement.",    grades:[10,11,12],     time:"~8 hrs",  badge:"exam"},
-  science:  {desc:"Why does lightning strike? How do solar panels work? Physics & chemistry in SA context.", grades:[8,9,10,11,12], time:"~11 hrs", badge:"popular"},
+  science:  {desc:"Why does lightning strike? How do solar panels work? Physics & chemistry in SA context.", grades:[10,11,12], time:"~11 hrs", badge:"popular"},
   lifesci:  {desc:"Understand your body, environment, and genetics – with local case studies like TB and fynbos.", grades:[10,11,12], time:"~10 hrs", badge:"popular"},
   history:  {desc:"From Mapungubwe to Mandela – uncover the stories that shaped South Africa.",      grades:[10,11,12],     time:"~9 hrs",  badge:"exam"},
   geography:{desc:"Explore climate zones, GIS mapping, and human impact – right here in Mzansi.",   grades:[10,11,12],     time:"~10 hrs", badge:"popular"},
   accounting:{desc:"Learn to manage finances like a pro. Balance sheets, income statements, real scenarios.", grades:[10,11,12], time:"~10 hrs", badge:"exam"},
   business: {desc:"Start a spaza shop, understand the JSE, and learn how businesses succeed in SA.",grades:[10,11,12],     time:"~8 hrs",  badge:"popular"},
   economics:{desc:"Inflation, GDP, and the SARB – how the economy affects your pocket.",            grades:[10,11,12],     time:"~8 hrs",  badge:"exam"},
-  english_hl:{desc:"Master poetry, essays, and language skills with South African literature.",     grades:[8,9,10,11,12], time:"~10 hrs", badge:"popular"},
-  afrikaans:{desc:"Ontdek die skoonheid van Afrikaans – gedigte, taalstrukture en kreatiewe skryfwerk.", grades:[8,9,10,11,12], time:"~9 hrs", badge:null},
-  isizulu:  {desc:"Fundisa ulimi lwakho – izinkondlo, izakhiwo zolimi, nokubhala ngobuciko.",       grades:[8,9,10,11,12], time:"~9 hrs",  badge:null},
+  english_hl:{desc:"Master poetry, essays, and language skills with South African literature.",     grades:[10,11,12], time:"~10 hrs", badge:"popular"},
+  afrikaans:{desc:"Ontdek die skoonheid van Afrikaans – gedigte, taalstrukture en kreatiewe skryfwerk.", grades:[10,11,12], time:"~9 hrs", badge:null},
+  isizulu:  {desc:"Fundisa ulimi lwakho – izinkondlo, izakhiwo zolimi, nokubhala ngobuciko.",       grades:[10,11,12], time:"~9 hrs",  badge:null},
   cat:      {desc:"From spreadsheets to problem-solving – essential digital skills for the modern workplace.", grades:[10,11,12], time:"~9 hrs", badge:"popular"},
   technology:{desc:"Design and make – learn about structures, electronics, and systems with local examples.", grades:[8,9], time:"~8 hrs", badge:"new"},
   arts:     {desc:"Express yourself through drawing, painting, and design. Explore celebrated SA artists.", grades:[10,11,12], time:"~8 hrs", badge:"new"},
   music:    {desc:"Learn music theory, composition, and the sounds of SA – from jazz to maskandi.",  grades:[10,11,12],     time:"~9 hrs",  badge:"new"},
-  lifeori:  {desc:"Build resilience, career planning, and citizenship skills for life after school.", grades:[8,9,10,11,12], time:"~7 hrs", badge:"popular"},
+  lifeori:  {desc:"Build resilience, career planning, and citizenship skills for life after school.", grades:[10,11,12], time:"~7 hrs", badge:"popular"},
   nautical: {desc:"Navigation, seamanship, and maritime communications – gateway to SA's shipping industry.", grades:[10,11,12], time:"~9 hrs", badge:"new"},
   consumer: {desc:"Make informed choices – from nutrition to fashion, with a focus on local products.", grades:[10,11,12],   time:"~8 hrs",  badge:"new"},
   adv_mech: {desc:"Precision machining, hydraulics, PLCs – advanced skills for SA's industrial sector.", grades:[10,11,12],  time:"~11 hrs", badge:"new"},
@@ -7614,7 +7627,7 @@ function renderLbRows(rows){
     return '<div class="live-lb-row">'
       +'<div class="live-lb-rank '+(rankClasses[i]||'')+'">'+(i<3?medals[i]:i+1)+'</div>'
       +'<div class="live-lb-av">'+(r.avatar||'🧬')+'</div>'
-      +'<div class="live-lb-name">'+(r.displayName||'Learner')+'</div>'
+      +'<div class="live-lb-name">'+lbName(r.displayName)+'</div>'
       +'<div class="live-lb-prov">'+(r.province||'SA')+'</div>'
       +'<div class="live-lb-pts">'+(r.pts||0)+' ⭐</div>'
       +'</div>';
@@ -8118,6 +8131,7 @@ async function loadLeaderboard(){
   // Apply top N limit
   data=data.slice(0,_lbLimit);
 
+  window._lbRows=data;
   var medals=['🥇','🥈','🥉'];
   var top3=data.slice(0,3), order=[1,0,2], heights=[90,70,55];
   var podEl=document.getElementById('lbPodium');
@@ -8125,12 +8139,11 @@ async function loadLeaderboard(){
   if(podEl) podEl.innerHTML='<div style="display:flex;align-items:flex-end;justify-content:center;gap:1rem;padding:1rem 0">'
     +order.filter(function(i){return top3[i];}).map(function(i){
       var r=top3[i];
-      var name=(r.displayName||'Learner');
-      var shortName=name.length>12?name.slice(0,12)+'…':name;
+      var shortName=lbName(r.displayName);
       var avHtml=window.SVG_AVATARS?getAvatarSvg(r.avatar):'<span style="font-size:1.6rem">'+(r.avatar||'🧬')+'</span>';
       return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;max-width:110px">'
         +(i===0?'<div style="font-size:1rem">👑</div>':'<div style="height:1.3rem"></div>')
-        +'<div style="width:52px;height:52px;border-radius:50%;border:3px solid '+podColors[i]+';background:var(--bg-3);display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer" onclick="openProfileSheet('+JSON.stringify(r)+','+(i+1)+')">'+avHtml+'</div>'
+        +'<div style="width:52px;height:52px;border-radius:50%;border:3px solid '+podColors[i]+';background:var(--bg-3);display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer" onclick="openProfileSheet(window._lbRows['+i+'],'+(i+1)+')">'+avHtml+'</div>'
         +'<div style="font-size:.72rem;font-weight:800;color:var(--txt);text-align:center;line-height:1.3">'+shortName+'</div>'
         +'<div style="font-size:.65rem;color:var(--txt-3)">Gr '+(r.grade||'?')+' · '+(r.province||'SA').split(' ')[0]+'</div>'
         +'<div style="background:'+podColors[i]+';border-radius:8px 8px 0 0;width:100%;height:'+heights[i]+'px;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;font-size:1.2rem">'+medals[i]+'</div>'
@@ -8147,12 +8160,12 @@ async function loadLeaderboard(){
       var avHtml=window.SVG_AVATARS?getAvatarSvg(r.avatar):'<span style="font-size:1.1rem">'+(r.avatar||'🧬')+'</span>';
       var rankColor=i===3?'#CD7F32':isMe?'var(--dna-green)':'var(--txt-3)';
       return '<div style="display:flex;align-items:center;gap:.75rem;padding:.625rem 1rem;border-bottom:1px solid var(--border);cursor:'+(isMe?'default':'pointer')+';transition:background .15s'+(isMe?';background:rgba(0,214,143,.04)':'')+'" '
-        +(isMe?'':' onclick="openProfileSheet('+JSON.stringify(r)+','+(i+1)+')"')
+        +(isMe?'':' onclick="openProfileSheet(window._lbRows['+i+'],'+(i+1)+')"')
         +' onmouseover="if(!'+isMe+')this.style.background=\'var(--bg-3)\'" onmouseout="if(!'+isMe+')this.style.background=\''+(isMe?'rgba(0,214,143,.04)':'transparent')+'\'\">'
         +'<span style="font-family:var(--mono);font-size:.75rem;font-weight:700;color:'+rankColor+';min-width:26px;text-align:center">#'+(i+1)+'</span>'
         +'<div style="width:34px;height:34px;border-radius:50%;background:var(--bg-3);border:1.5px solid '+(isMe?'var(--dna-green)':'var(--border-2)')+';display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">'+avHtml+'</div>'
         +'<div style="flex:1;min-width:0">'
-        +'<div style="font-size:.82rem;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(r.displayName||'Learner')+(isMe?' <span style="font-size:.6rem;background:rgba(0,214,143,.15);color:var(--dna-green);padding:1px 6px;border-radius:8px;font-weight:800">YOU</span>':'')+'</div>'
+        +'<div style="font-size:.82rem;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+lbName(r.displayName)+(isMe?' <span style="font-size:.6rem;background:rgba(0,214,143,.15);color:var(--dna-green);padding:1px 6px;border-radius:8px;font-weight:800">YOU</span>':'')+'</div>'
         +'<div style="font-size:.65rem;color:var(--txt-3)">Grade '+(r.grade||'?')+' · '+(r.province||'?')+'</div>'
         +'</div>'
         +'<div style="text-align:right;flex-shrink:0">'
@@ -8307,7 +8320,7 @@ function printCertificate(name,subj,pct,date){
     +'<div class="certifies">This certifies that</div><div class="name">'+name+'</div>'
     +'<div class="completed">has successfully completed the final examination in</div>'
     +'<div class="subject">'+subj+'</div><div class="score">Final Exam Score: '+pct+'%</div>'
-    +'<div style="font-size:.78rem;color:#5A7099;margin-bottom:2rem">Awarded '+date+' · MzansiAcademy CAPS Grade 8–12 · South Africa 🇿🇦</div>'
+    +'<div style="font-size:.78rem;color:#5A7099;margin-bottom:2rem">Awarded '+date+' · MzansiAcademy · CAPS-aligned · South Africa 🇿🇦</div>'
     +'<div class="footer"><div><div class="sig-line"></div><div class="sig-text">MzansiAcademy Platform</div></div>'
     +'<div>🇿🇦</div><div style="text-align:right"><div class="sig-line" style="margin-left:auto"></div><div class="sig-text">CAPS Curriculum</div></div></div></div>'
     +'<button class="print-btn" onclick="window.print()">🖨️ Print Certificate</button>'
@@ -10815,7 +10828,7 @@ function updateCharCount(textarea, countId) {
     <div style="padding:1.1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg-2);z-index:10">
       <div>
         <div style="font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--txt)">📚 All 21 CAPS Subjects</div>
-        <div style="font-size:.68rem;color:var(--txt-3);margin-top:2px">Grade 8–12 · CAPS Aligned · More subjects coming soon</div>
+        <div style="font-size:.68rem;color:var(--txt-3);margin-top:2px">Grade 10–12 · CAPS Aligned · Grade 8–9 coming soon</div>
       </div>
       <button onclick="closeModal('subjectsModal')" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--txt-3);padding:.25rem;line-height:1">✕</button>
     </div>
@@ -10886,7 +10899,7 @@ function updateCharCount(textarea, countId) {
         <span style="font-size:.68rem;font-weight:700;color:var(--dna-gold);letter-spacing:.08em">500+ TOPICS ACROSS 21 SUBJECTS</span>
       </div>
       <h1 style="font-family:var(--serif);font-size:clamp(1.8rem,5vw,3rem);color:var(--txt);margin-bottom:.5rem">Every Topic. Every Subject.</h1>
-      <p style="color:var(--txt-3);font-size:.85rem;max-width:500px;margin:0 auto">CAPS-aligned curriculum topics — all free, all interactive, all designed for South African Grade 8–12 learners.</p>
+      <p style="color:var(--txt-3);font-size:.85rem;max-width:500px;margin:0 auto">CAPS-aligned curriculum topics — all free, all interactive, all designed for South African Grade 10–12 learners.</p>
     </div>
 
     <div id="topicsAllList" style="max-width:900px;margin:0 auto">
