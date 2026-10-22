@@ -6630,7 +6630,7 @@ function switchUvTab(el,tab){
 }
 
 // ── Lesson content files (content/lessons/<sid>.js, loaded on demand) ──
-var LESSON_FILES={math:1,science:1};
+var LESSON_FILES={math:1,science:1,lifesci:1};
 var _lessonFilesLoaded={};
 function ensureLessons(sid,cb){
   if(!LESSON_FILES[sid]||_lessonFilesLoaded[sid]) return cb();
