@@ -94,8 +94,8 @@ this repo (or behind auth) and add a `.vercelignore`.
    confirm those inboxes exist.
 10. **Duplicate id `friendSearchInput`** (`index.html:10193` and `11054`). The friends-list
     filter (`renderFriendsList`, line 10191) can read the wrong input.
-11. **SVG console error** `<rect> attribute rx: Expected length, "3 3 0 0"` — `rx` takes one
-    value; use a `<path>` for asymmetric corners.
+11. ~~**SVG console error** `<rect> attribute rx: Expected length, "3 3 0 0"`~~ — fixed
+    (Rooms tab icon now uses `rx="3"`; the square rect under it keeps the bottom flat).
 12. **Two `<link rel="manifest">` tags** (file + data-URL). Keep `/manifest.json` only.
     Its icons point at `ui-avatars.com` (third-party, PNG generated on demand) — ship real
     192/512 PNGs in the repo so installs work offline.

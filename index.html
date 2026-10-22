@@ -1272,6 +1272,17 @@ code { font-family:var(--mono); font-size:0.85em; background:var(--bg-4); paddin
 .feature-icon { font-size:2.5rem; margin-bottom:1rem; display:block; }
 .feature-title { font-family:var(--serif); font-size:1.2rem; margin-bottom:.625rem; color:var(--txt); }
 .feature-desc { font-size:.85rem; color:var(--txt-2); line-height:1.7; }
+@media(max-width:600px){
+  .hero-stats { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; max-width:340px; margin:0 auto; }
+  .scroll-hint { display:none; }
+  .features-section { padding:3rem 1rem; }
+  .section-header { margin-bottom:2rem; }
+  .features-grid { gap:.75rem; }
+  .feature-card { padding:1.125rem 1.25rem; }
+  .feature-icon { font-size:1.6rem; float:left; margin:0 .875rem .25rem 0; }
+  .feature-title { font-size:1.05rem; margin-bottom:.375rem; }
+  .feature-desc { font-size:.8rem; line-height:1.6; }
+}
 
 /* ── Vision section ── */
 .vision-section {
@@ -2204,6 +2215,9 @@ body { overflow-x:hidden; max-width:100vw; }
   .uv-bar { width:60px !important; }
 }
 
+/* Back / Contents / progress stay under the nav while reading */
+.uv-topbar { position:sticky; top:var(--nav-h); }
+
 /* Reading bar always visible */
 .uv-reading-bar { position:sticky; top:0; z-index:30; }
 
@@ -2332,6 +2346,8 @@ body { overflow-x:hidden; max-width:100vw; }
 body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem); }
 @media(min-width:768px){
   .ai-fab, body:has(#pgCourseView.active) .ai-fab { top:calc(var(--nav-h) + .625rem); bottom:auto; right:.75rem; }
+  /* Lessons: keep clear of the course progress bar at the top */
+  body:has(#pgCourseView.active) .ai-fab { top:auto; bottom:5rem; }
 }
 .ai-panel {
   position:fixed; bottom:calc(var(--bottom-nav) + 4.5rem); right:.5rem;
@@ -3162,11 +3178,9 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
     <div class="page-inner" style="padding-top:1.5rem;padding-bottom:0">
       <div class="badge badge-green" style="margin-bottom:.875rem">📚 CAPS-Aligned Curriculum</div>
       <h2 style="font-family:var(--serif);font-size:clamp(1.4rem,4vw,2.2rem);color:var(--txt);margin-bottom:.25rem">Choose Your Subject</h2>
-      <p style="color:var(--txt-2);font-size:.82rem;margin-bottom:1rem">All subjects follow the South African CAPS curriculum for Grades 8–12.</p>
+      <p style="color:var(--txt-2);font-size:.82rem;margin-bottom:1rem">All subjects follow the South African CAPS curriculum for Grades 10–12 (Grade 8–9 coming soon).</p>
       <div class="grade-filter" id="gradeFilter">
         <button class="grade-btn active" onclick="setGrade(0,this)">All Grades</button>
-        <button class="grade-btn" onclick="setGrade(8,this)">Grade 8</button>
-        <button class="grade-btn" onclick="setGrade(9,this)">Grade 9</button>
         <button class="grade-btn" onclick="setGrade(10,this)">Grade 10</button>
         <button class="grade-btn" onclick="setGrade(11,this)">Grade 11</button>
         <button class="grade-btn" onclick="setGrade(12,this)">Grade 12</button>
@@ -5656,7 +5670,9 @@ var SUBJECT_SVGS = {
   webprog:'<svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="80" fill="rgba(99,102,241,0.05)" rx="8"/><rect x="8" y="8" width="104" height="64" fill="none" stroke="#6366F1" stroke-width="1.5" rx="5"/><rect x="8" y="8" width="104" height="16" fill="rgba(99,102,241,0.2)" rx="5"/><circle cx="18" cy="16" r="3" fill="#E03C31"/><circle cx="28" cy="16" r="3" fill="#FFB800"/><circle cx="38" cy="16" r="3" fill="#00D68F"/><text x="12" y="38" fill="#E03C31" font-size="8" font-family="monospace">&lt;html&gt;</text><text x="20" y="50" fill="#FFB800" font-size="8" font-family="monospace">.class{}</text><text x="12" y="62" fill="#6366F1" font-size="8" font-family="monospace">function()</text></svg>',
 };
 function getSubjectSVG(sid){
-  return SUBJECT_SVGS[sid] || SUBJECT_SVGS['math'];
+  if(SUBJECT_SVGS[sid]) return SUBJECT_SVGS[sid];
+  var cd=COURSE_DATA[sid]||{}, c=cd.color||'#00D68F';
+  return '<svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="80" fill="'+c+'" fill-opacity=".08" rx="8"/><text x="60" y="50" text-anchor="middle" fill="'+c+'" font-size="24" font-weight="800" font-family="sans-serif">'+(cd.icon||'')+'</text></svg>';
 }
 
 // ── Auth Callbacks ────────────────────────────────────
@@ -6374,6 +6390,13 @@ function lbName(n){
   var p=String(n||'Learner').trim().split(/\s+/);
   var s=p[0]+(p.length>1?' '+p[p.length-1].charAt(0)+'.':'');
   return s.replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+}
+function lbAv(r){
+  var av=window.SVG_AVATARS&&r.avatar&&SVG_AVATARS.find(function(a){return a.id===r.avatar;});
+  if(av) return av.svg;
+  var p=String(r.displayName||'L').trim().split(/\s+/);
+  var ini=(p[0].charAt(0)+(p.length>1?p[p.length-1].charAt(0):'')).toUpperCase();
+  return '<div style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#00D68F,#00C2D4);display:flex;align-items:center;justify-content:center;color:#080D1A;font-weight:800;font-size:.95em">'+lbName(ini)+'</div>';
 }
 async function loadLeaderboardPreview(){
   var demoData=[
@@ -8140,12 +8163,12 @@ async function loadLeaderboard(){
     +order.filter(function(i){return top3[i];}).map(function(i){
       var r=top3[i];
       var shortName=lbName(r.displayName);
-      var avHtml=window.SVG_AVATARS?getAvatarSvg(r.avatar):'<span style="font-size:1.6rem">'+(r.avatar||'🧬')+'</span>';
+      var avHtml=lbAv(r);
       return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;max-width:110px">'
         +(i===0?'<div style="font-size:1rem">👑</div>':'<div style="height:1.3rem"></div>')
         +'<div style="width:52px;height:52px;border-radius:50%;border:3px solid '+podColors[i]+';background:var(--bg-3);display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer" onclick="openProfileSheet(window._lbRows['+i+'],'+(i+1)+')">'+avHtml+'</div>'
         +'<div style="font-size:.72rem;font-weight:800;color:var(--txt);text-align:center;line-height:1.3">'+shortName+'</div>'
-        +'<div style="font-size:.65rem;color:var(--txt-3)">Gr '+(r.grade||'?')+' · '+(r.province||'SA').split(' ')[0]+'</div>'
+        +'<div style="font-size:.62rem;color:var(--txt-3);text-align:center;line-height:1.3">Gr '+(r.grade||'?')+' · '+String(r.province||'SA').replace(/[&<>"']/g,'')+'</div>'
         +'<div style="background:'+podColors[i]+';border-radius:8px 8px 0 0;width:100%;height:'+heights[i]+'px;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;font-size:1.2rem">'+medals[i]+'</div>'
         +'<div style="font-family:var(--mono);font-size:.72rem;font-weight:700;color:'+podColors[i]+'">'+( r.pts||0).toLocaleString()+'⭐</div>'
         +'</div>';
@@ -8157,7 +8180,7 @@ async function loadLeaderboard(){
     +data.slice(3).map(function(r,idx){
       var i=idx+3;
       var isMe=r.uid===myUid;
-      var avHtml=window.SVG_AVATARS?getAvatarSvg(r.avatar):'<span style="font-size:1.1rem">'+(r.avatar||'🧬')+'</span>';
+      var avHtml=lbAv(r);
       var rankColor=i===3?'#CD7F32':isMe?'var(--dna-green)':'var(--txt-3)';
       return '<div style="display:flex;align-items:center;gap:.75rem;padding:.625rem 1rem;border-bottom:1px solid var(--border);cursor:'+(isMe?'default':'pointer')+';transition:background .15s'+(isMe?';background:rgba(0,214,143,.04)':'')+'" '
         +(isMe?'':' onclick="openProfileSheet(window._lbRows['+i+'],'+(i+1)+')"')
@@ -11117,7 +11140,7 @@ function updateCharCount(textarea, countId) {
       <button class="friends-tab active" onclick="switchFriendsTab('friends',this)">👥 Friends</button>
       <button class="friends-tab" onclick="switchFriendsTab('requests',this)">📨 Requests <span id="friendReqCount" style="display:none;background:#EF4444;color:#fff;border-radius:10px;padding:1px 5px;font-size:.6rem;margin-left:3px">0</span></button>
       <button class="friends-tab" onclick="switchFriendsTab('find',this)">🔍 Find</button>
-      <button class="friends-tab" onclick="switchFriendsTab('rooms',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="display:inline;vertical-align:middle;margin-right:3px"><rect x="1" y="6" width="6" height="12" rx="3 3 0 0" fill="currentColor" opacity=".9"/><rect x="1" y="12" width="6" height="6" rx="0" fill="currentColor"/><circle cx="6.5" cy="13" r=".8" fill="#080D1A"/><rect x="9" y="4" width="6" height="14" rx="3 3 0 0" fill="currentColor"/><rect x="9" y="11" width="6" height="7" rx="0" fill="currentColor"/><circle cx="14.5" cy="12" r=".8" fill="#080D1A"/><rect x="17" y="6" width="6" height="12" rx="3 3 0 0" fill="currentColor" opacity=".9"/><rect x="17" y="12" width="6" height="6" rx="0" fill="currentColor"/><circle cx="22.5" cy="13" r=".8" fill="#080D1A"/></svg>Rooms</button>
+      <button class="friends-tab" onclick="switchFriendsTab('rooms',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="display:inline;vertical-align:middle;margin-right:3px"><rect x="1" y="6" width="6" height="12" rx="3" fill="currentColor" opacity=".9"/><rect x="1" y="12" width="6" height="6" rx="0" fill="currentColor"/><circle cx="6.5" cy="13" r=".8" fill="#080D1A"/><rect x="9" y="4" width="6" height="14" rx="3" fill="currentColor"/><rect x="9" y="11" width="6" height="7" rx="0" fill="currentColor"/><circle cx="14.5" cy="12" r=".8" fill="#080D1A"/><rect x="17" y="6" width="6" height="12" rx="3" fill="currentColor" opacity=".9"/><rect x="17" y="12" width="6" height="6" rx="0" fill="currentColor"/><circle cx="22.5" cy="13" r=".8" fill="#080D1A"/></svg>Rooms</button>
     </div>
 
     <!-- Friends list -->
