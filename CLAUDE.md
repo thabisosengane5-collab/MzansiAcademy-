@@ -79,12 +79,14 @@ Unless the user names `apps/web` or `mzansi-app`, "the website" means root `inde
 - Real lessons for a subject go in `content/lessons/<sid>.js` (assigns
   `LESSON_DB.<sid>.m<N> = {…}`) and the subject id is added to `LESSON_FILES` in
   `index.html`. The file loads on demand when the course opens. Done: `math` (42),
-  `science` (24), `lifesci` (30), `math_lit` (18), `english_hl` (24), `geography` (30). If a subject already has lessons inside
+  `science` (24), `lifesci` (30), `math_lit` (18), `english_hl` (24), `geography` (30), `accounting` (18). If a subject already has lessons inside
   `index.html`, merge into them (see `_lsAdd` in `lifesci.js`, `_geoAdd` in `geography.js`) instead of overwriting.
 - Lesson shape: see any entry in `content/lessons/math.js`. Every lesson needs a
   real-life South African `hook`, worked `examples` with answers, `mistakes`,
   `activity` + `activityAnswer`, `examTip`, `keyterms` and a 3-question `quiz`
   (`{q,opts,a,et}`, same shape as `QBANK`). Module quizzes draw from these.
+- Join digit groups in amounts with a no-break space (R6\u00a0000, not R6 000) so they don't
+  wrap on phones — not inside the SVG strings.
 - Check numbers in examples by calculation before committing; keep the CAPS grade in
   `subtitle`; mark anything beyond CAPS as enrichment.
 - Validate a content file: `node -e "global.LESSON_DB={};require('./content/lessons/math.js')"`.
