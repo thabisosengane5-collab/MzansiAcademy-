@@ -75,7 +75,9 @@ Unless the user names `apps/web` or `mzansi-app`, "the website" means root `inde
   name swapped in). Replacing template lessons with real ones is ongoing.
 - Real lessons for a subject go in `content/lessons/<sid>.js` (assigns
   `LESSON_DB.<sid>.m<N> = {…}`) and the subject id is added to `LESSON_FILES` in
-  `index.html`. The file loads on demand when the course opens. `math` is done (42/42).
+  `index.html`. The file loads on demand when the course opens. Done: `math` (42),
+  `science` (24), `lifesci` (30), `math_lit` (18). If a subject already has lessons inside
+  `index.html`, merge into them (see `_lsAdd` in `lifesci.js`) instead of overwriting.
 - Lesson shape: see any entry in `content/lessons/math.js`. Every lesson needs a
   real-life South African `hook`, worked `examples` with answers, `mistakes`,
   `activity` + `activityAnswer`, `examTip`, `keyterms` and a 3-question `quiz`
