@@ -124,8 +124,8 @@ this repo (or behind auth) and add a `.vercelignore`.
 21. **96% of lessons were template text.** Of 504 topics, only 22 had hand-written
     lessons; the rest come from one generic template per subject with the topic name
     swapped in — the same paragraphs on every page. Now fully written: Mathematics (42),
-    Physical Sciences (24), Life Sciences (30), Maths Literacy (18) and English Home Language
-    (24) in `content/lessons/`; 16 subjects (~350 lessons) remain.
+    Physical Sciences (24), Life Sciences (30), Maths Literacy (18), English Home Language (24)
+    and Geography (30) in `content/lessons/`; 15 subjects (~320 lessons) remain.
 22. **5 subjects quiz learners on Maths.** `math_lit`, `afrikaans`, `isizulu`,
     `technology` and `arts` have no questions, and `index.html` fills them with the
     Maths bank (`QBANK[s.id]=QBANK.math`).
