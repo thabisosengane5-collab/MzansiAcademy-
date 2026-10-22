@@ -1,1 +1,4 @@
-{"version":2}
+{
+  "version": 2,
+  "ignoreCommand": "if [ \"$VERCEL_PROJECT_ID\" = \"prj_Mw2nEBArxVzU2j5QPTiZWRLuXC1T\" ]; then echo 'pulsify project: skipping MzansiAcademy build'; exit 0; else exit 1; fi"
+}
