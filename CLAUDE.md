@@ -32,8 +32,9 @@ For multi-step tasks, state a brief plan with a verify step for each.
 **Production = the static root `index.html` deployed on Vercel** at
 `https://www.mzansiacademysa.co.za`. Every file in the repo root is served as-is, plus the
 serverless functions in `api/`. `vercel.json` has only an `ignoreCommand` that skips the
-build when the Vercel project is `pulsify` (prj_Mw2nEB…) — that project was wrongly
-Git-linked to this repo and overwrote pulsefy.co.za. Keep that rule.
+build when the Vercel project is `pulsify` (prj_Mw2nEB…). That project was wrongly
+Git-linked to this repo and overwrote pulsefy.co.za; the link was removed on 22 Oct 2026.
+Keep the rule as a backstop.
 
 | Path | What it is | Live? |
 |---|---|---|
