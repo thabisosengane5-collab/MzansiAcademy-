@@ -127,9 +127,9 @@ this repo (or behind auth) and add a `.vercelignore`.
     Physical Sciences (24), Life Sciences (30), Maths Literacy (18), English Home Language (24),
     Geography (30), Accounting (18), History (24), Business Studies (12) and Economics (12) in
     `content/lessons/`; 11 subjects (~250 lessons) remain.
-22. **5 subjects quiz learners on Maths.** `math_lit`, `afrikaans`, `isizulu`,
-    `technology` and `arts` have no questions, and `index.html` fills them with the
-    Maths bank (`QBANK[s.id]=QBANK.math`).
+22. ~~**5 subjects quiz learners on Maths.**~~ Fixed: `content/quiz/bank.js` gives
+    `math_lit`, `afrikaans`, `isizulu`, `technology` and `arts` their own banks, and adds
+    `GK_QUESTIONS` for Battle Trivia's General Knowledge mode.
 23. **Module quizzes weren't about the module** — they drew 8 random questions from the
     whole subject. Fixed for subjects with per-lesson quizzes (Maths so far).
 24. **10-second timer on module quiz questions** is too short for calculation questions

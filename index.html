@@ -3455,7 +3455,7 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
             <div class="battle-mode-card selected" id="bmode-general" onclick="selectBattleMode('general')">
               <span class="battle-mode-icon">🌍</span>
               <div class="battle-mode-name">General Knowledge</div>
-              <div class="battle-mode-desc">Mixed topics from all 21 subjects</div>
+              <div class="battle-mode-desc">Mzansi facts, English, sport, music, science &amp; more</div>
             </div>
             <div class="battle-mode-card" id="bmode-curriculum" onclick="selectBattleMode('curriculum')">
               <span class="battle-mode-icon">📚</span>
@@ -3533,7 +3533,9 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
           <div class="quiz-q-text" id="battleQText">Loading question...</div>
         </div>
         <div class="quiz-options" id="battleOpts"></div>
+        <div id="battleFact" style="display:none;margin-top:.75rem;padding:.625rem .875rem;border-radius:10px;background:rgba(255,184,0,.08);border:1px solid rgba(255,184,0,.25);font-size:.78rem;color:var(--txt-2);line-height:1.5"></div>
         <div class="battle-scores" id="battleScoreBoard" style="margin-top:1rem"></div>
+        <script src="/content/quiz/bank.js" defer></script>
       </div>
 
       <!-- Battle result -->
@@ -7945,11 +7947,20 @@ function renderQuizSetup(){
   var sel=document.getElementById('quizSubjectSel');
   if(sel) sel.innerHTML=SUBJECTS.map(function(s){return '<option value="'+s.id+'">'+s.emoji+' '+s.label+'</option>';}).join('');
 }
+// Story-based questions from a subject's written lessons, for quick quizzes and challenges
+function lessonQuizPool(sid){
+  var out=[], db=LESSON_DB[sid]||{};
+  Object.keys(db).forEach(function(m){ Object.keys(db[m]).forEach(function(t){
+    var L=db[m][t]; (L.quiz||[]).forEach(function(q){ out.push(Object.assign({em:L.emoji},q)); });
+  }); });
+  return out;
+}
 function startQuickQuiz(){
   var sid=document.getElementById('quizSubjectSel').value;
+  if(LESSON_FILES[sid]&&!_lessonFilesLoaded[sid]){ ensureLessons(sid,startQuickQuiz); return; }
   var count=parseInt(document.getElementById('quizCountSel').value);
   qq.timeMax=parseInt(document.getElementById('quizTimeSel').value);
-  var pool=QBANK[sid]||QBANK.math;
+  var pool=(QBANK[sid]||QBANK.math).concat(lessonQuizPool(sid));
   qq.qs=[].concat(pool).sort(function(){return Math.random()-.5;}).slice(0,Math.min(count,pool.length));
   qq.idx=0;qq.score=0;qq.total=qq.qs.length;qq.sid=sid;qq.answered=false;
   document.getElementById('quizSetup').style.display='none';
@@ -9222,7 +9233,14 @@ function getBattleQuestions(){
   var all=[];
   pools.forEach(function(p){all=all.concat(p);});
   // Shuffle and return rounds questions
-  return all.sort(function(){return Math.random()-.5;}).slice(0,BATTLE.rounds);
+  all=all.sort(function(){return Math.random()-.5;});
+  // General Knowledge: about three quarters fun mixed questions, the rest from the curriculum
+  if(BATTLE.mode!=='curriculum' && window.GK_QUESTIONS){
+    var nGk=Math.round(BATTLE.rounds*0.75);
+    var gk=[].concat(GK_QUESTIONS).sort(function(){return Math.random()-.5;}).slice(0,nGk);
+    return gk.concat(all.slice(0,BATTLE.rounds-gk.length)).sort(function(){return Math.random()-.5;});
+  }
+  return all.slice(0,BATTLE.rounds);
 }
 
 function findBattleMatch(){
@@ -9457,7 +9475,8 @@ function showBattleQuestion(){
   BATTLE.answered=false;
   var timeLimit=10;
   setEl('battleQNum',BATTLE.qIdx+1);
-  setEl('battleQSubject',q.em||'❓');
+  setEl('battleQSubject',(q.em||'❓')+(q.cat?' '+q.cat:''));
+  var fact=document.getElementById('battleFact'); if(fact) fact.style.display='none';
   setEl('battleQText',q.q);
   var timerDisp=document.getElementById('battleTimer');
   if(timerDisp){timerDisp.textContent=timeLimit;timerDisp.style.color='var(--dna-gold)';}
@@ -9521,10 +9540,12 @@ function answerBattle(idx){
     }
   }
   updateBattleScoreboard();
+  var fact=document.getElementById('battleFact');
+  if(fact && q.et){ fact.textContent='💡 '+q.et; fact.style.display='block'; }
   setTimeout(function(){
     BATTLE.qIdx++;
     showBattleQuestion();
-  },1200);
+  },q.et?3000:1200);
 }
 
 function updateBattleScoreboard(){

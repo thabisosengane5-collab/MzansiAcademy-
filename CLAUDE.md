@@ -96,6 +96,11 @@ Unless the user names `apps/web` or `mzansi-app`, "the website" means root `inde
   wrap on phones — not inside the SVG strings.
 - Check numbers in examples by calculation before committing; keep the CAPS grade in
   `subtitle`; mark anything beyond CAPS as enrichment.
+- Quizzes: `QBANK` (in `index.html`) holds per-subject questions; `content/quiz/bank.js`
+  (loaded with `defer`) adds `GK_QUESTIONS` — fun mixed questions with a `cat` tag and a fun
+  fact in `et` — for Battle Trivia's General Knowledge mode, plus banks for subjects that had
+  none. Quick quizzes and subject challenges also draw from the lesson quizzes. Keep battle
+  questions interesting, not just hard: a surprising fact in every `et`.
 - Validate a content file: `node -e "global.LESSON_DB={};require('./content/lessons/math.js')"`.
 
 ## 8. Hard rules
