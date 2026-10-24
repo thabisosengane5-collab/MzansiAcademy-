@@ -80,8 +80,8 @@ Unless the user names `apps/web` or `mzansi-app`, "the website" means root `inde
   `LESSON_DB.<sid>.m<N> = {…}`) and the subject id is added to `LESSON_FILES` in
   `index.html`. The file loads on demand when the course opens. Done: `math` (42),
   `science` (24), `lifesci` (30), `math_lit` (18), `english_hl` (24), `geography` (30), `accounting` (18), `history` (24), `business` (12),
-  `economics` (12). If a subject already has lessons inside
-  `index.html`, merge into them (see `_lsAdd` in `lifesci.js`, `_geoAdd` in `geography.js`) instead of overwriting.
+  `economics` (12), `lifeori` (30). If a subject already has lessons inside
+  `index.html`, merge into them (see `_lsAdd` in `lifesci.js`, `_geoAdd` in `geography.js`, `_loAdd` in `lifeori.js`) instead of overwriting.
 - **House style — CAPS, twisted.** Every lesson covers what CAPS and the NSC exam require
   (the topic, key facts, terms and exam skills) but is taught through South African real
   life, not textbook language: open with a hook from today's world (taxis, load shedding,
