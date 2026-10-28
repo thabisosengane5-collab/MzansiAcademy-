@@ -13,6 +13,8 @@ security, not looks.
 ## 🔴 Critical — do these first
 
 ### 1. Firebase service-account private key is committed (public repo)
+**Code fixed** — `api/notify.js` now reads `FIREBASE_SERVICE_ACCOUNT` from the env.
+Still to do (owner): rotate the key and set that env var in Vercel; until then push returns 503.
 `api/notify.js` hard-codes the full `firebase-adminsdk` service-account JSON, including
 `private_key`. The repo is public, so anyone can use it to act as **admin on the whole
 Firebase project `edusa-a6efe`**: read/modify/delete every user, Firestore and RTDB doc,
@@ -27,24 +29,31 @@ Fix:
 3. Check Firebase Auth / Firestore for anything unexpected (new admins, mass deletes).
 
 ### 2. Groq API key is committed
+**Code fixed** — `.env.local` untracked and `.env*` ignored. Still to do (owner): rotate the Groq key.
 `apps/web/.env.local` is tracked in git and contains `GROQ_API_KEY` (plus Supabase and
 Firebase public config). Rotate the Groq key in the Groq console, `git rm --cached
 apps/web/.env.local`, and add `.env*` to `.gitignore`.
 
-### 3. `/api/notify` lets anyone push any notification to any learner
+### 3. ~~`/api/notify` lets anyone push any notification to any learner~~ — fixed
+Now requires a Firebase ID token; sends only to the caller's own device, or to everyone if
+`users/{uid}.isAdmin` (checked server-side — still only as safe as the Firestore rules, item 6).
 No auth check — any caller can POST `{token, title, body}` and the server signs it with
 the admin credential. Combined with item 5 (push toast uses `innerHTML`) this is a
 remote script-injection path. Fix: require a Firebase ID token (`Authorization: Bearer`),
 verify it server-side, and only allow sending to tokens the caller is entitled to (or
 move sending to a trusted backend/admin only).
 
-### 4. `/api/chat` is an open Groq proxy
+### 4. ~~`/api/chat` is an open Groq proxy~~ — fixed
+Model, `max_tokens` and system prompt are fixed server-side; only `messages` accepted (≤ 8,
+≤ 2 000 chars each); best-effort per-IP limit of 20 per 10 min.
 It forwards the raw request body to Groq. Anyone can call it with any model, any
 `max_tokens`, any prompt — on your bill. Fix: build the Groq request server-side (fixed
 model, capped `max_tokens`, server-owned system prompt), accept only `messages`, cap their
 count/length, and add basic rate limiting.
 
-### 5. Stored XSS in DMs, study rooms, push toast and AI replies
+### 5. ~~Stored XSS in DMs, study rooms, push toast and AI replies~~ — fixed
+`escHtml()` is applied at every sink that shows another user's data (DMs, group/room chat,
+friends, requests, groups, battle players, leaderboard, profile, toasts, AI replies).
 User-supplied text is inserted with `innerHTML` unescaped:
 - `index.html:10449` — DM `m.text`
 - `index.html:10588-10589` — room message `m.name` and `m.text`
@@ -102,7 +111,7 @@ this repo (or behind auth) and add a `.vercelignore`.
 13. **Firebase Analytics config 404** (`…/webConfig`) — the web app ID's Analytics link
     looks broken in the Firebase console; it falls back to `G-N8W3TQ8QVD`. Re-link
     Analytics for the web app.
-14. **AI endpoint is hard-coded to `https://www.mzansiacademysa.co.za/api/chat`**
+14. ~~**AI endpoint is hard-coded to `https://www.mzansiacademysa.co.za/api/chat`**~~ — fixed (`/api/chat`)
     (`index.html:9485`) — breaks on preview deploys and the apex domain. Use `/api/chat`.
 
 ## 🟢 Low / housekeeping
