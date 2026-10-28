@@ -41,7 +41,7 @@ Keep the rule as a backstop.
 | `index.html` (~820 KB, ~11k lines) | The whole learner app: HTML + CSS + JS + subject content in one file | **Yes** |
 | `admin.html` | Admin console (Firebase; gated on `users/{uid}.isAdmin`) | Yes |
 | `api/chat.js` | Proxy to Groq chat completions (`GROQ_API_KEY`) — powers the Amahle/Nkosazane AI tutor | Yes |
-| `api/notify.js` | Sends FCM push via Firebase service account | Yes |
+| `api/notify.js` | Sends FCM push (service account from `FIREBASE_SERVICE_ACCOUNT` env var; needs a Firebase ID token; `broadcast` is admin-only) | Yes |
 | `firebase-messaging-sw.js` | FCM background-push service worker | Yes |
 | `manifest.json` | PWA manifest | Yes |
 | `dashboard.html`, `seed.html` | "TUBS" founder dashboard / board seeder — internal tools, not part of the app | Served publicly (shouldn't be) |
@@ -66,7 +66,8 @@ Unless the user names `apps/web` or `mzansi-app`, "the website" means root `inde
   console. Points, leaderboard and `isAdmin` are written client-side, so the rules are
   the only thing stopping cheating / privilege escalation. Check them before touching
   any of that.
-- AI tutor: `sendAiMessage()` → `/api/chat` → Groq `llama-3.3-70b-versatile`.
+- AI tutor: `sendAiMessage()` → `/api/chat` → Groq `openai/gpt-oss-120b`. Model, limits and the
+  Nkosazane system prompt live in `api/chat.js`; the client sends only `messages`.
 - Firebase web `apiKey` in HTML is public by design — that's fine. Anything server-side
   (service accounts, Groq key) is not.
 
