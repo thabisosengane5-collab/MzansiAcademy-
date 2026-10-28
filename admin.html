@@ -537,14 +537,8 @@ async function postAnnouncement(){
     var pushToggle=document.getElementById('pushNotifyToggle');
     if(pushToggle&&pushToggle.checked){
       try{
-        var tokensSnap=await FB.getDocs(FB.collection(FB.db,'fcmTokens'));
-        var sends=[];
-        tokensSnap.forEach(function(d){
-          if(d.data().token){
-            sends.push(fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:d.data().token,title:'📢 '+title,body:msg,data:{type:'announcement'}})}));
-          }
-        });
-        await Promise.allSettled(sends);
+        var idToken=await window.ADMIN_FB.auth.currentUser.getIdToken();
+        await fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},body:JSON.stringify({broadcast:true,title:'📢 '+title,body:msg,data:{type:'announcement'}})});
       }catch(pe){console.warn('Push notify failed:',pe);}
     }
     showToast('Announcement posted! 📢','success');

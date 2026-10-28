@@ -89,7 +89,7 @@ async function initPushNotifications(uid) {
       if (n) {
         const toast = document.createElement('div');
         toast.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);background:var(--dna-green);color:#000;padding:.75rem 1.25rem;border-radius:1rem;z-index:9999;font-weight:600;max-width:90vw;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.3)';
-        toast.innerHTML = '🔔 <strong>' + n.title + '</strong><br>' + n.body;
+        toast.innerHTML = '🔔 <strong>' + escHtml(n.title) + '</strong><br>' + escHtml(n.body);
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 5000);
       }
@@ -97,12 +97,14 @@ async function initPushNotifications(uid) {
   } catch(e) { console.error('[FCM] Error:', e.code, e.message); }
 }
 
-async function sendPushNotification(token, title, body, data) {
+async function sendPushNotification(title, body, data) {
   try {
+    if (!auth.currentUser) return;
+    const idToken = await auth.currentUser.getIdToken();
     await fetch('/api/notify', {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({token, title, body, data: data||{}})
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body: JSON.stringify({title, body, data: data||{}})
     });
   } catch(e) { console.warn('Push failed:', e); }
 }
@@ -4356,6 +4358,7 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
 <div class="toast" id="toast"></div>
 
 <script>
+function escHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
 // ═══════════════════════════════════════════════════════
 //  MZANSIacademy — COMPLETE APPLICATION JAVASCRIPT
 //  "It's in our DNA" 🧬
@@ -5722,7 +5725,7 @@ function onUserLoaded(){
     closeModal('authModal');
     goTo('home');
     setTimeout(function(){
-      showToast('Wamukelekile, '+(u.displayName||'Learner').split(' ')[0]+'! 🧬','success');
+      showToast('Wamukelekile, '+escHtml((u.displayName||'Learner').split(' ')[0])+'! 🧬','success');
     }, 300);
   }
 
@@ -6045,9 +6048,9 @@ function renderProfile(){
   var avEl=document.getElementById('profileAvDisp');
   if(avEl) avEl.innerHTML=getAvatarSvg(u.avatar);
   // Name & handle
-  setEl('profileNameDisp',u.displayName||'Your Name');
-  setEl('profileHandleDisp',u.username?'@'+u.username:'');
-  setEl('profileGradeDisp','Grade '+(u.grade||'—')+' · '+(u.province||'—'));
+  setEl('profileNameDisp',escHtml(u.displayName||'Your Name'));
+  setEl('profileHandleDisp',u.username?'@'+escHtml(u.username):'');
+  setEl('profileGradeDisp','Grade '+(u.grade||'—')+' · '+escHtml(u.province||'—'));
   // Stat chips
   setEl('psPts',(u.pts||0).toLocaleString());
   setEl('psTopics',countDoneTopics());
@@ -6168,7 +6171,7 @@ function openProfileSheet(r,rank){
   var avEl=document.getElementById('sheetAv');
   if(avEl) avEl.innerHTML=getAvatarSvg(r.avatar);
   setEl('sheetName',lbName(r.displayName));
-  setEl('sheetSub','Grade '+(r.grade||'?')+' · '+(r.province||'?'));
+  setEl('sheetSub','Grade '+(r.grade||'?')+' · '+escHtml(r.province||'?'));
   setEl('sheetPts',(r.pts||0).toLocaleString());
   setEl('sheetWins',r.battleWins||0);
   setEl('sheetRank','#'+rank);
@@ -6197,10 +6200,7 @@ async function scheduleStudyReminder(uid){
     if(next<=now)next.setDate(next.getDate()+1);
     const ms=next-now;
     setTimeout(async()=>{
-      const tokenSnap=await getDoc(doc(db,'fcmTokens',uid));
-      if(tokenSnap.exists()){
-        await sendPushNotification(tokenSnap.data().token,'📚 Study Time!','Your daily study reminder — open MzansiAcademy and keep that streak going! 🔥',{type:'study_reminder'});
-      }
+      await sendPushNotification('📚 Study Time!','Your daily study reminder — open MzansiAcademy and keep that streak going! 🔥',{type:'study_reminder'});
     },ms);
   }catch(e){console.warn('Reminder:',e);}
 }
@@ -6365,9 +6365,9 @@ function renderDashboard(){
     setEl('welcomeSub','Sign in to track your progress');
     return;
   }
-  setEl('welcomeName','Welcome back, '+(u.displayName||'Learner').split(' ')[0]+'! 👋');
+  setEl('welcomeName','Welcome back, '+escHtml((u.displayName||'Learner').split(' ')[0])+'! 👋');
   setEl('welcomeGrade',u.grade||'—');
-  setEl('welcomeProvince',u.province||'—');
+  setEl('welcomeProvince',escHtml(u.province||'—'));
   setEl('streakBadge','🔥 '+APP.streakDays+' day streak');
   setEl('dashPts',(u.pts||0).toLocaleString());
   setEl('dashQuizzes',u.totalQuizzes||0);
@@ -6417,9 +6417,9 @@ async function loadLeaderboardPreview(){
   el.innerHTML=demoData.slice(0,5).map(function(r,i){
     var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
     return '<div class="lb-row"><span class="lb-rank">'+medal+'</span>'
-      +'<div class="lb-av" style="background:var(--bg-4)">'+( r.avatar||'🧬')+'</div>'
+      +'<div class="lb-av" style="background:var(--bg-4)">'+escHtml(r.avatar||'🧬')+'</div>'
       +'<div><div style="font-weight:700;font-size:.85rem;color:var(--txt)">'+lbName(r.displayName)+'</div>'
-      +'<div style="font-size:.68rem;color:var(--txt-3)">Gr '+(r.grade||'?')+' · '+(r.province||'?')+'</div></div>'
+      +'<div style="font-size:.68rem;color:var(--txt-3)">Gr '+(r.grade||'?')+' · '+escHtml(r.province||'?')+'</div></div>'
       +'<span class="lb-pts">'+(r.pts||0).toLocaleString()+'⭐</span></div>';
   }).join('');
 }
@@ -7651,9 +7651,9 @@ function renderLbRows(rows){
   return rows.map(function(r,i){
     return '<div class="live-lb-row">'
       +'<div class="live-lb-rank '+(rankClasses[i]||'')+'">'+(i<3?medals[i]:i+1)+'</div>'
-      +'<div class="live-lb-av">'+(r.avatar||'🧬')+'</div>'
+      +'<div class="live-lb-av">'+escHtml(r.avatar||'🧬')+'</div>'
       +'<div class="live-lb-name">'+lbName(r.displayName)+'</div>'
-      +'<div class="live-lb-prov">'+(r.province||'SA')+'</div>'
+      +'<div class="live-lb-prov">'+escHtml(r.province||'SA')+'</div>'
       +'<div class="live-lb-pts">'+(r.pts||0)+' ⭐</div>'
       +'</div>';
   }).join('');
@@ -8080,10 +8080,10 @@ function closeChatRoom(){
 function renderChatMessages(id){
   var el=document.getElementById('chatMessages'); if(!el) return;
   el.innerHTML=(chatHistory[id]||[]).map(function(m){
-    if(m.from==='system') return '<div style="text-align:center;font-size:.72rem;color:var(--txt-3);padding:.25rem">'+m.text+'</div>';
+    if(m.from==='system') return '<div style="text-align:center;font-size:.72rem;color:var(--txt-3);padding:.25rem">'+escHtml(m.text)+'</div>';
     var isMe=m.from==='me';
-    return '<div>'+((!isMe)?'<div style="font-size:.65rem;color:var(--txt-3);margin-bottom:2px;padding-left:4px">'+(m.name||'Learner')+'</div>':'')
-      +'<div class="chat-msg '+(isMe?'me':'them')+'">'+m.text+'</div>'
+    return '<div>'+((!isMe)?'<div style="font-size:.65rem;color:var(--txt-3);margin-bottom:2px;padding-left:4px">'+escHtml(m.name||'Learner')+'</div>':'')
+      +'<div class="chat-msg '+(isMe?'me':'them')+'">'+escHtml(m.text)+'</div>'
       +'<div class="chat-msg-time" style="text-align:'+(isMe?'right':'left')+'">'+(m.t||'')+'</div></div>';
   }).join('');
   el.scrollTop=99999;
@@ -8200,7 +8200,7 @@ async function loadLeaderboard(){
         +'<div style="width:34px;height:34px;border-radius:50%;background:var(--bg-3);border:1.5px solid '+(isMe?'var(--dna-green)':'var(--border-2)')+';display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">'+avHtml+'</div>'
         +'<div style="flex:1;min-width:0">'
         +'<div style="font-size:.82rem;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+lbName(r.displayName)+(isMe?' <span style="font-size:.6rem;background:rgba(0,214,143,.15);color:var(--dna-green);padding:1px 6px;border-radius:8px;font-weight:800">YOU</span>':'')+'</div>'
-        +'<div style="font-size:.65rem;color:var(--txt-3)">Grade '+(r.grade||'?')+' · '+(r.province||'?')+'</div>'
+        +'<div style="font-size:.65rem;color:var(--txt-3)">Grade '+(r.grade||'?')+' · '+escHtml(r.province||'?')+'</div>'
         +'</div>'
         +'<div style="text-align:right;flex-shrink:0">'
         +'<div style="font-family:var(--mono);font-size:.8rem;font-weight:800;color:var(--dna-gold)">'+(r.pts||0).toLocaleString()+'</div>'
@@ -8983,11 +8983,11 @@ async function openFriendInfoModal(uid){
     }).join(' ');
     if(body) body.innerHTML=
       '<div style="text-align:center;margin-bottom:1rem">'
-      +'<div style="width:56px;height:56px;border-radius:50%;background:var(--bg-3);border:2px solid var(--border-2);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto .5rem">'+(u.avatar||'🧬')+'</div>'
-      +'<div style="font-weight:800;font-size:1rem;color:var(--txt)">'+(u.displayName||'Learner')+'</div>'
-      +(u.username?'<div style="font-size:.72rem;color:var(--dna-teal)">@'+u.username+'</div>':'')
-      +'<div style="font-size:.72rem;color:var(--txt-3);margin-top:3px">Grade '+(u.grade||'?')+' · '+(u.province||'?')+'</div>'
-      +(u.school?'<div style="font-size:.68rem;color:var(--txt-4)">🏫 '+u.school+'</div>':'')
+      +'<div style="width:56px;height:56px;border-radius:50%;background:var(--bg-3);border:2px solid var(--border-2);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto .5rem">'+escHtml(u.avatar||'🧬')+'</div>'
+      +'<div style="font-weight:800;font-size:1rem;color:var(--txt)">'+escHtml(u.displayName||'Learner')+'</div>'
+      +(u.username?'<div style="font-size:.72rem;color:var(--dna-teal)">@'+escHtml(u.username)+'</div>':'')
+      +'<div style="font-size:.72rem;color:var(--txt-3);margin-top:3px">Grade '+(u.grade||'?')+' · '+escHtml(u.province||'?')+'</div>'
+      +(u.school?'<div style="font-size:.68rem;color:var(--txt-4)">🏫 '+escHtml(u.school)+'</div>':'')
       +'</div>'
       +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1rem">'
       +'<div style="background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:.5rem;text-align:center"><div style="font-family:var(--mono);font-size:.9rem;font-weight:800;color:var(--dna-gold)">'+(lb.pts||u.pts||0).toLocaleString()+'</div><div style="font-size:.6rem;color:var(--txt-4)">Points</div></div>'
@@ -9385,10 +9385,10 @@ function updateWaitingRoomUI(players,count){
       var col=avatarColors[i%avatarColors.length];
       var avHtml=(p.avatar&&p.avatar.startsWith('av')&&window.SVG_AVATARS)
         ?'<div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center">'+getAvatarSvg(p.avatar)+'</div>'
-        :'<div style="font-size:1.5rem">'+p.avatar+'</div>';
+        :'<div style="font-size:1.5rem">'+escHtml(p.avatar)+'</div>';
       return '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'
         +'<div style="width:48px;height:48px;border-radius:50%;background:var(--bg-3);border:2px solid '+col+';display:flex;align-items:center;justify-content:center;overflow:hidden">'+avHtml+'</div>'
-        +'<div style="font-size:.55rem;color:var(--txt-3);max-width:52px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center">'+p.name+'</div>'
+        +'<div style="font-size:.55rem;color:var(--txt-3);max-width:52px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center">'+escHtml(p.name)+'</div>'
         +'<div style="font-size:.5rem;color:'+col+'">● Live</div>'
         +'</div>';
     }).join('');
@@ -9434,7 +9434,7 @@ function startOfflineBattle(){
   var row=document.getElementById('battlePlayersRow');
   if(row){
     row.innerHTML=Object.values(BATTLE.players).map(function(p){
-      return '<div style="text-align:center"><div class="battle-player-avatar ready" style="margin:0 auto 4px">'+p.avatar+'</div><div style="font-size:.55rem;color:var(--txt-3)">'+p.name+'</div></div>';
+      return '<div style="text-align:center"><div class="battle-player-avatar ready" style="margin:0 auto 4px">'+escHtml(p.avatar)+'</div><div style="font-size:.55rem;color:var(--txt-3)">'+escHtml(p.name)+'</div></div>';
     }).join('');
   }
   var title=document.getElementById('battleQueueTitle');
@@ -9555,7 +9555,7 @@ function updateBattleScoreboard(){
   setEl('battleLeaderScore',leader?leader.score:0);
   board.innerHTML=sorted.slice(0,5).map(function(p,i){
     var isMe=p.isMe||(p.name===(window.currentUser&&window.currentUser.displayName));
-    return '<div class="battle-score-row'+(isMe?' you':'')+'"><span style="font-size:.8rem">'+['🥇','🥈','🥉','4.','5.'][i]+'</span><span style="font-size:.85rem">'+p.avatar+'</span><span style="flex:1;font-size:.72rem;font-weight:600;color:var(--txt)">'+p.name+(isMe?' (you)':'')+'</span><span style="font-size:.75rem;font-weight:800;color:var(--dna-gold)">'+p.score+'</span></div>';
+    return '<div class="battle-score-row'+(isMe?' you':'')+'"><span style="font-size:.8rem">'+['🥇','🥈','🥉','4.','5.'][i]+'</span><span style="font-size:.85rem">'+escHtml(p.avatar)+'</span><span style="flex:1;font-size:.72rem;font-weight:600;color:var(--txt)">'+escHtml(p.name)+(isMe?' (you)':'')+'</span><span style="font-size:.75rem;font-weight:800;color:var(--dna-gold)">'+p.score+'</span></div>';
   }).join('');
 }
 
@@ -9577,11 +9577,11 @@ function endBattleGame(){
   if(board) board.innerHTML='<div style="display:flex;flex-direction:column;gap:.375rem">'+sorted.map(function(p,i){
     var medals=['🥇','🥈','🥉']; var isMe=p.isMe||(p.name===(window.currentUser&&window.currentUser.displayName));
     var avHtml=window.SVG_AVATARS&&p.avatar&&p.avatar.startsWith('av')?getAvatarSvg(p.avatar):p.avatar||'🧬';
-    var addBtn=(!isMe&&!p.bot)?'<button onclick="battleAddFriend(\'' +p.name+ '\')" style="background:rgba(0,214,143,.1);border:1px solid rgba(0,214,143,.3);color:var(--dna-green);border-radius:6px;padding:3px 8px;font-size:.65rem;font-weight:700;cursor:pointer;font-family:var(--font)">+ Add</button>':'';
+    var addBtn=(!isMe&&!p.bot)?'<button onclick="battleAddFriend('+escHtml(JSON.stringify(p.name))+')" style="background:rgba(0,214,143,.1);border:1px solid rgba(0,214,143,.3);color:var(--dna-green);border-radius:6px;padding:3px 8px;font-size:.65rem;font-weight:700;cursor:pointer;font-family:var(--font)">+ Add</button>':'';
     return '<div style="display:flex;align-items:center;gap:.625rem;padding:.5rem .75rem;background:var(--bg-2);border-radius:8px'+(isMe?';border:1px solid var(--dna-green)':'')+'">'
       +'<span>'+(medals[i]||(i+1)+'.')+'</span>'
       +'<div style="width:28px;height:28px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--bg-3)">'+avHtml+'</div>'
-      +'<span style="flex:1;font-size:.78rem;font-weight:600">'+p.name+(isMe?' \u2B05 you':'')+'</span>'
+      +'<span style="flex:1;font-size:.78rem;font-weight:600">'+escHtml(p.name)+(isMe?' \u2B05 you':'')+'</span>'
       +addBtn
       +'<span style="font-size:.78rem;font-weight:800;color:var(--dna-gold)">'+p.score+'\u2B50</span></div>';
   }).join('')+'</div>';
@@ -9608,9 +9608,8 @@ function endBattleGame(){
 // ═══════════════════════════════════════════════════════════════
 // AI ASSISTANT — Groq (Llama 3.3)
 // ═══════════════════════════════════════════════════════════════
-var NKOSAZANE_API = 'https://www.mzansiacademysa.co.za/api/chat';
+var NKOSAZANE_API = '/api/chat';
 var AI_HISTORY = [];
-var AI_SYSTEM = 'You are Nkosazane - not just an AI, but a study bestie, a big sister, a cheerleader, and the smartest friend in the room. You are the AI learning guide for MzansiAcademy, a free South African educational platform for Grade 8-12 learners. Your name means Princess/young royalty in Zulu - because every learner deserves to be treated like royalty.\n\nYOUR VIBE:\n- Warm, fun, real, and deeply caring. You talk like a friend, not a textbook.\n- Use emojis naturally: check mark for correct things, X for wrong ones, fire for hype, books for study mode, party for wins, muscle for motivation.\n- Skip lines between ideas so messages are easy to read on a phone.\n- Proper English sentence structure - conversational but never sloppy.\n- Drop SA multilingual phrases naturally: Yebo (Yes), Aikona (No ways), Hamba kahle (Go well), Sharp sharp (All good), Eish (expressing struggle), Sawubona (I see you), Ngiyabonga (Thank you), Ubuntu (togetherness).\n- Celebrate every win no matter how small.\n- Motivate when learners struggle. Never make them feel stupid. Ever.\n\nHOW YOU RESPOND:\n- Always use clear paragraph breaks. Never write a wall of text.\n- Use checkmarks and X to highlight right vs wrong.\n- Use pin emoji for key points, lightbulb for tips, warning for common mistakes, fire for important facts.\n- Break complex topics into numbered steps.\n- End EVERY response with a motivational line OR a follow-up question.\n- Use SA examples always: Eskom, Gautrain, JSE, load-shedding, SA provinces, rands and cents, the Constitution.\n\nGUIDELINES:\n1. Specialise in ALL CAPS subjects: Maths, Physical Sciences, Life Sciences, History, Geography, Accounting, Business Studies, Economics, English, Afrikaans, isiZulu, CAT, Technology, Visual Arts, Music, Life Orientation, Consumer Studies, Nautical Science.\n2. Respond in the same language the learner uses.\n3. Never give direct answers to tests or exams - guide the method, not the answer.\n4. Keep responses under 300 words unless a full explanation is truly needed.\n5. You are not just teaching - you are building confidence. Every learner must leave feeling smarter than when they arrived.';
 
 function toggleAiPanel(){
   var panel=document.getElementById('aiPanel');
@@ -9640,12 +9639,7 @@ async function sendAiMessage(){
     var resp=await fetch(NKOSAZANE_API,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'llama-3.3-70b-versatile',
-        messages:[{role:'system',content:AI_SYSTEM}].concat(AI_HISTORY.slice(-8)),
-        max_tokens:400,
-        temperature:0.7,
-      })
+      body:JSON.stringify({messages:AI_HISTORY.slice(-8)})
     });
     var data=await resp.json();
     var reply=(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||'Sorry, I could not process that. Please try again.';
@@ -9667,7 +9661,7 @@ function addAiMessage(text,type,id){
   var div=document.createElement('div');
   div.className='ai-msg '+type;
   if(id) div.id=id;
-  if(type==="ai"){div.innerHTML=text.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\n/g,"<br>");}else{div.textContent=text;}
+  if(type==="ai"){div.innerHTML=escHtml(text).replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\n/g,"<br>");}else{div.textContent=text;}
   msgs.appendChild(div);
   msgs.scrollTop=msgs.scrollHeight;
 }
@@ -9769,8 +9763,8 @@ function updateProfileNameDisplay(){
   var aka=u.nickname||u.displayName||'';
   var nameDisp=document.getElementById('profileNameDisp');
   if(nameDisp){
-    nameDisp.innerHTML='<div class="profile-full-name">'+fullName+'</div>'
-      +(aka?'<div class="profile-aka">aka '+aka+'</div>':'');
+    nameDisp.innerHTML='<div class="profile-full-name">'+escHtml(fullName)+'</div>'
+      +(aka?'<div class="profile-aka">aka '+escHtml(aka)+'</div>':'');
   }
   var topName=document.getElementById('topUserName');
   if(topName) topName.textContent=(aka||u.firstName||fullName).split(' ')[0];
@@ -9909,18 +9903,18 @@ function renderGroupsGrid(){
     }
 
     return '<div class="group-card" onclick="openGroupChat(\''+g.id+'\')">'
-      +'<div class="group-card-banner" style="background:'+g.color+'"></div>'
+      +'<div class="group-card-banner" style="background:'+escHtml(g.color)+'"></div>'
       +'<div class="group-card-body">'
       +'<div class="group-card-header">'
-      +'<div class="group-card-avatar" style="background:'+g.color+'22;border:2px solid '+g.color+'44">'+g.icon+'</div>'
-      +'<div style="flex:1"><div class="group-card-name">'+g.name+'</div><div class="group-card-subject" style="color:'+g.color+'">'+g.subjectLabel+'</div></div>'
+      +'<div class="group-card-avatar" style="background:'+escHtml(g.color)+'22;border:2px solid '+escHtml(g.color)+'44">'+escHtml(g.icon)+'</div>'
+      +'<div style="flex:1"><div class="group-card-name">'+escHtml(g.name)+'</div><div class="group-card-subject" style="color:'+escHtml(g.color)+'">'+g.subjectLabel+'</div></div>'
       +actionBtn+'</div>'
-      +'<div class="group-card-desc">'+g.desc+'</div>'
+      +'<div class="group-card-desc">'+escHtml(g.desc)+'</div>'
       +'<div class="group-card-meta">'
       +'<span class="group-meta-chip">👥 '+g.members+'/'+g.maxMembers+'</span>'
       +'<span class="group-meta-chip">'+(g.joinType==='open'?'🔓 Open':g.joinType==='request'?'🔑 Request':'🔐 Invite')+'</span>'
       +(g.grade&&g.grade!=='all'?'<span class="group-meta-chip">Grade '+g.grade+'</span>':'')
-      +(g.province&&g.province!=='Nationwide'?'<span class="group-meta-chip">'+g.province+'</span>':'')
+      +(g.province&&g.province!=='Nationwide'?'<span class="group-meta-chip">'+escHtml(g.province)+'</span>':'')
       +'</div></div></div>';
   }).join('');
 }
@@ -9991,7 +9985,7 @@ async function openGroupChat(gid){
   if(grid) grid.style.display='none';
   if(chatArea) chatArea.style.display='block';
   setEl('groupChatIcon',_activeGroup.icon||'📚');
-  setEl('groupChatName',_activeGroup.name);
+  setEl('groupChatName',escHtml(_activeGroup.name));
   setEl('groupChatOnline','● '+(_activeGroup.members||1)+' member'+((_activeGroup.members||1)>1?'s':''));
   switchGroupTab('chat',document.querySelector('.group-tab-btn'));
   renderGroupInfo();
@@ -10163,11 +10157,11 @@ function renderGroupMembers(){
       }
     }
     return '<div class="friend-card">'
-      +'<div class="friend-avatar-wrap"><div class="friend-avatar">'+(m.avatar||m.av||'🧬')+'</div>'
+      +'<div class="friend-avatar-wrap"><div class="friend-avatar">'+escHtml(m.avatar||m.av||'🧬')+'</div>'
       +'<span class="status-dot '+(m.status||'offline')+'"></span></div>'
       +'<div class="friend-info" style="flex:1">'
-      +'<div class="friend-name">'+(m.name||'Learner')+(isMe?' <span style="font-size:.6rem;color:var(--dna-green)">(you)</span>':'')+'</div>'
-      +(m.grade?'<div style="font-size:.65rem;color:var(--txt-4)">Grade '+m.grade+(m.province?' · '+m.province:'')+'</div>':'')
+      +'<div class="friend-name">'+escHtml(m.name||'Learner')+(isMe?' <span style="font-size:.6rem;color:var(--dna-green)">(you)</span>':'')+'</div>'
+      +(m.grade?'<div style="font-size:.65rem;color:var(--txt-4)">Grade '+m.grade+(m.province?' · '+escHtml(m.province):'')+'</div>':'')
       +'<div style="font-size:.6rem;color:'+statusColor+';margin-top:2px">● '+(m.status||'Offline')+'</div>'
       +'</div>'
       +(actionBtn?'<div>'+actionBtn+'</div>':'')
@@ -10300,7 +10294,7 @@ function renderFriendsGroupsGrid(){
   }
   el.innerHTML=_allGroups.map(function(g){
     var isMember=g.memberUids&&window.currentUser&&g.memberUids.indexOf(window.currentUser.uid)!==-1;
-    return '<div class="group-card" onclick="openGroupChat(\''+g.id+'\')">'      +'<div style="display:flex;align-items:center;gap:.625rem;margin-bottom:.5rem">'      +'<div style="font-size:1.4rem">'+g.icon+'</div>'      +'<div style="flex:1;min-width:0">'      +'<div style="font-weight:800;font-size:.85rem;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+g.name+'</div>'      +'<div style="font-size:.65rem;color:var(--txt-4)">'+g.subjectLabel+' · '+(g.members||0)+' members</div>'      +'</div>'      +(isMember?'<span style="font-size:.6rem;padding:2px 7px;border-radius:10px;background:rgba(0,214,143,.1);color:var(--dna-green);border:1px solid rgba(0,214,143,.2);font-weight:700">Joined</span>':'')      +'</div>'      +(g.desc?'<div style="font-size:.72rem;color:var(--txt-3);line-height:1.5;margin-bottom:.375rem">'+g.desc+'</div>':'')      +'<div style="display:flex;justify-content:space-between;align-items:center">'      +'<span style="font-size:.62rem;color:var(--txt-4)">'+g.joinType+' · '+g.province+'</span>'      +'<span style="font-size:.62rem;padding:2px 7px;border-radius:6px;background:var(--bg-3);color:var(--txt-3)">'+g.format+'</span>'      +'</div></div>';
+    return '<div class="group-card" onclick="openGroupChat(\''+g.id+'\')">'      +'<div style="display:flex;align-items:center;gap:.625rem;margin-bottom:.5rem">'      +'<div style="font-size:1.4rem">'+escHtml(g.icon)+'</div>'      +'<div style="flex:1;min-width:0">'      +'<div style="font-weight:800;font-size:.85rem;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+escHtml(g.name)+'</div>'      +'<div style="font-size:.65rem;color:var(--txt-4)">'+g.subjectLabel+' · '+(g.members||0)+' members</div>'      +'</div>'      +(isMember?'<span style="font-size:.6rem;padding:2px 7px;border-radius:10px;background:rgba(0,214,143,.1);color:var(--dna-green);border:1px solid rgba(0,214,143,.2);font-weight:700">Joined</span>':'')      +'</div>'      +(g.desc?'<div style="font-size:.72rem;color:var(--txt-3);line-height:1.5;margin-bottom:.375rem">'+escHtml(g.desc)+'</div>':'')      +'<div style="display:flex;justify-content:space-between;align-items:center">'      +'<span style="font-size:.62rem;color:var(--txt-4)">'+g.joinType+' · '+escHtml(g.province)+'</span>'      +'<span style="font-size:.62rem;padding:2px 7px;border-radius:6px;background:var(--bg-3);color:var(--txt-3)">'+g.format+'</span>'      +'</div></div>';
   }).join('');
 }
 
@@ -10323,17 +10317,17 @@ function renderFriendsList(){
     var statusLabel={online:'Online',away:'Away',busy:'Busy',offline:'Offline'}[f.status]||'Offline';
     var safeUid=(f.uid||'').replace(/'/g,"\\'");
     return '<div class="friend-card">'
-      +'<div class="friend-avatar-wrap"><div class="friend-avatar">'+( f.avatar||'🧬')+'</div><span class="status-dot '+(f.status||'offline')+'"></span></div>'
+      +'<div class="friend-avatar-wrap"><div class="friend-avatar">'+escHtml(f.avatar||'🧬')+'</div><span class="status-dot '+(f.status||'offline')+'"></span></div>'
       +'<div class="friend-info">'
-      +'<div class="friend-name">'+(f.displayName||f.firstName||'Learner')+'</div>'
-      +(f.username?'<div class="friend-aka">@'+f.username+'</div>':'')
+      +'<div class="friend-name">'+escHtml(f.displayName||f.firstName||'Learner')+'</div>'
+      +(f.username?'<div class="friend-aka">@'+escHtml(f.username)+'</div>':'')
       +(f.mood?'<div class="friend-mood">💭 '+f.mood+'</div>':'')
-      +'<div style="font-size:.6rem;margin-top:2px;color:'+statusColor+'">● '+statusLabel+(f.grade?' · Grade '+f.grade:'')+( f.province?' · '+f.province:'')+'</div>'+(f.school?'<div style="font-size:.6rem;color:var(--txt-4)">🏫 '+f.school+'</div>':'')
+      +'<div style="font-size:.6rem;margin-top:2px;color:'+statusColor+'">● '+statusLabel+(f.grade?' · Grade '+f.grade:'')+( f.province?' · '+escHtml(f.province):'')+'</div>'+(f.school?'<div style="font-size:.6rem;color:var(--txt-4)">🏫 '+escHtml(f.school)+'</div>':'')
       +'</div>'
       +'<div class="friend-actions">'
       +'<button class="friend-action-btn" onclick="openFriendInfoModal(\''+safeUid+'\')" title="Info" style="font-size:.7rem;color:var(--dna-teal)">ℹ️</button>'
       +'<button class="friend-action-btn" onclick="openDm(\''+safeUid+'\',true)" title="Message">💬</button>'
-      +'<button class="friend-action-btn" onclick="confirmUnfriend(\''+safeUid+'\',\''+(f.displayName||'Friend').replace(/'/g,"\\'")+'\')" title="Unfriend" style="color:var(--dna-red);font-size:.6rem;font-weight:700">Unfriend</button>'
+      +'<button class="friend-action-btn" onclick="confirmUnfriend(\''+safeUid+'\','+escHtml(JSON.stringify(f.displayName||'Friend'))+')" title="Unfriend" style="color:var(--dna-red);font-size:.6rem;font-weight:700">Unfriend</button>'
       +'</div></div>';
   }).join('');
 }
@@ -10350,11 +10344,11 @@ function renderFriendRequests(){
     var safeUid=(r.fromUid||'').replace(/'/g,"\\'");
     return '<div class="friend-card" style="flex-direction:column;gap:.625rem;align-items:stretch">'
       +'<div style="display:flex;align-items:center;gap:.75rem">'
-      +'<div class="friend-avatar-wrap"><div class="friend-avatar">'+(r.avatar||'🧬')+'</div><span class="status-dot online"></span></div>'
+      +'<div class="friend-avatar-wrap"><div class="friend-avatar">'+escHtml(r.avatar||'🧬')+'</div><span class="status-dot online"></span></div>'
       +'<div class="friend-info" style="flex:1">'
-      +'<div class="friend-name">'+(r.displayName||'Learner')+'</div>'
-      +(r.username?'<div class="friend-aka">@'+r.username+'</div>':'')
-      +'<div style="font-size:.65rem;color:var(--txt-4)">'+(r.grade?'Grade '+r.grade:'')+(r.province?' · '+r.province:'')+'</div>'
+      +'<div class="friend-name">'+escHtml(r.displayName||'Learner')+'</div>'
+      +(r.username?'<div class="friend-aka">@'+escHtml(r.username)+'</div>':'')
+      +'<div style="font-size:.65rem;color:var(--txt-4)">'+(r.grade?'Grade '+r.grade:'')+(r.province?' · '+escHtml(r.province):'')+'</div>'
       +'</div></div>'
       +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.375rem">'
       +'<button onclick="acceptFriendReq(\''+safeId+'\',\''+safeUid+'\')" style="padding:.45rem;border-radius:8px;background:linear-gradient(135deg,var(--dna-green),var(--dna-teal));border:none;color:#000;cursor:pointer;font-size:.72rem;font-weight:800">✓ Accept</button>'
@@ -10406,7 +10400,7 @@ async function acceptFriendReq(reqId, fromUid){
         createdAt:window.FB.serverTimestamp()
       }).catch(function(){})
     ]);
-    showToast('You and '+(r.displayName||'them')+' are now friends! 🎉','success');
+    showToast('You and '+escHtml(r.displayName||'them')+' are now friends! 🎉','success');
   }catch(e){showToast('Error: '+((e&&e.message)||String(e)),'error');console.warn(e);}
 }
 
@@ -10459,15 +10453,15 @@ async function searchFriends(q){
       var safeName=(f.displayName||'').replace(/'/g,"'");
       return '<div class="friend-card" style="flex-direction:column;align-items:stretch;gap:.5rem">'
         +'<div style="display:flex;align-items:center;gap:.625rem">'
-        +'<div class="friend-avatar-wrap"><div class="friend-avatar" style="font-size:1.5rem">'+(f.avatar||'🧬')+'</div></div>'
+        +'<div class="friend-avatar-wrap"><div class="friend-avatar" style="font-size:1.5rem">'+escHtml(f.avatar||'🧬')+'</div></div>'
         +'<div class="friend-info" style="flex:1">'
-        +'<div class="friend-name">'+(f.displayName||'Learner')+'</div>'
-        +(f.username?'<div class="friend-aka" style="color:var(--dna-teal)">@'+f.username+'</div>':'')
+        +'<div class="friend-name">'+escHtml(f.displayName||'Learner')+'</div>'
+        +(f.username?'<div class="friend-aka" style="color:var(--dna-teal)">@'+escHtml(f.username)+'</div>':'')
         +'</div></div>'
         +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem;font-size:.68rem;color:var(--txt-3);background:var(--bg-3);border-radius:8px;padding:.5rem .625rem">'
         +(f.grade?'<div>🎓 Grade '+f.grade+'</div>':'')
-        +(f.province?'<div>📍 '+f.province+'</div>':'')
-        +(f.school?'<div style="grid-column:1/-1">🏫 '+f.school+'</div>':'')
+        +(f.province?'<div>📍 '+escHtml(f.province)+'</div>':'')
+        +(f.school?'<div style="grid-column:1/-1">🏫 '+escHtml(f.school)+'</div>':'')
         +(f.matricYear?'<div>📅 Matric '+f.matricYear+'</div>':'')
         +'</div>'
         +'<div style="display:flex;gap:.5rem">'
@@ -10543,7 +10537,7 @@ function openDm(uid, fromFriendCard){
   _activeDmFriend=friend;
   var panel=document.getElementById('dmPanel');
   if(panel) panel.classList.add('open');
-  setEl('dmFriendName',(friend.displayName||'Friend')+(friend.username?' (@'+friend.username+')':''));
+  setEl('dmFriendName',escHtml((friend.displayName||'Friend')+(friend.username?' (@'+friend.username+')':'')));
   var statusColor={online:'#22C55E',away:'#FFB800',busy:'#EF4444',offline:'#555'}[friend.status]||'#555';
   var sEl=document.getElementById('dmFriendStatus');
   if(sEl) sEl.innerHTML='<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:'+statusColor+';margin-right:3px"></span><span style="color:'+statusColor+'">'+(friend.status||'Offline').charAt(0).toUpperCase()+(friend.status||'offline').slice(1)+'</span>';
@@ -10572,7 +10566,7 @@ function listenDmMessages(friendUid){
     var mine=m.uid===myUid;
     var div=document.createElement('div');
     div.style.cssText='display:flex;flex-direction:column;margin-bottom:.375rem';
-    div.innerHTML='<div class="dm-msg '+(mine?'mine':'theirs')+'">'+m.text
+    div.innerHTML='<div class="dm-msg '+(mine?'mine':'theirs')+'">'+escHtml(m.text)
       +'<div class="dm-msg-time">'+(mine?'You · ':'')+new Date(m.ts||Date.now()).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</div></div>';
     msgs.appendChild(div);
     msgs.scrollTop=msgs.scrollHeight;
@@ -10692,7 +10686,7 @@ async function joinGroup(gid){
         username:u.username||'',grade:u.grade||'',joinedAt:window.FB.serverTimestamp(),role:'member'
       })
     ]);
-    showToast('Joined "'+g.name+'"! 🎉','success');
+    showToast('Joined "'+escHtml(g.name)+'"! 🎉','success');
   }catch(e){showToast('Error joining group','error');console.warn(e);}
 }
 
@@ -10711,8 +10705,8 @@ function listenGroupChat(gid){
     var mine=m.uid===myUid;
     var div=document.createElement('div');
     div.className='dm-msg '+(mine?'mine':'theirs');
-    div.innerHTML=(!mine?'<div style="font-size:.6rem;color:var(--dna-teal);font-weight:700;margin-bottom:2px">'+(m.name||'Learner')+'</div>':'')
-      +'<span>'+m.text+'</span>'
+    div.innerHTML=(!mine?'<div style="font-size:.6rem;color:var(--dna-teal);font-weight:700;margin-bottom:2px">'+escHtml(m.name||'Learner')+'</div>':'')
+      +'<span>'+escHtml(m.text)+'</span>'
       +'<div class="dm-msg-time">'+new Date(m.ts||Date.now()).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</div>';
     box.appendChild(div);
     box.scrollTop=box.scrollHeight;
@@ -10802,7 +10796,7 @@ function setMyMood(mood){
 }
 function startGroupQuiz(){
   if(!_activeGroup) return;
-  showToast('Starting group quiz for '+_activeGroup.name+'...','info');
+  showToast('Starting group quiz for '+escHtml(_activeGroup.name)+'...','info');
   setTimeout(function(){ goTo('quizzes'); switchQuizTab('battle',document.querySelector('.quiz-main-tab:nth-child(3)')); },500);
 }
 async function leaveGroup(){
@@ -10825,7 +10819,7 @@ async function leaveGroup(){
         })
       ]);
     }
-    showToast('Left '+_activeGroup.name+' 👋','info');
+    showToast('Left '+escHtml(_activeGroup.name)+' 👋','info');
   }catch(e){
     console.warn('leaveGroup:',e.message);
     showToast('Left group (local)','info');
