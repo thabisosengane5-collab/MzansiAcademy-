@@ -79,8 +79,8 @@ Unless the user names `apps/web` or `mzansi-app`, "the website" means root `inde
   name swapped in). Replacing template lessons with real ones is ongoing.
 - Real lessons for a subject go in `content/lessons/<sid>.js` (assigns
   `LESSON_DB.<sid>.m<N> = {…}`) and the subject id is added to `LESSON_FILES` in
-  `index.html`. The file loads on demand when the course opens. Done: `math` (42),
-  `science` (24), `lifesci` (30), `math_lit` (18), `english_hl` (24), `geography` (30), `accounting` (18), `history` (24), `business` (12),
+  `index.html`. The file loads on demand when the course opens. Done: `math` (48),
+  `science` (24), `lifesci` (38), `math_lit` (18), `english_hl` (24), `geography` (30), `accounting` (18), `history` (24), `business` (12),
   `economics` (12), `lifeori` (30), `cat` (24), `technology` (18), `arts` (18), `music` (30). If a subject already has lessons inside
   `index.html`, merge into them (see `_lsAdd` in `lifesci.js`, `_geoAdd` in `geography.js`, `_loAdd` in `lifeori.js`, `_muAdd` in `music.js`) instead of overwriting.
 - **House style — CAPS, twisted.** Every lesson covers what CAPS and the NSC exam require

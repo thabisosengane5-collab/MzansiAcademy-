@@ -135,8 +135,8 @@ this repo (or behind auth) and add a `.vercelignore`.
 
 21. **96% of lessons were template text.** Of 504 topics, only 22 had hand-written
     lessons; the rest come from one generic template per subject with the topic name
-    swapped in — the same paragraphs on every page. Now fully written: Mathematics (42),
-    Physical Sciences (24), Life Sciences (30), Maths Literacy (18), English Home Language (24),
+    swapped in — the same paragraphs on every page. Now fully written: Mathematics (48),
+    Physical Sciences (24), Life Sciences (38), Maths Literacy (18), English Home Language (24),
     Geography (30), Accounting (18), History (24), Business Studies (12), Economics (12),
     Life Orientation (30), CAT (24), Technology (18), Visual Arts (18) and Music (30) in
     `content/lessons/`; 6 subjects (~130 lessons) remain.
@@ -145,8 +145,9 @@ this repo (or behind auth) and add a `.vercelignore`.
     `GK_QUESTIONS` for Battle Trivia's General Knowledge mode.
 23. **Module quizzes weren't about the module** — they drew 8 random questions from the
     whole subject. Fixed for subjects with per-lesson quizzes (Maths so far).
-24. **10-second timer on module quiz questions** is too short for calculation questions
-    (and the speed bonus divides by 20, not 10).
+24. ~~**10-second timer on module quiz questions** is too short for calculation questions
+    (and the speed bonus divides by 20, not 10).~~ Fixed: 30 seconds, bonus divides by 30 (max 150 a question,
+    matching the result percentage).
 
 ---
 
