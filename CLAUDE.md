@@ -44,7 +44,7 @@ Keep the rule as a backstop.
 | `api/notify.js` | Sends FCM push (service account from `FIREBASE_SERVICE_ACCOUNT` env var; needs a Firebase ID token; `broadcast` is admin-only) | Yes |
 | `firebase-messaging-sw.js` | FCM background-push service worker | Yes |
 | `manifest.json` | PWA manifest | Yes |
-| `dashboard.html`, `seed.html` | "TUBS" founder dashboard / board seeder — internal tools, not part of the app | Served publicly (shouldn't be) |
+| `dashboard.html`, `seed.html` | "TUBS" founder dashboard / board seeder — internal tools, not part of the app | No — excluded by `.vercelignore` |
 | `CAPS *.pdf`, `NAUTICAL SCIENCE.pdf` | DBE CAPS curriculum documents (~65 MB) — not linked from the app | Served |
 | `apps/web/` | Next.js 14 rebuild (Firebase + Supabase, Amahle AI) | **No** — work in progress |
 | `mzansi-app/` | Next.js 16 rebuild + Cloudflare worker | **No** — work in progress |
