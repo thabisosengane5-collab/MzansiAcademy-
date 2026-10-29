@@ -4490,6 +4490,7 @@ var COURSE_DATA = {
     {id:'m4',title:'Euclidean Geometry',icon:'[G]',topics:['Lines, Angles & Triangles','Quadrilateral Properties','Circle Theorems','Tangent-Chord Angle','Similarity & Proportion','Proofs & Riders']},
     {id:'m5',title:'Statistics & Probability',icon:'[%]',topics:['Central Tendency','Standard Deviation','Histograms & Ogives','Counting Principles','Combinations','Conditional Probability']},
     {id:'m6',title:'Calculus',icon:'[C]',topics:['Limits & Rate of Change','First Principles','Power Rule','Turning Points','Optimisation','Integration & Area']},
+    {id:'m7',title:'Grade 12 Exam Topics',icon:'[12]',topics:['Inverse Functions','Logarithms','Compound & Double Angles','Analytical Geometry – Circles & Tangents','Regression & Correlation','Cubic Polynomials & the Factor Theorem']},
   ]},
   math_lit:{title:'Mathematical Literacy',icon:'ML',color:'#00C2D4',modules:[
     {id:'m0',title:'Numbers & Finance',icon:'[$]',topics:['Percentages & Ratios','Simple & Compound Interest','Loans & Hire Purchase','Exchange Rates','Inflation & VAT','Budgets']},
@@ -4508,6 +4509,7 @@ var COURSE_DATA = {
     {id:'m2',title:'Life Processes',icon:'[P]',topics:['Support & Transport in Plants','Circulatory System','Nutrition & Digestion','Gaseous Exchange','Excretion & Kidneys','Homeostasis']},
     {id:'m3',title:'Biodiversity & Ecology',icon:'[E]',topics:['Classification & Taxonomy','Ecosystems & Food Webs','Population Ecology','Human Impact on Environment','SA Biodiversity','Conservation in SA']},
     {id:'m4',title:'Evolution',icon:'[V]',topics:['Evidence for Evolution','Natural Selection','Fossil Record & SA Sites','Cradle of Humankind','Human Evolution Timeline','Biodiversity & Extinction']},
+    {id:'m5',title:'Grade 12 Exam Topics',icon:'[12]',topics:['DNA – The Code of Life','RNA & Protein Synthesis','Genetics – Mendel & Monohybrid Crosses','Blood Groups, Sex-linked Traits & Pedigrees','Nervous System & Reflexes','The Eye & Ear','Reproduction in Vertebrates','Plant Responses to the Environment']},
   ]},
   history:{title:'History',icon:'HIS',color:'#B45309',modules:[
     {id:'m0',title:'World Around 1600',icon:'[W]',topics:['African Societies Around 1600','Asian Empires Mughal & Ming','European Renaissance','Transatlantic Slave Trade','Portuguese & Spanish Exploration','Impact on Indigenous Societies']},
@@ -7855,7 +7857,7 @@ function openModuleQuiz(sid,mi){
     +'<div class="badge badge-gold" style="margin-bottom:.875rem">Module Quiz</div>'
     +'<h2 style="font-family:var(--serif);font-size:1.5rem;color:var(--txt);margin-bottom:.25rem">🎯 '+(mod?mod.title:'Module')+'</h2>'
     +'<p style="color:var(--txt-2);font-size:.82rem">Questions change every attempt!</p></div>'
-    +'<div class="quiz-card"><div class="quiz-hud"><div class="quiz-timer ok" id="mqTimer">20</div><span class="quiz-qnum" id="mqNum">Q 1/'+mq.qs.length+'</span>'
+    +'<div class="quiz-card"><div class="quiz-hud"><div class="quiz-timer ok" id="mqTimer">30</div><span class="quiz-qnum" id="mqNum">Q 1/'+mq.qs.length+'</span>'
     +'<div class="quiz-pbar"><div class="progress-wrap progress-sm"><div class="progress-fill" id="mqPBar" style="width:'+(100/mq.qs.length)+'%"></div></div></div>'
     +'<div class="quiz-score" id="mqScore">⭐ 0</div></div>'
     +'<div class="quiz-question"><div class="quiz-q-type">Multiple Choice</div><div class="quiz-q-text" id="mqQText">Loading...</div></div>'
@@ -7884,13 +7886,13 @@ function mqShowQ(){
     return '<button class="quiz-opt" onclick="mqAnswer('+i+')"><span class="opt-letter">'+L[i]+'</span>'+o+'</button>';
   }).join('');
   if(mq.timer) clearInterval(mq.timer);
-  mq.timeLeft=10;
+  mq.timeLeft=30;
   var te=document.getElementById('mqTimer');
-  if(te){te.textContent=10;te.className='quiz-timer ok';}
+  if(te){te.textContent=30;te.className='quiz-timer ok';}
   mq.timer=setInterval(function(){
     mq.timeLeft--;
     var t=document.getElementById('mqTimer');
-    if(t){t.textContent=mq.timeLeft;if(mq.timeLeft<=4)t.className='quiz-timer warning';}
+    if(t){t.textContent=mq.timeLeft;if(mq.timeLeft<=8)t.className='quiz-timer warning';}
     if(mq.timeLeft<=0){clearInterval(mq.timer);if(!mq.answered)mqTimeUp();}
   },1000);
 }
@@ -7898,7 +7900,7 @@ function mqAnswer(idx){
   if(mq.answered) return;
   mq.answered=true; clearInterval(mq.timer);
   var q=mq.qs[mq.idx], ok=idx===q.a;
-  if(ok) mq.score+=100+Math.floor(mq.timeLeft/20*50);
+  if(ok) mq.score+=100+Math.floor(mq.timeLeft/30*50);
   document.querySelectorAll('#mqOpts .quiz-opt').forEach(function(b,i){
     b.disabled=true;
     if(i===q.a) b.classList.add('correct');
