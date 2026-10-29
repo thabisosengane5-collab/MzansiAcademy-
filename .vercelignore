@@ -1,0 +1,3 @@
+# Internal tools — keep in the repo, never deploy
+/dashboard.html
+/seed.html

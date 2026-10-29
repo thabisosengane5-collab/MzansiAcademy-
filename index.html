@@ -16,7 +16,6 @@
 <meta property="og:description" content="Free CAPS-aligned gamified learning for South African Grade 10–12 learners.">
 <meta property="og:type" content="website">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%277%27%20fill%3D%27%2523080D1A%27%2F%3E%3Ctext%20x%3D%2716%27%20y%3D%2723%27%20font-size%3D%2718%27%20text-anchor%3D%27middle%27%3E%F0%9F%A7%AC%3C%2Ftext%3E%3C%2Fsvg%3E">
-<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22MzansiAcademy%22%2C%22short_name%22%3A%22MzansiAcademy%22%2C%22description%22%3A%22Free%20CAPS-aligned%20learning%20for%20SA%20Grade%208-12%20learners%22%2C%22start_url%22%3A%22/%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23080D1A%22%2C%22theme_color%22%3A%22%2300D68F%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage/png%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk%2BM9QDwADhgGAWjR9awAAAABJRU5ErkJggg%3D%3D%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image/png%22%7D%5D%7D">
 <link rel="apple-touch-icon"  href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20180%20180%27%3E%3Crect%20width%3D%27180%27%20height%3D%27180%27%20rx%3D%2736%27%20fill%3D%27%2523080D1A%27%2F%3E%3Ctext%20x%3D%2790%27%20y%3D%27120%27%20font-size%3D%2790%27%20text-anchor%3D%27middle%27%3E%F0%9F%A7%AC%3C%2Ftext%3E%3C%2Fsvg%3E">
 
 <!-- Fonts -->
@@ -10308,10 +10307,12 @@ function renderFriendsList(){
     el.innerHTML='<div style="text-align:center;padding:3rem 1rem;color:var(--txt-4)"><div style="font-size:2.5rem;margin-bottom:.875rem">👥</div><p>No friends yet.<br>Search for learners to add!</p></div>';
     return;
   }
-  var _fq=(document.getElementById('friendSearchInput')&&document.getElementById('friendSearchInput').value||'').toLowerCase().trim();
+  var _fqEl=document.getElementById('friendListFilter'),_fqFocus=_fqEl&&document.activeElement===_fqEl;
+  var _fqRaw=_fqEl?_fqEl.value:'',_fq=_fqRaw.toLowerCase().trim();
+  function _refocus(){ if(_fqFocus){ var n=document.getElementById('friendListFilter'); n.focus(); n.setSelectionRange(n.value.length,n.value.length); } }
   var _filtered=_fq?_friends.filter(function(f){return (f.displayName||'').toLowerCase().includes(_fq)||(f.username||'').toLowerCase().includes(_fq);}):_friends;
-  el.innerHTML='<div style="margin-bottom:.75rem"><input id="friendSearchInput" type="text" placeholder="🔍 Search friends..." oninput="renderFriendsList()" style="width:100%;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--border);background:var(--bg-3);color:var(--txt);font-size:.78rem;box-sizing:border-box" value="'+(_fq||'')+'"></div>';
-  if(!_filtered.length){el.innerHTML+='<div style="text-align:center;padding:2rem;color:var(--txt-4);font-size:.78rem">'+(  _fq?'No friends match your search.':'No friends yet. Search for learners to add!')+'</div>';return;}
+  el.innerHTML='<div style="margin-bottom:.75rem"><input id="friendListFilter" type="text" placeholder="🔍 Search friends..." oninput="renderFriendsList()" style="width:100%;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--border);background:var(--bg-3);color:var(--txt);font-size:.78rem;box-sizing:border-box" value="'+escHtml(_fqRaw)+'"></div>';
+  if(!_filtered.length){el.innerHTML+='<div style="text-align:center;padding:2rem;color:var(--txt-4);font-size:.78rem">'+(  _fq?'No friends match your search.':'No friends yet. Search for learners to add!')+'</div>';_refocus();return;}
   el.innerHTML+=_filtered.map(function(f){
     var statusColor={online:'#22C55E',away:'#FFB800',busy:'#EF4444',offline:'#555'}[f.status]||'#555';
     var statusLabel={online:'Online',away:'Away',busy:'Busy',offline:'Offline'}[f.status]||'Offline';
@@ -10321,7 +10322,7 @@ function renderFriendsList(){
       +'<div class="friend-info">'
       +'<div class="friend-name">'+escHtml(f.displayName||f.firstName||'Learner')+'</div>'
       +(f.username?'<div class="friend-aka">@'+escHtml(f.username)+'</div>':'')
-      +(f.mood?'<div class="friend-mood">💭 '+f.mood+'</div>':'')
+      +(f.mood?'<div class="friend-mood">💭 '+escHtml(f.mood)+'</div>':'')
       +'<div style="font-size:.6rem;margin-top:2px;color:'+statusColor+'">● '+statusLabel+(f.grade?' · Grade '+f.grade:'')+( f.province?' · '+escHtml(f.province):'')+'</div>'+(f.school?'<div style="font-size:.6rem;color:var(--txt-4)">🏫 '+escHtml(f.school)+'</div>':'')
       +'</div>'
       +'<div class="friend-actions">'
@@ -10330,6 +10331,7 @@ function renderFriendsList(){
       +'<button class="friend-action-btn" onclick="confirmUnfriend(\''+safeUid+'\','+escHtml(JSON.stringify(f.displayName||'Friend'))+')" title="Unfriend" style="color:var(--dna-red);font-size:.6rem;font-weight:700">Unfriend</button>'
       +'</div></div>';
   }).join('');
+  _refocus();
 }
 
 function renderFriendRequests(){

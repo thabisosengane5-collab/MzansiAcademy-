@@ -79,13 +79,15 @@ panel, or give themselves 1,000,000 points. Fix: in Firestore rules, deny client
 to `isAdmin` and `pts` (or validate increments), and set admin via custom claims. Commit
 `firestore.rules` / `database.rules.json` to the repo so they're reviewable.
 
-### 7. Background push notifications are broken — API key typo
+### 7. ~~Background push notifications are broken — API key typo~~ — fixed
+The service worker now uses the page's exact config and SDK 10.12.0.
 `firebase-messaging-sw.js` has `apiKey: "AIzaSyCS6LZeWXOqmi3O1BN9dD4u8yGVu9NOFi8"` — two
 zeros were typed as the letter **O** (compare `index.html:38`, `…WX0qmi…N0Fi8`). Its
 `storageBucket` also differs (`appspot.com` vs `firebasestorage.app`) and its SDK
 (10.7.0) differs from the page (10.12.0). Copy the config from `index.html` exactly.
 
-### 8. Internal tools are publicly served
+### 8. ~~Internal tools are publicly served~~ — fixed
+`.vercelignore` keeps `dashboard.html` and `seed.html` in the repo but out of deploys.
 `dashboard.html` ("TUBS // FOUNDER DASHBOARD" — plans for MzansiAcademy, Pulsify, Tradi)
 and `seed.html` ("TUBS // BOARD SEEDER") return 200 on the live domain. Move them out of
 this repo (or behind auth) and add a `.vercelignore`.
@@ -94,18 +96,19 @@ this repo (or behind auth) and add a `.vercelignore`.
 
 ## 🟡 Medium
 
-9. **Contact emails show "[email protected]" and link to a 404.** The page was saved from a
+9. ~~**Contact emails show "[email protected]" and link to a 404.** The page was saved from a
    Cloudflare-proxied copy: 5 `__cf_email__` spans + `/cdn-cgi/l/email-protection` links,
    and the decoder script `/cdn-cgi/scripts/…/email-decode.min.js` 404s on Vercel. Replace
    with plain `info@mzansiacademy.co.za` / `support@mzansiacademy.co.za` (lines ~3018,
    3202-3203, 3231, 10908) and delete the script tag at line 4335.
    ⚠ The site is `mzansiacademysa.co.za` but the emails are `@mzansiacademy.co.za` —
-   confirm those inboxes exist.
-10. **Duplicate id `friendSearchInput`** (`index.html:10193` and `11054`). The friends-list
+   confirm those inboxes exist.~~ — fixed earlier (plain `@mzansiacademy.co.za` links; that domain has an MX record).
+10. ~~**Duplicate id `friendSearchInput`**~~ — fixed: the friends-list filter is now `friendListFilter`,
+    keeps focus and case while typing, and its value and friends' moods are escaped. Was: (`index.html:10193` and `11054`). The friends-list
     filter (`renderFriendsList`, line 10191) can read the wrong input.
 11. ~~**SVG console error** `<rect> attribute rx: Expected length, "3 3 0 0"`~~ — fixed
     (Rooms tab icon now uses `rx="3"`; the square rect under it keeps the bottom flat).
-12. **Two `<link rel="manifest">` tags** (file + data-URL). Keep `/manifest.json` only.
+12. ~~**Two `<link rel="manifest">` tags**~~ — fixed: one manifest; icons are `/icon-192.png` and `/icon-512.png`. Was: (file + data-URL). Keep `/manifest.json` only.
     Its icons point at `ui-avatars.com` (third-party, PNG generated on demand) — ship real
     192/512 PNGs in the repo so installs work offline.
 13. **Firebase Analytics config 404** (`…/webConfig`) — the web app ID's Analytics link
