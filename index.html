@@ -6654,7 +6654,7 @@ function switchUvTab(el,tab){
 }
 
 // ── Lesson content files (content/lessons/<sid>.js, loaded on demand) ──
-var LESSON_FILES={math:1,science:1,lifesci:1,math_lit:1,english_hl:1,geography:1,accounting:1,history:1,business:1,economics:1,lifeori:1,cat:1,technology:1,arts:1};
+var LESSON_FILES={math:1,science:1,lifesci:1,math_lit:1,english_hl:1,geography:1,accounting:1,history:1,business:1,economics:1,lifeori:1,cat:1,technology:1,arts:1,music:1};
 var _lessonFilesLoaded={};
 function ensureLessons(sid,cb){
   if(!LESSON_FILES[sid]||_lessonFilesLoaded[sid]) return cb();
