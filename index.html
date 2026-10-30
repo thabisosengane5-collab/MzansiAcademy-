@@ -1273,6 +1273,47 @@ code { font-family:var(--mono); font-size:0.85em; background:var(--bg-4); paddin
 .feature-icon { font-size:2.5rem; margin-bottom:1rem; display:block; }
 .feature-title { font-family:var(--serif); font-size:1.2rem; margin-bottom:.625rem; color:var(--txt); }
 .feature-desc { font-size:.85rem; color:var(--txt-2); line-height:1.7; }
+/* ── Landing: subject marquee, 60-second challenge, lesson hooks ── */
+.lp-marquee { overflow:hidden; padding:1.25rem 0 .25rem; -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); }
+.lp-track { display:flex; gap:.625rem; width:max-content; animation:lpScroll 45s linear infinite; }
+.lp-marquee:hover .lp-track { animation-play-state:paused; }
+.lp-chip { white-space:nowrap; font-size:.75rem; font-weight:700; color:var(--txt-2); background:var(--bg-2); border:1px solid var(--border-2); border-radius:100px; padding:.45rem .9rem; cursor:pointer; }
+.lp-chip:hover { color:var(--dna-green); border-color:var(--border-glow); }
+@keyframes lpScroll { to { transform:translateX(-50%); } }
+.lp-section { padding:3.5rem 1.5rem 0; max-width:1200px; margin:0 auto; }
+.lp-quiz { max-width:620px; margin:0 auto; background:var(--bg-2); border:1px solid var(--border-2); border-radius:var(--radius-lg); padding:1.5rem; position:relative; overflow:hidden; }
+.lp-quiz::before { content:''; position:absolute; inset:0 0 auto 0; height:3px; background:linear-gradient(90deg,var(--dna-green),var(--dna-teal),var(--dna-gold)); }
+.lp-qtop { display:flex; justify-content:space-between; align-items:center; gap:.5rem; margin-bottom:.875rem; font-size:.72rem; font-weight:800; color:var(--txt-3); }
+.lp-xp { color:var(--dna-gold); }
+.lp-streak { color:var(--dna-orange); }
+.lp-bar { height:6px; background:var(--bg-4); border-radius:6px; overflow:hidden; margin-bottom:1.125rem; }
+.lp-bar > div { height:100%; width:0; background:linear-gradient(90deg,var(--dna-green),var(--dna-teal)); transition:width .4s; }
+.lp-subj { display:inline-block; font-size:.62rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--dna-teal); background:rgba(0,194,212,.08); border:1px solid rgba(0,194,212,.2); border-radius:100px; padding:.2rem .6rem; margin-bottom:.625rem; }
+.lp-q { font-family:var(--serif); font-size:1.15rem; color:var(--txt); line-height:1.45; margin-bottom:1rem; }
+.lp-opts { display:grid; gap:.5rem; }
+.lp-opt { text-align:left; font:inherit; font-size:.88rem; font-weight:600; color:var(--txt); background:var(--bg-3); border:1px solid var(--border-2); border-radius:var(--radius-sm); padding:.8rem 1rem; cursor:pointer; transition:border-color .15s, background .15s; }
+.lp-opt:hover:not(:disabled) { border-color:var(--dna-teal); }
+.lp-opt.right { background:rgba(0,214,143,.14); border-color:var(--dna-green); }
+.lp-opt.wrong { background:rgba(255,71,87,.12); border-color:var(--dna-red); }
+.lp-opt:disabled { cursor:default; }
+.lp-fact { display:none; margin-top:.875rem; font-size:.82rem; color:var(--txt-2); line-height:1.6; background:var(--bg-3); border-left:3px solid var(--dna-gold); border-radius:8px; padding:.7rem .875rem; }
+.lp-next { display:none; margin-top:1rem; }
+.lp-done { text-align:center; padding:.5rem 0; }
+.lp-score { font-family:var(--serif); font-size:3rem; line-height:1; margin:.5rem 0; }
+.lp-hooks { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1rem; }
+.lp-hook { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.375rem; cursor:pointer; transition:border-color .2s, box-shadow .2s; }
+.lp-hook:hover { border-color:var(--border-glow); box-shadow:var(--glow-green); }
+.lp-hook-emoji { font-size:2rem; }
+.lp-hook h3 { font-family:var(--serif); font-size:1.1rem; color:var(--txt); margin:.5rem 0; }
+.lp-hook p { font-size:.84rem; color:var(--txt-2); line-height:1.65; }
+.lp-hook-go { margin-top:.75rem; font-size:.72rem; font-weight:800; color:var(--dna-green); }
+.lp-steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-top:2.5rem; counter-reset:lpstep; }
+.lp-step { display:flex; gap:.875rem; align-items:flex-start; }
+.lp-step::before { counter-increment:lpstep; content:counter(lpstep); flex:none; width:2.25rem; height:2.25rem; border-radius:50%; display:grid; place-items:center; font-weight:800; color:var(--bg-root); background:linear-gradient(135deg,var(--dna-green),var(--dna-teal)); }
+.lp-step b { display:block; color:var(--txt); font-size:.92rem; margin-bottom:.2rem; }
+.lp-step span { color:var(--txt-2); font-size:.82rem; line-height:1.55; }
+@media (prefers-reduced-motion:reduce){ .lp-track { animation:none; flex-wrap:wrap; width:auto; justify-content:center; } .lp-track .lp-dup { display:none; } }
+@media(max-width:600px){ .lp-section { padding:2.5rem 1rem 0; } .lp-quiz { padding:1.125rem; } .lp-q { font-size:1.02rem; } }
 @media(max-width:600px){
   .hero-stats { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; max-width:340px; margin:0 auto; }
   .scroll-hint { display:none; }
@@ -2842,7 +2883,7 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
     <div class="hero-inner animate-in">
       <div class="hero-badge animate-in animate-in-delay-1">
         <span class="hero-badge-dot"></span>
-        Free · CAPS-Aligned · Grade 10–12 · South Africa
+        Free · Built on CAPS · Grade 10–12 · South Africa
       </div>
       <div style="display:flex;justify-content:center;gap:8px;margin-top:1rem">
         <div class="sa-flag-animated" style="width:56px;height:7px;border-radius:3px"><div></div><div></div><div></div><div></div><div></div><div></div></div>
@@ -2924,6 +2965,99 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
       </div>
     </div>
   </section>
+
+  <!-- Subject marquee -->
+  <div class="lp-marquee" aria-label="Subjects">
+    <div class="lp-track"><span class="lp-chip" onclick="goTo('courses')">📐 Mathematics</span><span class="lp-chip" onclick="goTo('courses')">🧬 Life Sciences</span><span class="lp-chip" onclick="goTo('courses')">⚗️ Physical Sciences</span><span class="lp-chip" onclick="goTo('courses')">📊 Accounting</span><span class="lp-chip" onclick="goTo('courses')">🌍 Geography</span><span class="lp-chip" onclick="goTo('courses')">📜 History</span><span class="lp-chip" onclick="goTo('courses')">💼 Business Studies</span><span class="lp-chip" onclick="goTo('courses')">📈 Economics</span><span class="lp-chip" onclick="goTo('courses')">📖 English HL</span><span class="lp-chip" onclick="goTo('courses')">💻 CAT</span><span class="lp-chip" onclick="goTo('courses')">🎨 Visual Arts</span><span class="lp-chip" onclick="goTo('courses')">🎵 Music</span><span class="lp-chip" onclick="goTo('courses')">🧭 Life Orientation</span><span class="lp-chip" onclick="goTo('courses')">🧮 Maths Literacy</span><span class="lp-chip" onclick="goTo('courses')">🛠️ Technology</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">📐 Mathematics</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🧬 Life Sciences</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">⚗️ Physical Sciences</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">📊 Accounting</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🌍 Geography</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">📜 History</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">💼 Business Studies</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">📈 Economics</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">📖 English HL</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">💻 CAT</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🎨 Visual Arts</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🎵 Music</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🧭 Life Orientation</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🧮 Maths Literacy</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🛠️ Technology</span></div>
+  </div>
+
+  <!-- 60-second challenge (no sign-in needed) -->
+  <section class="lp-section" id="lpChallenge">
+    <div class="section-header" style="margin-bottom:1.75rem">
+      <div class="section-tag">⚡ Try it now · no sign-up</div>
+      <h2 class="section-title">The <em class="grad-text">60-second</em> challenge</h2>
+      <p class="section-sub">Five real questions from our lessons. See how many you get — then save your XP.</p>
+    </div>
+    <div class="lp-quiz" id="lpQuiz" aria-live="polite"></div>
+  </section>
+
+  <!-- Lesson hooks -->
+  <section class="lp-section">
+    <div class="section-header" style="margin-bottom:1.75rem">
+      <div class="section-tag">🇿🇦 Learning, the Mzansi way</div>
+      <h2 class="section-title">Lessons that start <em class="grad-text">where you live</em></h2>
+      <p class="section-sub">Every lesson covers what CAPS and the matric exam need — taught through taxis, stokvels, the Comrades and the Cape fynbos, not dry textbook language.</p>
+    </div>
+    <div class="lp-hooks">
+      <div class="lp-hook" onclick="goTo('courses')">
+        <div class="lp-hook-emoji">🛢️</div>
+        <div class="lp-subj">Maths · Grade 10</div>
+        <h3>How much water does the tank hold?</h3>
+        <p>A plastic water tank 2 m wide and 1.6 m tall — about 5 000 litres. Volume and surface area, worked out from the tank in your yard.</p>
+        <div class="lp-hook-go">Open the lesson →</div>
+      </div>
+      <div class="lp-hook" onclick="goTo('courses')">
+        <div class="lp-hook-emoji">🏃</div>
+        <div class="lp-subj">Life Sciences · Grade 11</div>
+        <h3>The Comrades burn</h3>
+        <p>Why do runners' legs cramp at the 60 km mark? Cellular respiration, lactic acid and oxygen debt — explained on the road from Durban to Pietermaritzburg.</p>
+        <div class="lp-hook-go">Open the lesson →</div>
+      </div>
+      <div class="lp-hook" onclick="goTo('courses')">
+        <div class="lp-hook-emoji">💰</div>
+        <div class="lp-subj">Maths · Grade 12</div>
+        <h3>The stokvel sum</h3>
+        <p>R200 in month one, R50 more every month. What has she paid after a year? Arithmetic series and sigma notation, with money you can count.</p>
+        <div class="lp-hook-go">Open the lesson →</div>
+      </div>
+    </div>
+    <div class="lp-steps">
+      <div class="lp-step"><div><b>Pick your subjects</b><span>Grade 10–12 subjects, with real lessons that load fast on any phone.</span></div></div>
+      <div class="lp-step"><div><b>Learn and test yourself</b><span>Worked examples, an activity, an exam tip and a quiz in every lesson — plus a test at the end of each module.</span></div></div>
+      <div class="lp-step"><div><b>Battle and climb</b><span>Earn XP, take on learners in Battle Trivia and climb the national leaderboard.</span></div></div>
+    </div>
+  </section>
+
+<script>
+(function(){
+  var Q=[
+    {s:'Mathematics',q:'Every side of a box is doubled. Its volume is multiplied by…',o:['2','4','6','8'],a:3,f:'2 × 2 × 2 = 8. Area grows by k², volume by k³ — that is why a bigger tank costs less per litre.'},
+    {s:'Life Sciences',q:'Malaria is caused by…',o:['A virus','A mosquito','Plasmodium, a protist','A bacterium'],a:2,f:'The female Anopheles mosquito is only the carrier (vector). The real cause is a single-celled protist called Plasmodium.'},
+    {s:'Life Sciences',q:'Where does the oxygen from photosynthesis come from?',o:['Carbon dioxide','Water','Glucose','The soil'],a:1,f:'Light splits water molecules in the chloroplast. The oxygen you breathe was once part of water.'},
+    {s:'Mathematics',q:'8 + 4 + 2 + 1 + … goes on forever. What does it add up to?',o:['15','16','Infinity','32'],a:1,f:'Each term halves, so the sum gets closer and closer to 16 but never passes it: S∞ = 8 ÷ (1 − ½).'},
+    {s:'Mathematics',q:'In a class, 22 play soccer, 15 play netball and 6 play both. How many play at least one?',o:['37','31','43','28'],a:1,f:'22 + 15 − 6 = 31. Subtract the overlap so the 6 aren\'t counted twice — the addition rule.'}
+  ];
+  var i=0,score=0,xp=0,streak=0,el=null;
+  function bar(){ return '<div class="lp-bar"><div style="width:'+(i/Q.length*100)+'%"></div></div>'; }
+  function top(){ return '<div class="lp-qtop"><span>Question '+Math.min(i+1,Q.length)+' of '+Q.length+'</span><span><span class="lp-streak">🔥 '+streak+'</span> &nbsp; <span class="lp-xp">⭐ '+xp+' XP</span></span></div>'; }
+  function show(){
+    if(i>=Q.length){ return done(); }
+    var c=Q[i],h=top()+bar()+'<div class="lp-subj">'+c.s+'</div><div class="lp-q">'+c.q+'</div><div class="lp-opts">';
+    c.o.forEach(function(o,k){ h+='<button class="lp-opt" data-k="'+k+'">'+o+'</button>'; });
+    h+='</div><div class="lp-fact"></div><div class="lp-next"><button class="btn btn-primary btn-full">'+(i<Q.length-1?'Next question →':'See my score →')+'</button></div>';
+    el.innerHTML=h;
+    el.querySelectorAll('.lp-opt').forEach(function(b){ b.onclick=function(){ pick(+b.getAttribute('data-k')); }; });
+    el.querySelector('.lp-next button').onclick=function(){ i++; show(); };
+  }
+  function pick(k){
+    var c=Q[i],bs=el.querySelectorAll('.lp-opt');
+    bs.forEach(function(b,j){ b.disabled=true; if(j===c.a) b.classList.add('right'); else if(j===k) b.classList.add('wrong'); });
+    if(k===c.a){ score++; streak++; xp+=20+streak*5; } else { streak=0; }
+    el.querySelector('.lp-qtop').outerHTML=top();
+    var f=el.querySelector('.lp-fact'); f.innerHTML=(k===c.a?'✅ <b>Correct!</b> ':'❌ <b>Not quite.</b> ')+c.f; f.style.display='block';
+    el.querySelector('.lp-next').style.display='block';
+  }
+  function done(){
+    var msg=score===5?'Perfect score — you\'re matric-ready material! 🏆':score>=3?'Solid! A few more lessons and you\'ll ace it. 💪':'Every expert started here. The lessons will get you there. 🌱';
+    el.innerHTML=bar()+'<div class="lp-done"><div class="lp-subj">Your result</div><div class="lp-score grad-text">'+score+'/5</div><div class="lp-xp" style="font-weight:800;margin-bottom:.5rem">⭐ '+xp+' XP earned</div><p class="section-sub" style="margin-bottom:1.25rem">'+msg+'</p><button class="btn btn-primary btn-lg" id="lpSave">🚀 Sign up free to save your XP</button><div style="margin-top:.75rem"><button class="btn btn-secondary" id="lpAgain">Try again</button></div></div>';
+    el.querySelector('.lp-bar div').style.width='100%';
+    document.getElementById('lpSave').onclick=function(){ openModal('authModal'); };
+    document.getElementById('lpAgain').onclick=function(){ i=0;score=0;xp=0;streak=0;show(); };
+  }
+  function init(){ el=document.getElementById('lpQuiz'); if(el) show(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>
 
   <!-- Features -->
   <section class="features-section">
