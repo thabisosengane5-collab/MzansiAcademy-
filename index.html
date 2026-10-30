@@ -2442,6 +2442,8 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
 .friends-tabs { display:flex; gap:0; background:var(--bg-3); border-radius:10px; padding:3px; margin-bottom:1.25rem; }
 .friends-tab { flex:1; padding:.45rem; font-size:.68rem; font-weight:700; border:none; border-radius:8px; background:transparent; color:var(--txt-3); cursor:pointer; transition:all .2s; }
 .friends-tab.active { background:var(--dna-green); color:#000; }
+.me-tab { flex:1; padding:.45rem; font-size:.68rem; font-weight:700; border:none; border-radius:8px; background:transparent; color:var(--txt-3); cursor:pointer; transition:all .2s; }
+.me-tab.active { background:var(--dna-green); color:#000; }
 .friend-card {
   display:flex; align-items:center; gap:.875rem; padding:.875rem 1rem;
   background:var(--bg-2); border:1px solid var(--border); border-radius:12px;
@@ -2854,14 +2856,9 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
     <span>Ranks</span>
     <span class="active-dot"></span>
   </button>
-  <button class="bottom-nav-item" onclick="goTo('friends')" data-bnav="friends">
-    <svg class="bnav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    <span>Friends</span>
-    <span class="active-dot"></span>
-  </button>
   <button class="bottom-nav-item" onclick="goTo('profile')" data-bnav="profile">
     <svg class="bnav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    <span>Profile</span>
+    <span>Me</span>
     <span class="active-dot"></span>
   </button>
 </nav>
@@ -3905,6 +3902,10 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
   <!-- Signed-in view -->
   <div id="profileSignedInView">
   <div class="page-inner" style="max-width:600px;margin:0 auto">
+    <div class="friends-tabs me-tabs" role="tablist" aria-label="Me">
+      <button class="me-tab active" role="tab" onclick="goTo('profile')">👤 Profile</button>
+      <button class="me-tab" role="tab" onclick="goTo('friends')">👥 Friends</button>
+    </div>
 
     <!-- Hero Card -->
     <div class="profile-hero">
@@ -4652,6 +4653,9 @@ var COURSE_DATA = {
     {id:'m1',title:'Apartheid South Africa',icon:'[A]',topics:['Key Apartheid Legislation','Forced Removals & Group Areas','Bantu Education Act','Pass Laws & Resistance','Sharpeville Massacre 1960','Freedom Charter 1955']},
     {id:'m2',title:'Cold War & Decolonisation',icon:'[C]',topics:['Origins of the Cold War','Korean War & Cuban Crisis','Decolonisation of Africa','Patrice Lumumba & Congo','Cold War in Angola','SA in Cold War Context']},
     {id:'m3',title:'SA Democracy',icon:'[D]',topics:['Unbanning ANC February 1990','CODESA Negotiations','1994 Elections & Mandela','TRC Truth & Reconciliation','Post-Apartheid Transformation','Contemporary SA Challenges']},
+    {id:'m4',title:'Grade 10 CAPS Topics',icon:'[10]',topics:['The French Revolution','Southern Africa after 1750','Colonial Expansion after 1750','The South African War & Union']},
+    {id:'m5',title:'Grade 11 CAPS Topics',icon:'[11]',topics:['Communism in Russia 1900–1940','Capitalism & the USA 1900–1940','Ideas of Race','Nationalisms – SA, Middle East & Africa']},
+    {id:'m6',title:'Grade 12 CAPS Topics',icon:'[12]',topics:['Civil Society Protests 1950s–1990s','Civil Resistance in SA 1970s–1980s','End of the Cold War & Globalisation']},
   ]},
   geography:{title:'Geography',icon:'GEO',color:'#059669',modules:[
     {id:'m0',title:'Climate & Weather',icon:'[C]',topics:['Global Atmospheric Circulation','High & Low Pressure Systems','Southern African Weather','Tropical Cyclones','Climate Regions of SA','Climate Change & SA Impact']},
@@ -4668,6 +4672,8 @@ var COURSE_DATA = {
   business:{title:'Business Studies',icon:'BUS',color:'#EF4444',modules:[
     {id:'m0',title:'Business Ownership',icon:'[O]',topics:['Sole Trader','Partnership','Private Company Pty Ltd','Public Company Ltd','Business Forms Comparison','BBBEE in SA Business']},
     {id:'m1',title:'Business Operations',icon:'[P]',topics:['Business Functions Overview','Marketing in SA Context','Human Resources & LRA','Financial Management','Operations & Production','Management Principles']},
+    {id:'m2',title:'Business Environments & Ventures',icon:'[E]',topics:['The Three Business Environments','Challenges & Business Strategies','Business Sectors','Socio-economic Issues & CSR','Entrepreneurship & Opportunities','Location & the Business Plan','Acquiring a Business & Contracts','Presenting Business Information']},
+    {id:'m3',title:'Business Roles & Investment',icon:'[R]',topics:['Creative Thinking & Problem Solving','Stress, Crisis & Change','Teams & Conflict Management','Professionalism & Ethics','Quality of Performance (TQM)','Business Legislation','Investment: Securities','Investment: Insurance']},
   ]},
   economics:{title:'Economics',icon:'ECO',color:'#F59E0B',modules:[
     {id:'m0',title:'Basic Concepts',icon:'[B]',topics:['Scarcity & Opportunity Cost','Supply & Demand','Market Equilibrium','Factors of Production','Economic Systems','SA Economy Overview']},
@@ -5941,7 +5947,7 @@ function goTo(page){
   var pg = document.getElementById(map[page]||('pg'+page.charAt(0).toUpperCase()+page.slice(1)));
   if(pg){ pg.classList.add('active'); pg.scrollIntoView({behavior:'instant',block:'start'}); }
   document.querySelectorAll('.nav-link').forEach(function(l){ l.classList.toggle('active', l.dataset.page===page); });
-  document.querySelectorAll('.bottom-nav-item').forEach(function(b){ b.classList.toggle('active', b.dataset.bnav===page||(page==='course'&&b.dataset.bnav==='courses')); });
+  document.querySelectorAll('.bottom-nav-item').forEach(function(b){ b.classList.toggle('active', b.dataset.bnav===page||(page==='course'&&b.dataset.bnav==='courses')||(page==='friends'&&b.dataset.bnav==='profile')); });
   var onCourse = page==='course';
   ['pageArrowLeft','pageArrowRight'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display=onCourse?'flex':'none';
@@ -6792,7 +6798,7 @@ function switchUvTab(el,tab){
 }
 
 // ── Lesson content files (content/lessons/<sid>.js, loaded on demand) ──
-var LESSON_FILES={math:1,science:1,lifesci:1,math_lit:1,english_hl:1,geography:1,accounting:1,history:1,business:1,economics:1,lifeori:1,cat:1,technology:1,arts:1,music:1};
+var LESSON_FILES={math:1,science:1,lifesci:1,math_lit:1,english_hl:1,geography:1,accounting:1,history:1,business:1,economics:1,lifeori:1,cat:1,technology:1,arts:1,music:1,webprog:1};
 var _lessonFilesLoaded={};
 function ensureLessons(sid,cb){
   if(!LESSON_FILES[sid]||_lessonFilesLoaded[sid]) return cb();
@@ -11280,6 +11286,10 @@ function updateCharCount(textarea, countId) {
 ══════════════════════════════════════════════════════════════════ -->
 <div class="page" id="pgFriends">
   <div class="page-inner" style="padding-bottom:calc(var(--bottom-nav)+1.5rem)">
+    <div class="friends-tabs me-tabs" role="tablist" aria-label="Me">
+      <button class="me-tab" role="tab" onclick="goTo('profile')">👤 Profile</button>
+      <button class="me-tab active" role="tab" onclick="goTo('friends')">👥 Friends</button>
+    </div>
 
     <!-- Header -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">

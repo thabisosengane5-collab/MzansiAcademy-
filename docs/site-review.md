@@ -137,9 +137,9 @@ this repo (or behind auth) and add a `.vercelignore`.
     lessons; the rest come from one generic template per subject with the topic name
     swapped in — the same paragraphs on every page. Now fully written: Mathematics (56),
     Physical Sciences (24), Life Sciences (46), Maths Literacy (18), English Home Language (24),
-    Geography (30), Accounting (18), History (24), Business Studies (12), Economics (12),
-    Life Orientation (30), CAT (24), Technology (18), Visual Arts (18) and Music (30) in
-    `content/lessons/`; 6 subjects (~130 lessons) remain.
+    Geography (30), Accounting (18), History (35), Business Studies (28), Economics (12),
+    Life Orientation (30), CAT (24), Technology (18), Visual Arts (18), Music (30) and Web Programming (24) in
+    `content/lessons/`; 5 subjects (~126 lessons) remain.
 22. ~~**5 subjects quiz learners on Maths.**~~ Fixed: `content/quiz/bank.js` gives
     `math_lit`, `afrikaans`, `isizulu`, `technology` and `arts` their own banks, and adds
     `GK_QUESTIONS` for Battle Trivia's General Knowledge mode.
