@@ -39,9 +39,9 @@ Keep the rule as a backstop.
 | Path | What it is | Live? |
 |---|---|---|
 | `index.html` (~820 KB, ~11k lines) | The whole learner app: HTML + CSS + JS + subject content in one file | **Yes** |
-| `admin.html` | Admin console (Firebase; gated on `users/{uid}.isAdmin`) | Yes |
+| `admin.html` | Admin console (Supabase; gated on `profiles.is_admin`) | Yes |
 | `api/chat.js` | Proxy to Groq chat completions (`GROQ_API_KEY`) — powers the Amahle/Nkosazane AI tutor | Yes |
-| `api/notify.js` | Sends FCM push (service account from `FIREBASE_SERVICE_ACCOUNT` env var; needs a Firebase ID token; `broadcast` is admin-only) | Yes |
+| `api/notify.js` | Sends FCM push (needs `FIREBASE_SERVICE_ACCOUNT` + `SUPABASE_SERVICE_ROLE_KEY` env vars and a Supabase access token; `broadcast` is admin-only) | Yes |
 | `firebase-messaging-sw.js` | FCM background-push service worker | Yes |
 | `manifest.json` | PWA manifest | Yes |
 | `dashboard.html`, `seed.html` | "TUBS" founder dashboard / board seeder — internal tools, not part of the app | No — excluded by `.vercelignore` |
@@ -55,24 +55,21 @@ Unless the user names `apps/web` or `mzansi-app`, "the website" means root `inde
 
 ## 6. Stack (live site)
 
-- **Firebase project `edusa-a6efe`** — Auth (email, Google, phone OTP), Firestore,
-  Realtime Database (DMs, rooms), Storage, Analytics, Cloud Messaging.
-  SDK v10 loaded from `gstatic.com` in the `<script type="module">` at the top of
-  `index.html`, then exposed as globals: `window.FB`, `window.DB`, `window.AUTH`,
-  `window.rtdb` / `window.rt*`.
-- Firestore collections: `users`, `users/{uid}/quizHistory`, `users/{uid}/pointsHistory`,
-  `leaderboard`, `fcmTokens`, `announcements`. RTDB: `dms/{chatId}/messages`, rooms.
-- **Firestore/RTDB security rules are NOT in this repo** — they live in the Firebase
-  console. Points, leaderboard and `isAdmin` are written client-side, so the rules are
-  the only thing stopping cheating / privilege escalation. Check them before touching
-  any of that.
+- **Supabase project `kxndcjzntrthwwnookgt`** holds all app data and sign-in (Google only).
+  The `<script type="module">` at the top of `index.html` creates the client (`window.SB`) and
+  exposes the data layer: `window.AUTH`, `window.DB` (profile, points, progress, leaderboards),
+  `window.SOCIAL` (friends, search, DMs), `window.GROUPS`, `window.BATTLES`, `window.CONTENT`.
+  Online status uses a Realtime presence channel (`window._onlineUids`).
+- Schema and security rules are in the repo: `db/supabase/*.sql`. Every table has RLS.
+  Points change only through `award_points()` (≤500 per call, ≤3 000 per day); never let the
+  client write `pts` or `is_admin`. Admins: set `profiles.is_admin` in the Supabase dashboard.
+- Extra per-user fields live in `profiles.data` (jsonb); `DB.saveProfile` splits real columns
+  from the rest. Lesson progress is still read from localStorage; the server copy is write-only.
+- Firebase (`edusa-a6efe`) is kept only for Cloud Messaging (push delivery).
 - AI tutor: `sendAiMessage()` → `/api/chat` → Groq `openai/gpt-oss-120b`. Model, limits and the
   Nkosazane system prompt live in `api/chat.js`; the client sends only `messages`.
-- **Moving to Supabase** (project `kxndcjzntrthwwnookgt`): the schema is live (`db/supabase/001_core_schema.sql`)
-  but the app still uses Firebase. Plan and open decisions: `docs/supabase-migration.md`.
-  Points change only through `award_points()`; never let the client write `pts` or `is_admin`.
-- Firebase web `apiKey` in HTML is public by design — that's fine. Anything server-side
-  (service accounts, Groq key) is not.
+- The Supabase publishable key and Firebase web `apiKey` in HTML are public by design. The
+  Supabase service-role key, service accounts and the Groq key are server-only (Vercel env vars).
 
 ## 7. Course content
 

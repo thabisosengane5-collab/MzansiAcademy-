@@ -24,252 +24,460 @@
 
 <!-- Firebase SDK v10 -->
 <script type="module">
+// ── Supabase (database + Google sign-in) ─────────────────────────────
+// Project kxndcjzntrthwwnookgt. The publishable key is safe in the browser:
+// every table is protected by row-level security (db/supabase/*.sql).
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/+esm';
+// Firebase is kept only for Cloud Messaging (push delivery).
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getDatabase, ref as dbRef, set, onValue, onChildAdded, push, update, remove, get, query as dbQuery, orderByChild, limitToLast, serverTimestamp as rtServerTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
-import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, collection, addDoc, getDocs, query, orderBy, limit, where, serverTimestamp, increment, onSnapshot, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup, signOut, RecaptchaVerifier, onAuthStateChanged, sendEmailVerification } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getAnalytics, logEvent } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
 import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js';
 
-// ── Firebase Config ──────────────────────────────────────────────────
-const firebaseConfig = {
-  apiKey:            "AIzaSyCS6LZeWX0qmi3O1BN9dD4u8yGVu9N0Fi8",
-  authDomain:        "edusa-a6efe.firebaseapp.com",
-  projectId:         "edusa-a6efe",
-  storageBucket:     "edusa-a6efe.firebasestorage.app",
-  messagingSenderId: "104983276558",
-  appId:             "1:104983276558:web:3a5bf7016666d3e873a2e0",
-  measurementId:     "G-N8W3TQ8QVD"
-};
+const SB = createClient('https://kxndcjzntrthwwnookgt.supabase.co', 'sb_publishable_ow1NvVwxtHCEm-iD5sOvVA_8-1z8FKg');
+window.SB = SB;
 
-const app      = initializeApp(firebaseConfig);
-const db       = getFirestore(app);
-const auth     = getAuth(app);
-const storage  = getStorage(app);
-const gProvider = new GoogleAuthProvider();
-const rtdb = getDatabase(app);
-window.rtdb = rtdb;
-window.dbRef = dbRef; window.rtSet = set; window.rtOnValue = onValue; window.rtOnChildAdded = onChildAdded; window.rtPush = push; window.rtUpdate = update; window.rtRemove = remove; window.rtGet = get;
-let analytics;
-try { analytics = getAnalytics(app); } catch(e) {}
-
-// — FCM Push Notifications —
 let messaging;
-try { messaging = getMessaging(app); } catch(e) {}
+try {
+  messaging = getMessaging(initializeApp({
+    apiKey: "AIzaSyCS6LZeWX0qmi3O1BN9dD4u8yGVu9N0Fi8",
+    projectId: "edusa-a6efe",
+    messagingSenderId: "104983276558",
+    appId: "1:104983276558:web:3a5bf7016666d3e873a2e0"
+  }));
+} catch(e) {}
 
 async function initPushNotifications(uid) {
-  console.log('[FCM] initPushNotifications called, uid:', uid);
-  if (!messaging) { console.warn('[FCM] messaging not initialized'); return; }
-  if (!('Notification' in window)) { console.warn('[FCM] Notifications not supported'); return; }
+  if (!messaging || !('Notification' in window) || !('serviceWorker' in navigator)) return;
   try {
-    console.log('[FCM] Registering service worker...');
     const sw = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-    console.log('[FCM] SW registered:', sw.scope);
     const permission = await Notification.requestPermission();
-    console.log('[FCM] Permission:', permission);
-    if (permission !== 'granted') { console.warn('[FCM] Permission denied'); return; }
-    console.log('[FCM] Getting token...');
+    if (permission !== 'granted') return;
     const token = await getToken(messaging, {
       vapidKey: 'BL3qHOC4PjRNs7KL4mfDbhsoFzXfEJnZ6awbbyMYJ7xjJaV9vEsRDoTorhySRIQMiiFioNm8BBtPz3BNqM71_qw',
       serviceWorkerRegistration: sw
     });
-    console.log('[FCM] Token:', token ? token.substring(0,20)+'...' : 'NULL');
-    if (token && uid) {
-      await setDoc(doc(db, 'fcmTokens', uid), {
-        token, uid, updatedAt: new Date().toISOString()
-      }, { merge: true });
-      console.log('[FCM] Token saved for uid:', uid);
-    } else {
-      console.warn('[FCM] No token or uid. token:', !!token, 'uid:', uid);
-    }
+    if (token && uid) await SB.from('push_tokens').upsert({ user_id: uid, token }, { onConflict: 'user_id,token', ignoreDuplicates: true });
     onMessage(messaging, (payload) => {
       const n = payload.notification;
       if (n) {
         const toast = document.createElement('div');
-        toast.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);background:var(--dna-green);color:#000;padding:.75rem 1.25rem;border-radius:1rem;z-index:9999;font-weight:600;max-width:90vw;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.3)';
+        toast.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);background:var(--dna-green);color:#000;padding:.75rem 1.25rem;border-radius:12px;font-weight:700;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,.3);max-width:90vw;text-align:center';
         toast.innerHTML = '🔔 <strong>' + escHtml(n.title) + '</strong><br>' + escHtml(n.body);
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 5000);
       }
     });
-  } catch(e) { console.error('[FCM] Error:', e.code, e.message); }
+  } catch(e) { console.warn('[push]', e.message); }
 }
 
 async function sendPushNotification(title, body, data) {
   try {
-    if (!auth.currentUser) return;
-    const idToken = await auth.currentUser.getIdToken();
+    const { data: s } = await SB.auth.getSession();
+    if (!s.session) return;
     await fetch('/api/notify', {
       method: 'POST',
-      headers: {'Content-Type':'application/json','Authorization':'Bearer '+idToken},
-      body: JSON.stringify({title, body, data: data||{}})
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + s.session.access_token },
+      body: JSON.stringify({ title, body, data: data || {} })
     });
   } catch(e) { console.warn('Push failed:', e); }
 }
+window.sendPushNotification = sendPushNotification;
 
-// ── Expose globals ───────────────────────────────────────────────────
-window.FB = {
-  db, auth, storage, analytics, gProvider, ready: true,
-  doc, setDoc, getDoc, updateDoc, deleteDoc,
-  collection, addDoc, getDocs, query, orderBy, limit, where,
-  serverTimestamp, increment, onSnapshot,
-  signInWithEmailAndPassword, createUserWithEmailAndPassword,
-  signInWithPhoneNumber, signInWithPopup, signOut,
-  RecaptchaVerifier, sendEmailVerification, logEvent, arrayUnion,
-  ref, uploadBytes, getDownloadURL
-};
+// ── Profiles ─────────────────────────────────────────────────────────
+const PROFILE_COLS = 'id,username,display_name,avatar,grade,province,school,mantra,pts,is_admin,created_at,data';
+const COL_MAP = { displayName:'display_name', username:'username', avatar:'avatar', grade:'grade', province:'province', school:'school', mantra:'mantra' };
+const SERVER_ONLY = { pts:1, isAdmin:1, uid:1, email:1, online:1, authProvider:1, emailVerified:1, photoURL:1 };
+let _profileData = {};
 
-// ── Auth State ───────────────────────────────────────────────────────
-onAuthStateChanged(auth, async (fbUser) => {
-  if (fbUser) {
-    try {
-      const snap = await getDoc(doc(db, 'users', fbUser.uid));
-      if (snap.exists()) {
-        var prov2 = 'email';
-        if (fbUser.providerData && fbUser.providerData.length > 0) {
-          var pid2 = fbUser.providerData[0].providerId;
-          if (pid2 === 'google.com') prov2 = 'google';
-          else if (pid2 === 'phone') prov2 = 'phone';
-        }
-        window.currentUser = {
-          ...snap.data(),
-          uid: fbUser.uid,
-          email: fbUser.email || '',
-          emailVerified: fbUser.emailVerified,
-          authProvider: snap.data().authProvider || prov2,
-          online: true
-        };
-        // Load battle wins from Firestore into APP + localStorage
-        APP.battleWins = snap.data().battleWins || 0;
-        localStorage.setItem('ma_bwins', APP.battleWins);
-        // Update last active
-        updateDoc(doc(db,'users',fbUser.uid), { lastActive: serverTimestamp(), online: true }).catch(()=>{});
-      } else {
-        // New user — profile not yet created
-        // Detect auth provider from Firebase user
-        var provider = 'email';
-        if (fbUser.providerData && fbUser.providerData.length > 0) {
-          var pid = fbUser.providerData[0].providerId;
-          if (pid === 'google.com') provider = 'google';
-          else if (pid === 'phone') provider = 'phone';
-        }
-        window.currentUser = {
-          uid: fbUser.uid,
-          email: fbUser.email || '',
-          emailVerified: fbUser.emailVerified || false,
-          displayName: fbUser.displayName || '',
-          photoURL: fbUser.photoURL || '',
-          authProvider: provider,
-          isNew: true, online: true
-        };
-      }
-    } catch(e) { console.warn('Firestore fetch:', e.message); }
-    if (typeof onUserLoaded === 'function') onUserLoaded();
-        initPushNotifications(fbUser.uid);
-        scheduleStudyReminder(fbUser.uid);
-  } else {
-    var wasSignedIn = !!window.currentUser;
+function rowToUser(row) {
+  const d = row.data || {};
+  return Object.assign({}, d, {
+    uid: row.id, displayName: row.display_name, username: row.username || '', avatar: row.avatar,
+    grade: row.grade || d.gradeLabel || '', province: row.province || '', school: row.school || '', mantra: row.mantra || '',
+    pts: row.pts || 0, isAdmin: !!row.is_admin
+  });
+}
+function cleanGrade(g) { g = String(g || '').replace(/\D/g, ''); return ['8','9','10','11','12'].indexOf(g) !== -1 ? g : null; }
+
+async function saveProfile(uid, obj) {
+  if (!uid || !obj) return;
+  const upd = {}, data = Object.assign({}, _profileData);
+  Object.keys(obj).forEach(function(k) {
+    const v = obj[k];
+    if (SERVER_ONLY[k] || v === undefined) return;
+    if (COL_MAP[k]) {
+      if (k === 'grade') { upd.grade = cleanGrade(v); if (!upd.grade && v) data.gradeLabel = String(v); }
+      else if (k === 'username') { if (v) upd.username = String(v).toLowerCase(); }
+      else upd[COL_MAP[k]] = (v === '' && k !== 'displayName') ? null : v;
+    } else data[k] = v;
+  });
+  if (upd.display_name === '' || upd.display_name === null) delete upd.display_name;
+  upd.data = data;
+  const { error } = await SB.from('profiles').update(upd).eq('id', uid);
+  if (error) { console.warn('saveProfile:', error.message); throw error; }
+  _profileData = data;
+}
+
+// ── Auth ─────────────────────────────────────────────────────────────
+let _loadedUid = null;
+async function loadSignedInUser(user) {
+  if (_loadedUid === user.id) return;
+  _loadedUid = user.id;
+  try {
+    const { data: row, error } = await SB.from('profiles').select(PROFILE_COLS).eq('id', user.id).single();
+    if (error) throw error;
+    _profileData = row.data || {};
+    const u = rowToUser(row);
+    u.email = user.email || '';
+    u.emailVerified = true;
+    u.authProvider = 'google';
+    u.photoURL = (user.user_metadata && user.user_metadata.avatar_url) || '';
+    u.online = true;
+    u.isNew = _profileData.isNew !== false;
+    if (u.isNew && (!row.display_name || row.display_name === 'Learner')) u.displayName = (user.user_metadata && user.user_metadata.full_name) || '';
+    window.currentUser = u;
+    APP.battleWins = _profileData.battleWins || 0;
+    try { localStorage.setItem('ma_bwins', APP.battleWins); } catch(e) {}
+  } catch(e) {
+    console.warn('Profile load:', e.message);
+    window.currentUser = { uid: user.id, email: user.email || '', displayName: '', authProvider: 'google', isNew: true, online: true, pts: 0 };
+  }
+  if (typeof onUserLoaded === 'function') onUserLoaded();
+  initPushNotifications(user.id);
+  if (typeof scheduleStudyReminder === 'function') scheduleStudyReminder(user.id);
+  startPresence(user.id);
+}
+
+SB.auth.onAuthStateChange(function(event, session) {
+  if (session && session.user && (event === 'INITIAL_SESSION' || event === 'SIGNED_IN')) {
+    setTimeout(function(){ loadSignedInUser(session.user); }, 0);
+  } else if (event === 'SIGNED_OUT') {
+    const wasSignedIn = !!window.currentUser;
+    _loadedUid = null; _profileData = {};
+    stopPresence();
     window.currentUser = null;
     if (typeof onUserSignedOut === 'function') onUserSignedOut(wasSignedIn);
   }
 });
 
-// ── DB helpers ───────────────────────────────────────────────────────
+window.AUTH = {
+  async google() {
+    const { error } = await SB.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } });
+    if (error) throw error;
+  },
+  async signOut() { await SB.auth.signOut(); }
+};
+
+// ── Presence (who is online) ─────────────────────────────────────────
+let _presence = null;
+window._onlineUids = {};
+function startPresence(uid) {
+  stopPresence();
+  _presence = SB.channel('online', { config: { presence: { key: uid } } });
+  _presence.on('presence', { event: 'sync' }, function() {
+    window._onlineUids = {};
+    Object.keys(_presence.presenceState()).forEach(function(k){ window._onlineUids[k] = true; });
+    if (typeof onPresenceChanged === 'function') onPresenceChanged();
+  }).subscribe(function(status) { if (status === 'SUBSCRIBED') _presence.track({ at: Date.now() }); });
+}
+function stopPresence() { if (_presence) { SB.removeChannel(_presence); _presence = null; } }
+
+// ── Learning data, points and leaderboard ────────────────────────────
+async function addPoints(uid, pts, reason) {
+  pts = Math.round(pts || 0);
+  if (!uid || pts < 1) return null;
+  const { data, error } = await SB.rpc('award_points', { p_amount: Math.min(pts, 500), p_reason: String(reason || 'points').slice(0, 60) });
+  if (error) { console.warn('addPoints:', error.message); return null; }
+  if (window.currentUser && window.currentUser.uid === uid) {
+    window.currentUser.pts = data;
+    const el = document.getElementById('topUserPts'); if (el) el.textContent = data + '⭐';
+  }
+  return data;
+}
+function lbRow(r) { return { id: r.id, uid: r.id, displayName: r.display_name, avatar: r.avatar, grade: r.grade || '', province: r.province || '', pts: r.pts || 0 }; }
+
 window.DB = {
-  async saveProfile(uid, data) {
-    try {
-      await setDoc(doc(db,'users',uid), { ...data, updatedAt: serverTimestamp() }, { merge: true });
-      // Mirror public fields to leaderboard
-      if (data.displayName || data.pts !== undefined || data.grade || data.province) {
-        await setDoc(doc(db,'leaderboard',uid), {
-          displayName: (function(n){var p=String(n||'Learner').trim().split(/\s+/);return p[0]+(p.length>1?' '+p[p.length-1].charAt(0)+'.':'');})(data.displayName || window.currentUser?.displayName),
-          avatar: data.avatar || '🧬',
-          pts: data.pts || 0,
-          grade: data.grade || '',
-          province: data.province || '',
-          updatedAt: serverTimestamp()
-        }, { merge: true });
-      }
-    } catch(e) { console.warn('saveProfile:', e.message); }
-  },
-
+  saveProfile,
+  addPoints,
   async markTopicDone(uid, sid, mi, ti) {
-    try {
-      await updateDoc(doc(db,'users',uid), {
-        [`progress.${sid}.${mi}.${ti}`]: true,
-        [`progress.${sid}.lastActive`]: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      });
-      if(analytics) logEvent(analytics,'topic_complete',{subject:sid,module:mi,topic:ti});
-    } catch(e) {}
+    const { error } = await SB.from('lesson_progress').upsert({ user_id: uid, subject_id: sid, module_idx: mi, topic_idx: ti }, { onConflict: 'user_id,subject_id,module_idx,topic_idx', ignoreDuplicates: true });
+    if (error) console.warn('markTopicDone:', error.message);
   },
-
-  async saveQuizResult(uid, data) {
-    try {
-      await addDoc(collection(db,'users',uid,'quizHistory'), { ...data, ts: serverTimestamp() });
-      await updateDoc(doc(db,'users',uid), {
-        pts: increment(data.pointsEarned||0),
-        totalQuizzes: increment(1),
-        updatedAt: serverTimestamp()
-      });
-      await updateDoc(doc(db,'leaderboard',uid), { pts: increment(data.pointsEarned||0), updatedAt: serverTimestamp() });
-      if(analytics) logEvent(analytics,'quiz_complete', data);
-    } catch(e) {}
+  async saveQuizResult(uid, d) {
+    const score = Math.max(0, Math.round(d.score || 0));
+    const total = d.total || (d.pct > 0 ? Math.max(score, Math.round(score * 100 / d.pct)) : Math.max(score, 1));
+    const { error } = await SB.from('quiz_attempts').insert({ user_id: uid, subject_id: String(d.sid || 'general').slice(0, 40), kind: d.type === 'module' ? 'module_test' : 'quiz', score, total });
+    if (error) console.warn('saveQuizResult:', error.message);
+    if (d.pointsEarned > 0) await addPoints(uid, d.pointsEarned, d.type === 'module' ? 'module_test' : 'quiz');
   },
-
-  async addPoints(uid, pts, reason) {
-    try {
-      await updateDoc(doc(db,'users',uid), { pts: increment(pts), updatedAt: serverTimestamp() });
-      await updateDoc(doc(db,'leaderboard',uid), { pts: increment(pts), updatedAt: serverTimestamp() });
-      await addDoc(collection(db,'users',uid,'pointsHistory'), { pts, reason, ts: serverTimestamp() });
-    } catch(e) {}
+  async getLeaderboard(period, filterGrade, filterProvince, limit) {
+    let rows;
+    const days = { daily: 1, weekly: 7, week: 7, monthly: 30, month: 30, yearly: 365 }[period];
+    if (days) {
+      const since = new Date(Date.now() - days * 86400000).toISOString();
+      ({ data: rows } = await SB.rpc('leaderboard_since', { p_since: since, p_limit: 100 }));
+    } else ({ data: rows } = await SB.rpc('leaderboard_top', { p_limit: limit || 100 }));
+    let res = (rows || []).map(lbRow);
+    if (filterGrade) res = res.filter(function(r){ return r.grade === filterGrade; });
+    if (filterProvince) res = res.filter(function(r){ return r.province === filterProvince; });
+    return res;
   },
+  track() {}
+};
 
-  async getLeaderboard(period='all', filterGrade='', filterProvince='') {
-    try {
-      let q = query(collection(db,'leaderboard'), orderBy('pts','desc'), limit(50));
-      const snap = await getDocs(q);
-      let results = snap.docs.map(d=>({id:d.id,...d.data()}));
-      if(filterGrade) results = results.filter(r=>r.grade===filterGrade);
-      if(filterProvince) results = results.filter(r=>r.province===filterProvince);
-      return results;
-    } catch(e) { return []; }
+// ── Social, groups, battles, announcements ───────────────────────────
+function me() { return window.currentUser && window.currentUser.uid; }
+function friendStatus(p) {
+  if (!window._onlineUids[p.id]) return 'offline';
+  const s = p.data && p.data.status;
+  return (s === 'away' || s === 'busy') ? s : 'online';
+}
+function profileCard(p) {
+  const d = p.data || {};
+  return { uid: p.id, displayName: p.display_name, username: p.username || '', avatar: p.avatar, grade: p.grade || '', province: p.province || '',
+           school: p.school || '', mood: d.mood || '', matricYear: d.matricYear || '', subjects: d.subjects || [], firstName: d.firstName || '',
+           mantra: p.mantra || '', battleWins: d.battleWins || 0, certs: d.certs || [],
+           pts: p.pts || 0, status: friendStatus(p) };
+}
+async function profilesByIds(ids) {
+  if (!ids.length) return [];
+  const { data, error } = await SB.from('profiles').select(PROFILE_COLS).in('id', ids);
+  if (error) { console.warn('profiles:', error.message); return []; }
+  return data;
+}
+function msgTime(iso) { return Date.parse(iso) || Date.now(); }
+
+window.SOCIAL = {
+  async friends() {
+    const { data, error } = await SB.from('friendships').select('friend_id').eq('user_id', me());
+    if (error) throw error;
+    return (await profilesByIds(data.map(function(r){ return r.friend_id; }))).map(profileCard);
   },
-
-  track(event, params={}) {
-    try { if(analytics) logEvent(analytics, event, params); } catch(e) {}
+  async requests() {
+    const { data, error } = await SB.from('friend_requests').select('from_id').eq('to_id', me()).eq('status', 'pending');
+    if (error) throw error;
+    return (await profilesByIds(data.map(function(r){ return r.from_id; }))).map(function(p){
+      return Object.assign(profileCard(p), { reqId: p.id, fromUid: p.id });
+    });
+  },
+  watchFriends(onChange) {
+    const ch = SB.channel('friends-' + me())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'friendships', filter: 'user_id=eq.' + me() }, onChange)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'friend_requests', filter: 'to_id=eq.' + me() }, onChange)
+      .subscribe();
+    return function(){ SB.removeChannel(ch); };
+  },
+  async sendRequest(toUid) {
+    const { data: fr } = await SB.from('friendships').select('friend_id').eq('user_id', me()).eq('friend_id', toUid).maybeSingle();
+    if (fr) return 'friends';
+    const { data: theirs } = await SB.from('friend_requests').select('status').eq('from_id', toUid).eq('to_id', me()).maybeSingle();
+    if (theirs) { await this.accept(toUid); return 'accepted'; }
+    const { error } = await SB.from('friend_requests').insert({ from_id: me(), to_id: toUid });
+    if (error) { if (error.code === '23505') return 'sent'; throw error; }
+    const u = window.currentUser;
+    await SB.from('notifications').insert({ user_id: toUid, type: 'friend_request', actor_id: me(), data: { message: (u.displayName || 'Someone') + ' sent you a friend request' } });
+    return 'new';
+  },
+  async accept(fromUid) {
+    const { error } = await SB.rpc('accept_friend_request', { p_from: fromUid });
+    if (error) throw error;
+    const u = window.currentUser;
+    await SB.from('notifications').insert({ user_id: fromUid, type: 'friend_accepted', actor_id: me(), data: { message: (u.displayName || 'Someone') + ' accepted your friend request! 🎉' } });
+  },
+  async decline(fromUid) { const { error } = await SB.from('friend_requests').delete().eq('from_id', fromUid).eq('to_id', me()); if (error) throw error; },
+  async mute(fromUid) { const { error } = await SB.from('friend_requests').update({ status: 'muted' }).eq('from_id', fromUid).eq('to_id', me()); if (error) throw error; },
+  async unfriend(uid) { const { error } = await SB.from('friendships').delete().eq('user_id', me()).eq('friend_id', uid); if (error) throw error; },
+  async search(q) {
+    q = String(q || '').replace(/[^\p{L}\p{N} _'-]/gu, '').trim().slice(0, 40);
+    if (q.length < 2) return [];
+    const { data, error } = await SB.from('profiles').select(PROFILE_COLS)
+      .or('username.ilike.' + q.toLowerCase().replace(/ /g, '') + '%,display_name.ilike.%' + q + '%').neq('id', me()).limit(10);
+    if (error) throw error;
+    return data.map(profileCard);
+  },
+  async profile(uid) {
+    const { data, error } = await SB.from('profiles').select(PROFILE_COLS).eq('id', uid).maybeSingle();
+    if (error) throw error;
+    return data ? profileCard(data) : null;
+  },
+  async usernameTaken(name) {
+    const { data, error } = await SB.from('profiles').select('id').eq('username', name).neq('id', me()).limit(1);
+    if (error) throw error;
+    return data.length > 0;
+  },
+  // Direct messages (friends only — enforced by RLS)
+  async dmHistory(friendUid) {
+    const m = me();
+    const { data, error } = await SB.from('direct_messages').select('sender_id,recipient_id,body,created_at')
+      .or('and(sender_id.eq.' + m + ',recipient_id.eq.' + friendUid + '),and(sender_id.eq.' + friendUid + ',recipient_id.eq.' + m + ')')
+      .order('created_at', { ascending: true }).limit(200);
+    if (error) throw error;
+    return data.map(function(r){ return { uid: r.sender_id, text: r.body, ts: msgTime(r.created_at) }; });
+  },
+  watchDm(friendUid, onMsg) {
+    const m = me();
+    const ch = SB.channel('dm-' + m + '-' + friendUid)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'direct_messages' }, function(p) {
+        const r = p.new;
+        if ((r.sender_id === m && r.recipient_id === friendUid) || (r.sender_id === friendUid && r.recipient_id === m))
+          onMsg({ uid: r.sender_id, text: r.body, ts: msgTime(r.created_at) });
+      }).subscribe();
+    return function(){ SB.removeChannel(ch); };
+  },
+  async sendDm(friendUid, text) {
+    const { error } = await SB.from('direct_messages').insert({ sender_id: me(), recipient_id: friendUid, body: text });
+    if (error) throw error;
   }
 };
 
-// ── Auth methods ─────────────────────────────────────────────────────
-window.AUTH = {
-  async google() {
-    const result = await signInWithPopup(auth, gProvider);
-    const snap = await getDoc(doc(db,'users',result.user.uid));
-    return { isNew: !snap.exists(), user: result.user };
+function groupShape(g, counts, mine, pending) {
+  const m = g.meta || {};
+  const uid = me();
+  return Object.assign({}, m, {
+    id: g.id, name: g.name, subject: g.subject_id || m.subject || '', joinType: g.join_type, adminUid: g.owner_id,
+    members: counts[g.id] || (mine[g.id] ? 1 : 0), maxMembers: m.maxMembers || 10,
+    memberUids: mine[g.id] ? [uid] : [], pendingUids: pending[g.id] ? [uid] : [],
+    icon: m.icon || '📚', color: m.color || '#00D68F', desc: m.desc || '', subjectLabel: m.subjectLabel || 'General',
+    createdAt: g.created_at
+  });
+}
+const GROUP_META_KEYS = ['icon','color','desc','subjectLabel','grade','province','maxMembers','lang','format','nextSession','recurring','type','admin','adminProvince','debate'];
+
+window.GROUPS = {
+  async list() {
+    const uid = me();
+    const [gs, counts, mem, pen] = await Promise.all([
+      SB.from('study_groups').select('id,name,subject_id,owner_id,join_type,meta,created_at').order('created_at', { ascending: false }).limit(100),
+      SB.rpc('group_member_counts'),
+      SB.from('study_group_members').select('group_id').eq('user_id', uid),
+      SB.from('study_group_join_requests').select('group_id').eq('user_id', uid)
+    ]);
+    if (gs.error) throw gs.error;
+    const c = {}, mine = {}, pending = {};
+    (counts.data || []).forEach(function(r){ c[r.group_id] = Number(r.members); });
+    (mem.data || []).forEach(function(r){ mine[r.group_id] = true; });
+    (pen.data || []).forEach(function(r){ pending[r.group_id] = true; });
+    return gs.data.map(function(g){ return groupShape(g, c, mine, pending); });
   },
-  async emailSignIn(email, pw) { return signInWithEmailAndPassword(auth, email, pw); },
-  async emailSignUp(email, pw) {
-    const uc = await createUserWithEmailAndPassword(auth, email, pw);
-    await sendEmailVerification(uc.user);
-    return uc;
+  watch(onChange) {
+    const ch = SB.channel('groups-' + me())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'study_groups' }, onChange)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'study_group_members' }, onChange)
+      .subscribe();
+    return function(){ SB.removeChannel(ch); };
   },
-  initRecaptcha(containerId) {
-    if (!window._rcv)
-      window._rcv = new RecaptchaVerifier(auth, containerId, { size:'invisible' });
+  async create(g) {
+    const meta = {};
+    GROUP_META_KEYS.forEach(function(k){ if (g[k] !== undefined && g[k] !== null) meta[k] = g[k]; });
+    const { data, error } = await SB.from('study_groups').insert({ name: g.name, subject_id: g.subject || null, owner_id: me(), join_type: g.joinType || 'open', meta }).select('id').single();
+    if (error) throw error;
+    return data.id;
   },
-  async sendOTP(phone) {
-    this.initRecaptcha('recaptcha-container');
-    window._confirmResult = await signInWithPhoneNumber(auth, phone, window._rcv);
+  async join(gid, joinType) {
+    if (joinType === 'request') {
+      const { error } = await SB.from('study_group_join_requests').insert({ group_id: gid, user_id: me() });
+      if (error && error.code !== '23505') throw error;
+      return 'requested';
+    }
+    const { error } = await SB.from('study_group_members').insert({ group_id: gid, user_id: me() });
+    if (error && error.code !== '23505') throw error;
+    return 'joined';
   },
-  async verifyOTP(code) { return window._confirmResult.confirm(code); },
-  async signOut() { await signOut(auth); }
+  async leave(gid) { const { error } = await SB.from('study_group_members').delete().eq('group_id', gid).eq('user_id', me()); if (error) throw error; },
+  async remove(gid) { const { error } = await SB.from('study_groups').delete().eq('id', gid); if (error) throw error; },
+  async members(gid) {
+    const { data, error } = await SB.from('study_group_members').select('user_id,role').eq('group_id', gid);
+    if (error) throw error;
+    const roles = {}; data.forEach(function(r){ roles[r.user_id] = r.role; });
+    return (await profilesByIds(Object.keys(roles))).map(function(p){
+      const c = profileCard(p);
+      return { uid: c.uid, name: c.displayName, avatar: c.avatar, grade: c.grade, province: c.province, status: c.status, role: roles[p.id] };
+    });
+  },
+  async setDebate(gid, meta, debate) {
+    const { error } = await SB.from('study_groups').update({ meta: Object.assign({}, meta || {}, { debate }) }).eq('id', gid);
+    if (error) throw error;
+  },
+  async messages(gid) {
+    const { data, error } = await SB.from('study_group_messages').select('sender_id,body,author_name,author_avatar,is_ai,created_at')
+      .eq('group_id', gid).order('created_at', { ascending: true }).limit(200);
+    if (error) throw error;
+    return data.map(groupMsg);
+  },
+  watchMessages(gid, onMsg) {
+    const ch = SB.channel('gc-' + gid)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'study_group_messages', filter: 'group_id=eq.' + gid }, function(p){ onMsg(groupMsg(p.new)); })
+      .subscribe();
+    return function(){ SB.removeChannel(ch); };
+  },
+  async send(gid, text, opts) {
+    opts = opts || {};
+    const u = window.currentUser || {};
+    const { error } = await SB.from('study_group_messages').insert({
+      group_id: gid, sender_id: me(), body: text, is_ai: !!opts.ai,
+      author_name: String(opts.name || u.displayName || 'Learner').slice(0, 60), author_avatar: opts.avatar || u.avatar || '🧬'
+    });
+    if (error) throw error;
+  }
+};
+function groupMsg(r) { return { uid: r.is_ai ? 'nkosazane_ai' : r.sender_id, name: r.author_name, avatar: r.author_avatar, text: r.body, ts: msgTime(r.created_at), isAI: r.is_ai }; }
+
+window.BATTLES = {
+  async findOrCreate(mode, rounds, makeQuestions) {
+    const since = new Date(Date.now() - 3 * 60000).toISOString();
+    const { data: rooms } = await SB.from('battle_rooms').select('id').eq('status', 'waiting').gte('created_at', since).order('created_at', { ascending: false }).limit(5);
+    let roomId = null;
+    for (const r of (rooms || [])) {
+      const { count } = await SB.from('battle_players').select('user_id', { count: 'exact', head: true }).eq('room_id', r.id);
+      if ((count || 0) < 50) { roomId = r.id; break; }
+    }
+    if (!roomId) {
+      const { data, error } = await SB.from('battle_rooms').insert({ created_by: me(), mode: String(mode || 'general').slice(0, 20), rounds: rounds || 10, questions: makeQuestions() }).select('id').single();
+      if (error) throw error;
+      roomId = data.id;
+    }
+    const u = window.currentUser || {};
+    const { error } = await SB.from('battle_players').upsert({ room_id: roomId, user_id: me(), name: String(u.displayName || 'Player').slice(0, 60), avatar: u.avatar || '🧬', score: 0 }, { onConflict: 'room_id,user_id' });
+    if (error) throw error;
+    return roomId;
+  },
+  async room(roomId) {
+    const [r, p] = await Promise.all([
+      SB.from('battle_rooms').select('status,questions').eq('id', roomId).maybeSingle(),
+      SB.from('battle_players').select('user_id,name,avatar,score').eq('room_id', roomId)
+    ]);
+    const players = {};
+    (p.data || []).forEach(function(x){ players['p_' + x.user_id] = { name: x.name, avatar: x.avatar, score: x.score }; });
+    return { status: r.data && r.data.status, questions: (r.data && r.data.questions) || [], players };
+  },
+  watch(roomId, onChange) {
+    const ch = SB.channel('battle-' + roomId)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'battle_players', filter: 'room_id=eq.' + roomId }, onChange)
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'battle_rooms', filter: 'id=eq.' + roomId }, onChange)
+      .subscribe();
+    return function(){ SB.removeChannel(ch); };
+  },
+  async start(roomId) { await SB.from('battle_rooms').update({ status: 'playing' }).eq('id', roomId); },
+  async score(roomId, score) { await SB.from('battle_players').update({ score: Math.max(0, Math.round(score)) }).eq('room_id', roomId).eq('user_id', me()); },
+  async leave(roomId) { await SB.from('battle_players').delete().eq('room_id', roomId).eq('user_id', me()); }
 };
 
-console.log('✅ MzansiAcademy Firebase ready — It\'s in our DNA 🧬');
+window.CONTENT = {
+  async announcements(limit) {
+    const { data, error } = await SB.from('announcements').select('id,title,body,type,target,created_at').order('created_at', { ascending: false }).limit(limit || 5);
+    if (error) throw error;
+    return data.map(function(a){ return { id: a.id, title: a.title, message: a.body, type: a.type, target: a.target, createdAt: new Date(a.created_at) }; });
+  },
+  async partnership(p) {
+    const { error } = await SB.from('partnership_inquiries').insert({
+      name: p.name, email: p.email, org: p.organisation || null,
+      message: ('Phone: ' + (p.phone || '-') + '\n\n' + (p.reason || '')).slice(0, 4000)
+    });
+    if (error) throw error;
+  }
+};
+
+console.log('✅ MzansiAcademy ready (Supabase) — It\'s in our DNA 🧬');
 </script>
-<div id="recaptcha-container"></div>
 <script>
 // ── PWA Install Prompt ────────────────────────────────────────────
 var _pwaPrompt = null;
@@ -3836,10 +4044,10 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
     <!-- Filters -->
     <div class="leaderboard-filters">
       <div class="period-tabs">
-        <button class="period-tab active" onclick="setLBPeriod('daily',this)">Daily</button>
+        <button class="period-tab" onclick="setLBPeriod('daily',this)">Daily</button>
         <button class="period-tab" onclick="setLBPeriod('weekly',this)">Weekly</button>
         <button class="period-tab" onclick="setLBPeriod('monthly',this)">Monthly</button>
-        <button class="period-tab" onclick="setLBPeriod('all',this)">All Time</button>
+        <button class="period-tab active" onclick="setLBPeriod('all',this)">All Time</button>
       </div>
       <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.625rem">
         <div class="period-tabs" style="gap:.25rem">
@@ -4317,14 +4525,6 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
           Continue with Google
         </button>
 
-        <div class="auth-divider"><span>OR</span></div>
-
-        <button class="auth-method-btn" onclick="showAuthMethod('phone')">
-          <span>📱</span> Continue with Phone Number
-        </button>
-        <button class="auth-method-btn" style="margin-top:.5rem" onclick="showAuthMethod('email')">
-          <span>✉️</span> Continue with Email
-        </button>
 
         <!-- Guest option -->
         <div style="text-align:center;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">
@@ -4334,58 +4534,6 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
           </button>
           <p style="font-size:.62rem;color:var(--txt-4);margin-top:.5rem;line-height:1.4">Guests can browse courses &amp; take basic quizzes.<br>Sign up to save progress, earn points &amp; join battles.</p>
         </div>
-      </div>
-
-      <!-- Step: Phone -->
-      <div class="auth-step" id="authStepPhone">
-        <button class="auth-back" onclick="showAuthStep('step0')">← Back</button>
-        <div style="text-align:center;margin-bottom:1.25rem">
-          <div style="font-size:2.5rem;margin-bottom:.375rem">📱</div>
-          <h3 style="font-family:var(--serif);font-size:1.2rem;color:var(--txt)">Your phone number</h3>
-          <p style="font-size:.75rem;color:var(--txt-3);margin-top:3px">We'll send a 6-digit OTP</p>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Phone Number</label>
-          <div style="display:flex;gap:.5rem">
-            <select class="form-select" id="phoneCC" style="width:90px;flex-shrink:0">
-              <option value="+27">🇿🇦 +27</option>
-              <option value="+263">🇿🇼 +263</option>
-              <option value="+267">🇧🇼 +267</option>
-              <option value="+266">🇱🇸 +266</option>
-              <option value="+268">🇸🇿 +268</option>
-            </select>
-            <input type="tel" class="form-input" id="phoneNum" placeholder="72 000 0000">
-          </div>
-        </div>
-        <button class="btn btn-primary btn-full" onclick="sendOTP()">Send OTP 📲</button>
-      </div>
-
-      <!-- Step: OTP verify -->
-      <div class="auth-step" id="authStepOTP">
-        <button class="auth-back" onclick="showAuthStep('stepPhone')">← Back</button>
-        <div style="text-align:center;margin-bottom:1.25rem">
-          <div style="font-size:2.5rem;margin-bottom:.375rem">🔐</div>
-          <h3 style="font-family:var(--serif);font-size:1.2rem;color:var(--txt)">Enter OTP</h3>
-          <p style="font-size:.75rem;color:var(--txt-3);margin-top:3px">6-digit code sent to your number</p>
-        </div>
-        <div class="form-group">
-          <input type="number" class="form-input" id="otpCode" placeholder="000000" maxlength="6" style="text-align:center;font-family:var(--mono);font-size:1.5rem;letter-spacing:.3em">
-        </div>
-        <button class="btn btn-primary btn-full" onclick="verifyOTP()">Verify ✅</button>
-      </div>
-
-      <!-- Step: Email -->
-      <div class="auth-step" id="authStepEmail">
-        <button class="auth-back" onclick="showAuthStep('step0')">← Back</button>
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" id="emailInput" placeholder="you@example.com">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input type="password" class="form-input" id="pwInput" placeholder="Minimum 8 characters">
-        </div>
-        <button class="btn btn-primary btn-full" id="emailAuthBtn" onclick="authEmail()">Continue ✉️</button>
       </div>
 
       <!-- Step: New profile setup (shown after first sign-up) -->
@@ -5876,50 +6024,34 @@ function onUserLoaded(){
   renderSubjectsGrid();
   renderRecommended();
   // Track session start
-  if(window.FB&&u.uid){
-    window.FB.updateDoc(window.FB.doc(window.FB.db,'users',u.uid),{
+  if(window.DB&&u.uid&&!u.isNew){
+    window.DB.saveProfile(u.uid,{
       lastActive:new Date().toISOString(),
-      lastSeen:new Date().toISOString(),
-      online:true,
-      totalSessions:window.FB.increment(1),
+      totalSessions:(u.totalSessions||0)+1,
       lastPage:'home'
     }).catch(function(){});
   }
-  // Start real-time Firebase listeners
+  // Start real-time listeners
   listenFriends();
   listenGroups();
   // Load announcements banner
   setTimeout(loadLiveAnnouncements, 1000);
-  // Write online presence to RTDB
-  if(window.rtdb && u.uid){
-    var presRef=window.dbRef(window.rtdb,'presence/'+u.uid);
-    window.rtSet(presRef,{online:true,uid:u.uid,lastSeen:Date.now()});
-    // Mark offline on disconnect
-    window.rtOnValue(window.dbRef(window.rtdb,'.info/connected'),function(snap){
-      if(snap.val()===true){
-        window.rtSet(presRef,{online:true,uid:u.uid,lastSeen:Date.now()});
-        // onDisconnect sets offline when browser closes
-        if(window.rtdb.app){
-          try{
-            var {onDisconnect}=require?require('firebase/database'):{};
-          }catch(e){}
-          // Fallback: use beforeunload
-        }
-      }
-    });
-    window.addEventListener('beforeunload',function(){
-      window.rtSet(presRef,{online:false,uid:u.uid,lastSeen:Date.now()});
-    });
-  }
+  // Online presence is tracked by the Supabase module (window._onlineUids)
+}
+
+// Re-draw friend statuses when someone comes online or goes offline
+function onPresenceChanged(){
+  var on=window._onlineUids||{};
+  _friends.forEach(function(f){
+    if(on[f.uid]) { if(f.status==='offline') f.status='online'; }
+    else f.status='offline';
+  });
+  renderFriendsList();
+  setEl('friendsOnlineCount',_friends.filter(function(f){return f.status==='online';}).length+' online now');
 }
 
 function onUserSignedOut(wasSignedIn){
-  // Clear presence
-  if(window.rtdb && window.currentUser && window.currentUser.uid){
-    window.rtSet(window.dbRef(window.rtdb,'presence/'+window.currentUser.uid),
-      {online:false,lastSeen:Date.now()});
-  }
-  // Stop Firebase listeners
+  // Stop real-time listeners
   if(typeof _friendsUnsub==='function'){_friendsUnsub();_friendsUnsub=null;}
   if(typeof _reqUnsub==='function'){_reqUnsub();_reqUnsub=null;}
   if(typeof _groupsUnsub==='function'){_groupsUnsub();_groupsUnsub=null;}
@@ -5973,14 +6105,13 @@ function goTo(page){
   closeDrawer();
   window.scrollTo(0,0);
   // Track page visit
-  if(window.currentUser&&window.currentUser.uid&&window.FB){
+  if(window.currentUser&&window.currentUser.uid&&!window.currentUser.isNew&&window.DB){
     var _now=Date.now();
     if(!window._lastTrack||_now-window._lastTrack>30000){
       window._lastTrack=_now;
-      window.FB.updateDoc(window.FB.doc(window.FB.db,'users',window.currentUser.uid),{
+      window.DB.saveProfile(window.currentUser.uid,{
         lastActive:new Date().toISOString(),
-        lastPage:page,
-        online:true
+        lastPage:page
       }).catch(function(){});
     }
   }
@@ -5988,17 +6119,21 @@ function goTo(page){
 
 // ── Activity helpers ───────────────────────────────────────────────
 function trackLessonView(sid){
-  if(!window.currentUser||!window.currentUser.uid||!window.FB) return;
-  window.FB.updateDoc(window.FB.doc(window.FB.db,'users',window.currentUser.uid),{
+  var u=window.currentUser;
+  if(!u||!u.uid||u.isNew||!window.DB) return;
+  u.lessonCount=(u.lessonCount||0)+1;
+  window.DB.saveProfile(u.uid,{
     lastSubject:sid, lastActive:new Date().toISOString(),
-    lessonCount:window.FB.increment(1)
+    lessonCount:u.lessonCount
   }).catch(function(){});
 }
 function trackQuizComplete(sid,score){
-  if(!window.currentUser||!window.currentUser.uid||!window.FB) return;
-  window.FB.updateDoc(window.FB.doc(window.FB.db,'users',window.currentUser.uid),{
+  var u=window.currentUser;
+  if(!u||!u.uid||u.isNew||!window.DB) return;
+  u.quizCount=(u.quizCount||0)+1;
+  window.DB.saveProfile(u.uid,{
     lastSubject:sid, lastActive:new Date().toISOString(),
-    quizCount:window.FB.increment(1), lastQuizScore:score
+    quizCount:u.quizCount, lastQuizScore:score
   }).catch(function(){});
 }
 
@@ -6032,7 +6167,6 @@ function switchAuthTab(mode){
   document.getElementById('authMethodLabel').textContent=mode==='signup'?'Choose how to create your account:':'Choose how to sign in:';
   showAuthStep('0');
 }
-function showAuthMethod(m){ if(m==='phone') showAuthStep('StepPhone'); else showAuthStep('StepEmail'); }
 function showAuthStep(s){
   // Normalise to just the suffix: strip 'authStep', 'step', 'Step' prefixes
   var key = s.replace(/^authStep/i,'').replace(/^step/i,'');
@@ -6049,49 +6183,15 @@ async function authGoogle(){
   var btn=document.getElementById('googleAuthBtn');
   btn.textContent='⏳ Connecting...'; btn.disabled=true;
   try{
-    var result=await window.AUTH.google();
-    // onUserLoaded will handle redirect + profile setup automatically
+    // Redirects to Google; the page reloads signed in and onUserLoaded takes over
+    await window.AUTH.google();
   }catch(e){
     var msg = e.message||'';
-    if(msg.includes('unauthorized-domain')) showToast('❌ Domain not authorised in Firebase. Add mzansi-academy.vercel.app to Firebase Auth settings.','error');
-    else if(msg.includes('popup-closed')) showToast('Sign-in cancelled','info');
-    else if(msg.includes('network')) showToast('No internet connection. Try again.','error');
+    if(msg.includes('provider is not enabled')) showToast('Google sign-in is not switched on yet — please try again soon','error');
+    else if(msg.toLowerCase().includes('network')||msg.includes('Failed to fetch')) showToast('No internet connection. Try again.','error');
     else showToast('Google sign-in failed: '+msg,'error');
+    btn.textContent='Continue with Google'; btn.disabled=false;
   }
-  finally{ btn.textContent='Continue with Google'; btn.disabled=false; }
-}
-async function sendOTP(){
-  var cc=document.getElementById('phoneCC').value;
-  var num=document.getElementById('phoneNum').value.replace(/\s/g,'');
-  if(!num){ showToast('Enter your phone number','error'); return; }
-  try{ await window.AUTH.sendOTP(cc+num); showAuthStep('StepOTP'); showToast('OTP sent! 📱','success'); }
-  catch(e){ showToast('Error: '+e.message,'error'); }
-}
-async function verifyOTP(){
-  var code=document.getElementById('otpCode').value;
-  if(code.length!==6){ showToast('Enter 6-digit OTP','error'); return; }
-  try{ await window.AUTH.verifyOTP(code); closeModal('authModal'); showToast('Phone verified! ✅','success'); }
-  catch(e){ showToast('Invalid OTP: '+e.message,'error'); }
-}
-async function authEmail(){
-  var email=document.getElementById('emailInput').value.trim();
-  var pw=document.getElementById('pwInput').value;
-  if(!email||!pw){ showToast('Fill in email and password','error'); return; }
-  var btn=document.getElementById('emailAuthBtn');
-  btn.textContent='⏳ Please wait...'; btn.disabled=true;
-  try{
-    if(_authMode==='signup'){ await window.AUTH.emailSignUp(email,pw); /* onUserLoaded handles next step */ }
-    else{ await window.AUTH.emailSignIn(email,pw); /* onUserLoaded handles redirect */ }
-  }catch(e){
-    var msg = e.message||'';
-    if(msg.includes('email-already-in-use')) showToast('📧 Email already registered — try Sign In instead','error');
-    else if(msg.includes('wrong-password')||msg.includes('invalid-credential')) showToast('❌ Wrong email or password','error');
-    else if(msg.includes('user-not-found')) showToast('No account found. Create one first!','error');
-    else if(msg.includes('weak-password')) showToast('Password must be at least 6 characters','error');
-    else if(msg.includes('invalid-email')) showToast('Please enter a valid email address','error');
-    else showToast(msg,'error');
-  }
-  finally{ btn.textContent='Continue ✉️'; btn.disabled=false; }
 }
 var _usernameCheckTimer=null, _usernameAvail=false;
 function checkUsernameAvail(val){
@@ -6105,8 +6205,8 @@ function checkUsernameAvail(val){
   clearTimeout(_usernameCheckTimer);
   _usernameCheckTimer=setTimeout(async function(){
     try{
-      var snap=await window.FB.getDoc(window.FB.doc(window.FB.db,'usernames',val));
-      if(snap.exists()){el.style.color='var(--dna-red)';el.textContent='❌ @'+val+' is taken';_usernameAvail=false;}
+      var taken=await window.SOCIAL.usernameTaken(val);
+      if(taken){el.style.color='var(--dna-red)';el.textContent='❌ @'+val+' is taken';_usernameAvail=false;}
       else{el.style.color='var(--dna-green)';el.textContent='✅ @'+val+' is available';_usernameAvail=true;}
     }catch(e){el.style.color='var(--txt-4)';el.textContent='';_usernameAvail=true;}
   },600);
@@ -6131,13 +6231,8 @@ async function saveNewProfile(){
   var school=(document.getElementById('newSchool')&&document.getElementById('newSchool').value.trim())||'';
   var profile={displayName:dn,firstName:fn||'',lastName:ln||'',username:uname,province:prov,grade:grade,matricYear:matric,school:school,avatar:APP.selectedAvatar||'🧬',subjects:[],mantra:'',pts:0,isNew:false,authProvider:(window.currentUser&&window.currentUser.authProvider)||'email',emailVerified:(window.currentUser&&window.currentUser.emailVerified)||false,createdAt:new Date().toISOString()};
   try{
-    if(window.FB) await window.FB.setDoc(window.FB.doc(window.FB.db,'usernames',uname),{uid:uid,createdAt:window.FB.serverTimestamp()});
     if(window.DB) await window.DB.saveProfile(uid,profile);
     window.currentUser=Object.assign({},window.currentUser,profile);
-    // Resend verification for email signups in case it was missed
-    if(window.FB && window.FB.auth && window.FB.auth.currentUser && !window.FB.auth.currentUser.emailVerified){
-      try{ await window.FB.sendEmailVerification(window.FB.auth.currentUser); }catch(ev){}
-    }
     closeModal('authModal');
     goTo('home');
     showToast('Wamukelekile '+dn+'! 🧬 Sharp Sharp.','success');
@@ -6148,9 +6243,9 @@ async function saveNewProfile(){
         showToast('📧 Check your email inbox to verify your account!','info');
       }, 2500);
     }
-    // Dev hint: to make yourself admin, set isAdmin:true in Firestore users/{uid}
+    // Dev hint: admins are set server-side (Supabase → profiles.is_admin)
     if(window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1'){
-      console.info('%c[MzansiAcademy] To set yourself as admin: Firebase Console → Firestore → users → '+uid+' → add field isAdmin (boolean) = true', 'color:#00D68F;font-weight:bold');
+      console.info('%c[MzansiAcademy] To make an admin: Supabase → Table editor → profiles → '+uid+' → is_admin = true', 'color:#00D68F;font-weight:bold');
     }
   }catch(e){ showToast('Error saving profile — try again','error'); }
 }
@@ -6158,10 +6253,7 @@ async function handleSignOut(){
   if(window.AUTH) await window.AUTH.signOut();
 }
 async function resendVerificationEmail(){
-  try{
-    var user=window.FB&&window.FB.auth&&window.FB.auth.currentUser;
-    if(user){ await window.FB.sendEmailVerification(user); showToast('Verification email sent! Check your inbox 📧','success'); }
-  }catch(e){ showToast('Could not send email — try again shortly','error'); }
+  showToast('Google accounts are already verified ✅','info');
 }
 
 // ── Profile Settings ──────────────────────────────────
@@ -6332,10 +6424,8 @@ function toggleReminderTime(){
 
 async function scheduleStudyReminder(uid){
   try{
-    const snap=await getDoc(doc(db,'users',uid));
-    if(!snap.exists())return;
-    const d=snap.data();
-    if(!d.reminderEnabled||!d.reminderTime)return;
+    const d=window.currentUser||{};
+    if(d.uid!==uid||!d.reminderEnabled||!d.reminderTime)return;
     const [h,m]=d.reminderTime.split(':').map(Number);
     const now=new Date();
     const next=new Date();
@@ -6396,13 +6486,7 @@ async function submitPartnershipForm(){
   if(!phone){showToast('Please enter a contact number','error');return;}
   if(!reason){showToast('Please describe your reason for contact','error');return;}
   try{
-    if(window.FB&&window.FB.db){
-      await window.FB.addDoc(window.FB.collection(window.FB.db,'partnershipInquiries'),{
-        name,email,phone,organisation:org,reason,
-        submittedAt:window.FB.serverTimestamp(),
-        source:'website-vision-page'
-      });
-    }
+    await window.CONTENT.partnership({name:name,email:email,phone:phone,organisation:org,reason:reason});
     closeModal('partnershipModal');
     // Reset fields
     ['partnerName','partnerEmail','partnerPhone','partnerOrg','partnerReason'].forEach(function(id){
@@ -6426,14 +6510,16 @@ function dismissAnnouncementBanner(){
 
 function loadLiveAnnouncements(){
   var el=document.getElementById('announcementsList');
-  if(!el||!window.FB) return;
+  if(!el) return;
+  if(!window.CONTENT){ if(!loadLiveAnnouncements._retried){ loadLiveAnnouncements._retried=true; setTimeout(loadLiveAnnouncements,1500); } return; }
   var typeColors={info:'#00C2D4',alert:'#EF4444',success:'#00D68F',event:'#FFB800'};
   var typeIcons={info:'💡',alert:'⚠️',success:'🎉',event:'🏆'};
-  window.FB.getDocs(
-    window.FB.query(window.FB.collection(window.FB.db,'announcements'),
-      window.FB.orderBy('createdAt','desc'),
-      window.FB.limit(5))
-  ).then(function(snap){
+  window.CONTENT.announcements(5).then(function(list){
+    // Same shape the renderer expected from Firestore; text is escaped before it reaches innerHTML
+    var snap={empty:!list.length,docs:list.map(function(a){
+      var o=Object.assign({},a,{title:escHtml(a.title),message:escHtml(a.message),target:escHtml(a.target),createdAt:{toDate:function(){return a.createdAt;}}});
+      return {data:function(){return o;}};
+    })};
     if(snap.empty){
       el.innerHTML='<div style="text-align:center;padding:1rem;color:var(--txt-4);font-size:.75rem">No announcements yet</div>';
       return;
@@ -7775,18 +7861,11 @@ function loadLiveLB(period,btn){
   var list=document.getElementById('liveLbList');
   if(!list) return;
   list.innerHTML='<div class="loading-center"><div class="spinner"></div></div>';
-  // Load from Firebase leaderboard
-  if(!window.DB||!window.db){list.innerHTML=renderDemoLb(period);return;}
-  try{
-    var {collection,query,orderBy,limit,getDocs}=window._fbFns||{};
-    if(!getDocs){list.innerHTML=renderDemoLb(period);return;}
-    getDocs(query(collection(window.db,'leaderboard'),orderBy('pts','desc'),limit(10))).then(function(snap){
-      if(snap.empty){list.innerHTML=renderDemoLb(period);return;}
-      var rows=[];
-      snap.forEach(function(d){rows.push(d.data());});
-      list.innerHTML=renderLbRows(rows);
-    }).catch(function(){list.innerHTML=renderDemoLb(period);});
-  }catch(e){list.innerHTML=renderDemoLb(period);}
+  // Load the real leaderboard for this period; demo rows only if it is empty or offline
+  if(!window.DB){list.innerHTML=renderDemoLb(period);return;}
+  window.DB.getLeaderboard(period,'','',10).then(function(rows){
+    list.innerHTML=rows.length?renderLbRows(rows):renderDemoLb(period);
+  }).catch(function(){list.innerHTML=renderDemoLb(period);});
 }
 function renderLbRows(rows){
   var medals=['🥇','🥈','🥉'];
@@ -8272,22 +8351,12 @@ async function loadLeaderboard(){
   if(lbt) lbt.innerHTML='<div class="loading-center"><div class="spinner"></div></div>';
 
   var data=[];
-  // Always try Firebase first — leaderboard collection is public
+  // Leaderboard is public (guests too); period = all / daily / weekly / monthly
   try{
-    if(window.FB && window.FB.db){
-      var q=window.FB.query(
-        window.FB.collection(window.FB.db,'leaderboard'),
-        window.FB.orderBy('pts','desc'),
-        window.FB.limit(_lbLimit||100)
-      );
-      var snap=await window.FB.getDocs(q);
-      if(!snap.empty){
-        data=snap.docs.map(function(d){ return Object.assign({uid:d.id},d.data()); });
-      }
-    }
+    if(window.DB) data=await window.DB.getLeaderboard(APP.lbPeriod||'all','','',100);
   }catch(e){ console.warn('LB fetch:',e.message); }
 
-  // Fallback demo data only if Firebase returned nothing
+  // Fallback demo data only if the database returned nothing
   if(!data.length){
     data=[
       {displayName:'Sipho M',avatar:'🦁',grade:'12',province:'Gauteng',pts:4820,uid:'d1'},
@@ -8808,30 +8877,28 @@ function updateLbDots(active){
 // ── Firebase Real-time Leaderboard (onSnapshot) ─────────────────
 var _lbUnsub=null;
 function startLiveLbSnapshot(){
-  if(!window.FB||!window.FB.db) return;
-  var {collection,query,orderBy,limit,onSnapshot}=window.FB;
-  if(!onSnapshot) return;
-  if(_lbUnsub) _lbUnsub(); // unsubscribe previous
-  try{
-    var q=query(collection(window.FB.db,'leaderboard'),orderBy('pts','desc'),limit(10));
-    _lbUnsub=onSnapshot(q,function(snap){
-      var rows=[];
-      snap.forEach(function(d){rows.push(d.data());});
+  if(!window.DB) return;
+  if(_lbUnsub) _lbUnsub(); // stop the previous refresh
+  var last='';
+  function refresh(){
+    window.DB.getLeaderboard('all','','',10).then(function(rows){
       var list=document.getElementById('liveLbList');
-      if(list&&rows.length) list.innerHTML=renderLbRows(rows);
-      // Flash new entry animation
-      snap.docChanges().forEach(function(change){
-        if(change.type==='modified'||change.type==='added'){
-          var el=document.getElementById('liveLbList');
-          if(el){
-            el.style.transition='background .3s';
-            el.style.background='rgba(0,214,143,.08)';
-            setTimeout(function(){el.style.background='';},600);
-          }
-        }
-      });
-    },function(err){ console.warn('LB snapshot:',err); });
-  }catch(e){}
+      if(!list||!rows.length) return;
+      var key=JSON.stringify(rows);
+      if(key===last) return;
+      list.innerHTML=renderLbRows(rows);
+      // Flash when the top 10 changes
+      if(last){
+        list.style.transition='background .3s';
+        list.style.background='rgba(0,214,143,.08)';
+        setTimeout(function(){list.style.background='';},600);
+      }
+      last=key;
+    }).catch(function(err){ console.warn('LB refresh:',err); });
+  }
+  refresh();
+  var t=setInterval(refresh,60000);
+  _lbUnsub=function(){ clearInterval(t); };
 }
 // Start snapshot when user logs in
 document.addEventListener('maUserLoaded',startLiveLbSnapshot);
@@ -9116,10 +9183,8 @@ async function openFriendInfoModal(uid){
   var body=document.getElementById('friendInfoBody');
   if(body) body.innerHTML='<div class="loading-center"><div class="spinner"></div></div>';
   try{
-    var snap=await window.FB.getDoc(window.FB.doc(window.FB.db,'users',uid));
-    var u=snap.exists()?snap.data():{};
-    var lbSnap=await window.FB.getDoc(window.FB.doc(window.FB.db,'leaderboard',uid)).catch(function(){return null;});
-    var lb=lbSnap&&lbSnap.exists()?lbSnap.data():{};
+    var u=(await window.SOCIAL.profile(uid))||{};
+    var lb={pts:u.pts||0};
     var subjects=(u.subjects||[]).map(function(sid){
       var s=SUBJECTS.find(function(x){return x.id===sid;})||{emoji:'📚',label:sid,color:'#00D68F'};
       return '<span style="display:inline-flex;align-items:center;gap:.2rem;background:'+s.color+'22;border:1px solid '+s.color+'44;border-radius:12px;padding:2px 8px;font-size:.65rem;color:var(--txt-2)">'+s.emoji+' '+s.label+'</span>';
@@ -9199,7 +9264,7 @@ var ACHIEVEMENTS_DEF = [
 
 try { APP.battleWins = parseInt(localStorage.getItem('ma_bwins')||'0'); } catch(e){ APP.battleWins=0; }
 // Load announcements for all users including guests
-if(window.FB && window.FB.db){ setTimeout(loadLiveAnnouncements, 2000); }
+setTimeout(loadLiveAnnouncements, 2000);
 try { APP.hadPerfectQuiz = localStorage.getItem('ma_perfect')==='1'; } catch(e){}
 try { APP.totalQuizzes = parseInt(localStorage.getItem('ma_tquizzes')||'0'); } catch(e){ APP.totalQuizzes=0; }
 try { APP.userPts = parseInt(localStorage.getItem('ma_pts')||'0'); } catch(e){ APP.userPts=0; }
@@ -9358,9 +9423,9 @@ function showBattleLobby(){
 }
 function cancelBattleSearch(){
   if(BATTLE.countdownTimer) clearInterval(BATTLE.countdownTimer);
-  if(BATTLE.roomId && window.rtdb){
-    var r=window.dbRef(window.rtdb,'battles/'+BATTLE.roomId+'/players/'+BATTLE.playerId);
-    window.rtRemove(r).catch(function(){});
+  if(BATTLE.unwatch){ BATTLE.unwatch(); BATTLE.unwatch=null; }
+  if(BATTLE.roomId && BATTLE.roomId!=='offline' && window.BATTLES){
+    window.BATTLES.leave(BATTLE.roomId).catch(function(){});
   }
   showBattleLobby();
 }
@@ -9387,44 +9452,20 @@ function getBattleQuestions(){
 }
 
 function findBattleMatch(){
-  if(!window.rtdb || BATTLE_CONNECTION === 'offline'){
-    showToast(BATTLE_CONNECTION==='offline' ? '🤖 Starting offline battle vs bots...' : 'Playing in offline practice mode 🎮','info');
+  if(!window.BATTLES || !window.currentUser || BATTLE_CONNECTION === 'offline'){
+    showToast(BATTLE_CONNECTION==='offline' ? '🤖 Starting offline battle vs bots...' : (window.currentUser ? 'Playing in offline practice mode 🎮' : 'Sign in to battle real learners — playing vs bots for now 🎮'),'info');
     startOfflineBattle();
     return;
   }
   var u=window.currentUser;
-  var name=(u&&u.displayName)||'Player';
-  var avatar=(u&&u.avatar)||'🧬';
   BATTLE.playerId='p_'+(u&&u.uid||Math.random().toString(36).substr(2,8));
   BATTLE.myScore=0;
 
-  // Find or create a room
-  var roomsRef=window.dbRef(window.rtdb,'battles/queue');
-  window.rtGet(roomsRef).then(function(snap){
-    var queue=snap.val()||{};
-    var openRoom=null;
-    Object.keys(queue).forEach(function(rid){
-      var r=queue[rid];
-      var playerCount=Object.keys(r.players||{}).length;
-      if(r.status==='waiting' && playerCount<50){ openRoom=rid; }
-    });
-
-    if(!openRoom){
-      openRoom='room_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
-      var qs=getBattleQuestions();
-      var roomData={
-        status:'waiting', mode:BATTLE.mode, rounds:BATTLE.rounds,
-        created:Date.now(), questions:qs,
-        players:{}
-      };
-      window.rtSet(window.dbRef(window.rtdb,'battles/queue/'+openRoom), roomData);
-    }
-    BATTLE.roomId=openRoom;
-    // Join room
-    window.rtSet(window.dbRef(window.rtdb,'battles/queue/'+openRoom+'/players/'+BATTLE.playerId),
-      {name:name,avatar:avatar,score:0,ready:true,joined:Date.now()});
-    enterWaitingRoom(openRoom);
-  }).catch(function(){ startOfflineBattle(); });
+  // Find an open room from the last 3 minutes, or create one, then join it
+  window.BATTLES.findOrCreate(BATTLE.mode, BATTLE.rounds, getBattleQuestions).then(function(roomId){
+    BATTLE.roomId=roomId;
+    enterWaitingRoom(roomId);
+  }).catch(function(e){ console.warn('battle match:', e.message); startOfflineBattle(); });
 }
 
 function enterWaitingRoom(roomId){
@@ -9440,20 +9481,26 @@ function enterWaitingRoom(roomId){
 
   function fmtTime(s){var m=Math.floor(s/60),sec=s%60;return m+':'+(sec<10?'0':'')+sec;}
 
-  // Listen for player changes
-  var roomRef=window.dbRef(window.rtdb,'battles/queue/'+roomId);
-  window.rtOnValue(roomRef,function(snap){
-    var room=snap.val();
-    if(!room) return;
-    var players=room.players||{};
-    var count=Object.keys(players).length;
-    updateWaitingRoomUI(players,count);
-    if(room.status==='playing'){
-      clearInterval(BATTLE.countdownTimer);
-      BATTLE.questions=Object.values(room.questions||{});
-      startBattleGame(players);
-    }
-  });
+  // Listen for player changes and the room starting
+  var started=false;
+  function syncRoom(){
+    window.BATTLES.room(roomId).then(function(room){
+      if(!room.status||started) return;
+      var players=room.players||{};
+      var count=Object.keys(players).length;
+      BATTLE.realCount=count;
+      updateWaitingRoomUI(players,count);
+      if(room.status==='playing'){
+        started=true;
+        clearInterval(BATTLE.countdownTimer);
+        BATTLE.questions=room.questions||[];
+        startBattleGame(players);
+      }
+    }).catch(function(){});
+  }
+  if(BATTLE.unwatch) BATTLE.unwatch();
+  BATTLE.unwatch=window.BATTLES.watch(roomId,syncRoom);
+  syncRoom();
 
   BATTLE.countdownTimer=setInterval(function(){
     elapsed++;
@@ -9469,15 +9516,12 @@ function enterWaitingRoom(roomId){
       else sub2.textContent='⏳ Almost at 2 minutes — bots will fill remaining slots soon';
     }
 
-    // At 4+ real players, speed-start in 5s
-    window.rtGet(window.dbRef(window.rtdb,'battles/queue/'+roomId+'/players')).then(function(s){
-      var count=Object.keys(s.val()||{}).length;
-      if(count>=4 && elapsed<MAX_WAIT-5){
-        elapsed=MAX_WAIT-5; // jump to near end
-        if(document.getElementById('battleSearchLabel'))
-          document.getElementById('battleSearchLabel').textContent='✅ Enough players! Starting in 5s...';
-      }
-    }).catch(function(){});
+    // At 4+ real players, speed-start in 5s (count kept fresh by the room listener)
+    if((BATTLE.realCount||0)>=4 && elapsed<MAX_WAIT-5){
+      elapsed=MAX_WAIT-5; // jump to near end
+      if(document.getElementById('battleSearchLabel'))
+        document.getElementById('battleSearchLabel').textContent='✅ Enough players! Starting in 5s...';
+    }
 
     // 2-minute timeout — mix in bots and start
     if(elapsed>=MAX_WAIT){
@@ -9498,15 +9542,16 @@ function mixBotsAndStart(roomId){
     {name:'Thabo N.',avatar:'🚀',score:0,bot:true,province:'Limpopo'},
     {name:'Nokwanda M.',avatar:'💎',score:0,bot:true,province:'Eastern Cape'},
   ];
-  window.rtGet(window.dbRef(window.rtdb,'battles/queue/'+roomId+'/players')).then(function(s){
-    var realPlayers=s.val()||{};
+  window.BATTLES.room(roomId).then(function(room){
+    var realPlayers=room.players||{};
     var realCount=Object.keys(realPlayers).length;
     var needed=Math.max(0,4-realCount);
     var bots={};
     botPool.slice(0,needed).forEach(function(b,i){ bots['bot_auto_'+i]=b; });
     var allPlayers=Object.assign({},realPlayers,bots);
-    // Mark room as playing
-    window.rtUpdate(window.dbRef(window.rtdb,'battles/queue/'+roomId),{status:'playing'});
+    // Mark room as playing (stop listening first so this client doesn't start twice)
+    if(BATTLE.unwatch){ BATTLE.unwatch(); BATTLE.unwatch=null; }
+    window.BATTLES.start(roomId).catch(function(){});
     BATTLE.questions=BATTLE.questions.length?BATTLE.questions:getBattleQuestions();
     setTimeout(function(){
       document.getElementById('battleWaitingView').style.display='none';
@@ -9677,9 +9722,9 @@ function answerBattle(idx){
     BATTLE.myScore+=100+timeBonus;
     if(BATTLE.players[BATTLE.playerId]) BATTLE.players[BATTLE.playerId].score=BATTLE.myScore;
     setEl('battleMyScore',BATTLE.myScore);
-    // Update Firebase if online
-    if(BATTLE.roomId!=='offline' && window.rtdb){
-      window.rtUpdate(window.dbRef(window.rtdb,'battles/queue/'+BATTLE.roomId+'/players/'+BATTLE.playerId),{score:BATTLE.myScore});
+    // Share my score with the room if online
+    if(BATTLE.roomId && BATTLE.roomId!=='offline' && window.BATTLES){
+      window.BATTLES.score(BATTLE.roomId,BATTLE.myScore).catch(function(){});
     }
   }
   updateBattleScoreboard();
@@ -9735,16 +9780,14 @@ function endBattleGame(){
     showToast('⚔️ Battle Victory! +500 bonus points!','success');
     if(window.currentUser&&window.DB){
       window.DB.addPoints(window.currentUser.uid,500,'Battle Trivia Win');
-      updateDoc(doc(db,'users',window.currentUser.uid),{
-        battleWins: increment(1),
-        updatedAt: serverTimestamp()
-      }).catch(function(){});
+      window.DB.saveProfile(window.currentUser.uid,{battleWins:APP.battleWins}).catch(function(){});
     }
   }
   checkAndUnlockAchievements();
   // Clean up room
-  if(BATTLE.roomId!=='offline'&&window.rtdb){
-    window.rtRemove(window.dbRef(window.rtdb,'battles/queue/'+BATTLE.roomId+'/players/'+BATTLE.playerId)).catch(function(){});
+  if(BATTLE.unwatch){ BATTLE.unwatch(); BATTLE.unwatch=null; }
+  if(BATTLE.roomId && BATTLE.roomId!=='offline' && window.BATTLES){
+    window.BATTLES.leave(BATTLE.roomId).catch(function(){});
   }
 }
 
@@ -9948,59 +9991,21 @@ var _groupChatUnsub=null;
 
 function listenGroups(){
   if(_groupsUnsub) _groupsUnsub();
-  if(!window.FB||!window.currentUser) return;
-  var uid=window.currentUser.uid;
-
-  // Load groups where this user is a member OR the group is open/request (discoverable)
-  // We do two queries and merge: (1) groups user belongs to, (2) open/request groups
-  var memberQ=window.FB.query(
-    window.FB.collection(window.FB.db,'groups'),
-    window.FB.where('memberUids','array-contains',uid),
-    window.FB.orderBy('createdAt','desc'),
-    window.FB.limit(50)
-  );
-
-  _groupsUnsub=window.FB.onSnapshot(memberQ,function(snap){
-    var myGroups=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
-    // Also fetch discoverable (open + request) groups so people can find new ones
-    window.FB.getDocs(
-      window.FB.query(
-        window.FB.collection(window.FB.db,'groups'),
-        window.FB.where('joinType','in',['open','request']),
-        window.FB.orderBy('createdAt','desc'),
-        window.FB.limit(50)
-      )
-    ).then(function(pubSnap){
-      var pubGroups=pubSnap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
-      // Merge: my groups + public discoverable, deduplicate by id
-      var seen={};
-      var merged=[];
-      myGroups.concat(pubGroups).forEach(function(g){
-        if(!seen[g.id]){seen[g.id]=true;merged.push(g);}
-      });
-      _allGroups=merged;
+  if(!window.GROUPS||!window.currentUser) return;
+  // Groups this user belongs to plus discoverable (open / request) groups — RLS decides what we see
+  var timer=null;
+  function reload(){
+    window.GROUPS.list().then(function(groups){
+      _allGroups=groups;
       renderGroupsGrid();
       if(document.getElementById('ftab-rooms')&&document.getElementById('ftab-rooms').style.display!=='none'){
         renderFriendsGroupsGrid();
       }
-    }).catch(function(){
-      // If the index isn't ready, fall back to just the user's own groups
-      _allGroups=myGroups;
-      renderGroupsGrid();
-    });
-  },function(e){
-    console.warn('groups listen:', e.message);
-    // Fallback: only show groups where user is a member
-    window.FB.getDocs(
-      window.FB.query(
-        window.FB.collection(window.FB.db,'groups'),
-        window.FB.where('memberUids','array-contains',uid)
-      )
-    ).then(function(snap){
-      _allGroups=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
-      renderGroupsGrid();
-    }).catch(function(e2){console.warn('groups fallback:',e2);});
-  });
+    }).catch(function(e){ console.warn('groups load:', e.message); });
+  }
+  var stop=window.GROUPS.watch(function(){ clearTimeout(timer); timer=setTimeout(reload,400); });
+  _groupsUnsub=function(){ clearTimeout(timer); stop(); };
+  reload();
 }
 
 function filterRooms(filter,btn){
@@ -10086,10 +10091,10 @@ function filterGroupsBySearch(q){
 async function openGroupChat(gid){
   if(!requireAuth('join Study Groups')) return;
   var found=_allGroups.find(function(x){return x.id===gid;});
-  if(!found && window.FB){
+  if(!found && window.GROUPS){
     try{
-      var snap=await window.FB.getDoc(window.FB.doc(window.FB.db,'groups',gid));
-      if(snap.exists()) found=Object.assign({id:snap.id},snap.data());
+      _allGroups=await window.GROUPS.list();
+      found=_allGroups.find(function(x){return x.id===gid;});
     }catch(e){ console.warn('openGroupChat fetch:',e.message); }
   }
   if(!found){ showToast('Group not found','error'); return; }
@@ -10134,6 +10139,10 @@ async function openGroupChat(gid){
   renderGroupInfo();
   renderGroupMembers();
   listenGroupChat(gid);
+  // Load the member list (members can see each other — RLS)
+  if(window.GROUPS) window.GROUPS.members(gid).then(function(list){
+    if(_activeGroup&&_activeGroup.id===gid){ _activeGroup.membersList=list; renderGroupMembers(); }
+  }).catch(function(e){ console.warn('group members:',e.message); });
 }
 
 function closeGroupChat(){
@@ -10243,17 +10252,18 @@ async function launchGroupDebate(){
     startedBy:u.displayName||'Admin',
     startedAt:Date.now(), active:true
   };
-  if(window.rtdb){
-    window.rtSet(window.dbRef(window.rtdb,'groupChats/'+_activeGroup.id+'/debate'),debateData).catch(function(){});
+  if(window.GROUPS){
+    _activeGroup.debate=debateData;
+    var _meta={};
+    ['icon','color','desc','subjectLabel','grade','province','maxMembers','lang','format','nextSession','recurring','type','admin','adminProvince'].forEach(function(k){ if(_activeGroup[k]!==undefined) _meta[k]=_activeGroup[k]; });
+    window.GROUPS.setDebate(_activeGroup.id,_meta,debateData).catch(function(){});
   }
   // Send Nkosazane into the group chat as moderator
   var subjectLabel=SUBJECTS.find(function(s){return s.id===subject;})||{label:subject,emoji:'📚'};
   var openingMsg='🎤 *[Nkosazane — Debate Moderator]*\n\nSawubona everyone! I\'m Nkosazane and I\'ll be moderating today\'s debate.\n\n📌 *Topic:* '+topic+'\n📚 *Subject:* '+subjectLabel.emoji+' '+subjectLabel.label+'\n\nRules: Be respectful · Back your points with facts · All arguments must relate to '+subjectLabel.label+'\n\nLet\'s begin! Who would like to open with their position? 🗣️';
-  var msgKey='nk_'+Date.now();
-  if(window.rtdb){
-    window.rtSet(window.dbRef(window.rtdb,'groupChats/'+_activeGroup.id+'/messages/'+msgKey),
-      {uid:'nkosazane_ai',name:'Nkosazane 🤖',avatar:'🎤',text:openingMsg,ts:Date.now(),isAI:true}
-    ).catch(function(){});
+  if(window.GROUPS){
+    // Only the group owner may post as the moderator (enforced in the database)
+    window.GROUPS.send(_activeGroup.id,openingMsg,{ai:true,name:'Nkosazane 🤖',avatar:'🎤'}).catch(function(){});
   }
   var area=document.getElementById('debateSetupArea');
   if(area) area.style.display='none';
@@ -10333,12 +10343,10 @@ async function sendGroupMessage(){
     if(warnings>=3) showToast('You have been muted for 24 hours.','error');
     return;
   }
-  // Save to Firebase RTDB so all members see it in real time
-  if(_activeGroup&&window.rtdb){
-    var gkey='m'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
-    window.rtSet(window.dbRef(window.rtdb,'groupChats/'+_activeGroup.id+'/messages/'+gkey),
-      {uid:(u&&u.uid)||'guest',name:name.trim(),avatar:avatar,text:msg,ts:Date.now()}
-    ).catch(function(e){ console.warn('Group msg:',e.message); });
+  // Save so all members see it in real time
+  if(_activeGroup&&window.GROUPS&&u){
+    window.GROUPS.send(_activeGroup.id,msg,{name:name.trim(),avatar:avatar})
+      .catch(function(e){ console.warn('Group msg:',e.message); showToast('Message failed — check connection','error'); });
   }
 }
 
@@ -10365,33 +10373,29 @@ var _dmUnsubscribe=null;
 var _friendsUnsub=null, _reqUnsub=null;
 
 function listenFriends(){
-  if(!window.currentUser||!window.FB) return;
-  var uid=window.currentUser.uid;
-  // friends list
+  if(!window.currentUser||!window.SOCIAL) return;
   if(_friendsUnsub) _friendsUnsub();
-  _friendsUnsub=window.FB.onSnapshot(
-    window.FB.collection(window.FB.db,'users',uid,'friends'),
-    function(snap){
-      _friends=snap.docs.map(function(d){return Object.assign({uid:d.id},d.data());});
+  if(_reqUnsub){ _reqUnsub(); _reqUnsub=null; }
+  function reload(){
+    window.SOCIAL.friends().then(function(list){
+      _friends=list;
       _friendsLoaded=true;
- renderFriendsList();
+      renderFriendsList();
       setEl('friendsOnlineCount',_friends.filter(function(f){return f.status==='online';}).length+' online now');
-    },
-    function(e){console.warn('friends listen:',e);}
-  );
-  // incoming requests
-  if(_reqUnsub) _reqUnsub();
-  _reqUnsub=window.FB.onSnapshot(
-    window.FB.collection(window.FB.db,'users',uid,'friendRequests'),
-    function(snap){
-      _friendRequests=snap.docs.map(function(d){return Object.assign({reqId:d.id},d.data());});
+    }).catch(function(e){console.warn('friends load:',e.message);});
+    window.SOCIAL.requests().then(function(list){
+      _friendRequests=list;
       var cnt=document.getElementById('friendReqCount');
       if(cnt){cnt.textContent=_friendRequests.length;cnt.style.display=_friendRequests.length?'':'none';}
       renderFriendRequests();
-    },
-    function(e){console.warn('reqListen:',e);}
-  );
+    }).catch(function(e){console.warn('requests load:',e.message);});
+  }
+  // Friendships and incoming requests update live; actions also reload straight away
+  _reloadFriends=reload;
+  _friendsUnsub=window.SOCIAL.watchFriends(reload);
+  reload();
 }
+var _reloadFriends=function(){};
 var _activeDmFriend=null;
 
 function switchFriendsTab(tab,btn){
@@ -10506,54 +10510,30 @@ function renderFriendRequests(){
 }
 
 async function muteFriendReq(reqId, fromUid){
-  var myUid=window.currentUser&&window.currentUser.uid; if(!myUid||!window.FB) return;
+  if(!window.currentUser||!window.SOCIAL) return;
   try{
-    // Delete the request but write a mute record so they can't re-request for 30 days
-    await Promise.all([
-      window.FB.deleteDoc(window.FB.doc(window.FB.db,'users',myUid,'friendRequests',reqId)),
-      window.FB.setDoc(window.FB.doc(window.FB.db,'users',myUid,'mutedRequests',fromUid),{
-        mutedAt:window.FB.serverTimestamp(), mutedUid:fromUid
-      })
-    ]);
+    // Keep a muted request so they can't send another one
+    await window.SOCIAL.mute(fromUid);
+    _reloadFriends();
     showToast('Request muted — they won\'t appear again 🔕','info');
   }catch(e){console.warn(e);}
 }
 
 async function acceptFriendReq(reqId, fromUid){
-  var myUid=window.currentUser&&window.currentUser.uid; if(!myUid||!window.FB) return;
+  if(!window.currentUser||!window.SOCIAL) return;
+  var r=_friendRequests.find(function(x){return x.fromUid===fromUid;})||{};
   try{
-    var reqSnap=await window.FB.getDoc(window.FB.doc(window.FB.db,'users',myUid,'friendRequests',reqId));
-    if(!reqSnap.exists()) return;
-    var r=reqSnap.data();
-    await Promise.all([
-      // Add to both friends lists
-      window.FB.setDoc(window.FB.doc(window.FB.db,'users',myUid,'friends',fromUid),{uid:fromUid,displayName:r.displayName||'',username:r.username||'',avatar:r.avatar||'🧬',grade:r.grade||'',province:r.province||'',status:'offline',addedAt:window.FB.serverTimestamp()}),
-      window.FB.setDoc(window.FB.doc(window.FB.db,'users',fromUid,'friends',myUid),{uid:myUid,displayName:window.currentUser.displayName||'',username:window.currentUser.username||'',avatar:window.currentUser.avatar||'🧬',grade:window.currentUser.grade||'',province:window.currentUser.province||'',status:'online',addedAt:window.FB.serverTimestamp()}),
-      // Delete the incoming request
-      window.FB.deleteDoc(window.FB.doc(window.FB.db,'users',myUid,'friendRequests',reqId)),
-      // Delete the sender's sentRequest record (they're now friends)
-      window.FB.deleteDoc(window.FB.doc(window.FB.db,'users',fromUid,'sentRequests',myUid)).catch(function(){}),
-      // Delete any notification
-      window.FB.deleteDoc(window.FB.doc(window.FB.db,'users',myUid,'notifications',fromUid+'_fr')).catch(function(){}),
-      // Notify the sender that request was accepted
-      window.FB.setDoc(window.FB.doc(window.FB.db,'users',fromUid,'notifications',myUid+'_acc'),{
-        type:'friend_accepted',
-        fromUid:myUid,
-        fromName:window.currentUser.displayName||'Someone',
-        fromAvatar:window.currentUser.avatar||'🧬',
-        message:(window.currentUser.displayName||'Someone')+' accepted your friend request! 🎉',
-        read:false,
-        createdAt:window.FB.serverTimestamp()
-      }).catch(function(){})
-    ]);
+    await window.SOCIAL.accept(fromUid);
+    _reloadFriends();
     showToast('You and '+escHtml(r.displayName||'them')+' are now friends! 🎉','success');
   }catch(e){showToast('Error: '+((e&&e.message)||String(e)),'error');console.warn(e);}
 }
 
 async function declineFriendReq(reqId){
-  var myUid=window.currentUser&&window.currentUser.uid; if(!myUid||!window.FB) return;
+  if(!window.currentUser||!window.SOCIAL) return;
   try{
-    await window.FB.deleteDoc(window.FB.doc(window.FB.db,'users',myUid,'friendRequests',reqId));
+    await window.SOCIAL.decline(reqId);
+    _reloadFriends();
     showToast('Request declined','info');
   }catch(e){console.warn(e);}
 }
@@ -10564,12 +10544,10 @@ function confirmUnfriend(uid, name){
   }
 }
 async function removeFriend(uid, name){
-  var myUid=window.currentUser&&window.currentUser.uid; if(!myUid||!window.FB) return;
+  if(!window.currentUser||!window.SOCIAL) return;
   try{
-    await Promise.all([
-      window.FB.deleteDoc(window.FB.doc(window.FB.db,'users',myUid,'friends',uid)),
-      window.FB.deleteDoc(window.FB.doc(window.FB.db,'users',uid,'friends',myUid))
-    ]);
+    await window.SOCIAL.unfriend(uid);
+    _reloadFriends();
     showToast((name||'Friend')+' removed','info');
   }catch(e){console.warn(e);}
 }
@@ -10581,18 +10559,9 @@ async function searchFriends(q){
   if(q.length<2){ el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--txt-4);font-size:.78rem">Type at least 2 characters to search</div>'; return; }
   el.innerHTML='<div style="text-align:center;padding:1.5rem;color:var(--txt-4);font-size:.78rem">Searching...</div>';
   try{
-    var q1=window.FB.query(window.FB.collection(window.FB.db,'users'),window.FB.where('username','==',q.toLowerCase()),window.FB.limit(5));
-    var q2=window.FB.query(window.FB.collection(window.FB.db,'users'),window.FB.where('displayName','>=',q),window.FB.where('displayName','<=',q+''),window.FB.limit(8));
-    // Run queries independently so one index error doesn't kill both
-    var r1=[],r2=[];
-    try{ r1=(await window.FB.getDocs(q1)).docs; }catch(e){ console.warn('username search:',e.message); }
-    try{ r2=(await window.FB.getDocs(q2)).docs; }catch(e){ console.warn('displayName search:',e.message); }
-    var snaps=[{docs:r1},{docs:r2}];
-    var seen={}; var results=[];
-    snaps[0].docs.concat(snaps[1].docs).forEach(function(d){
-      if(!seen[d.id]&&d.id!==(window.currentUser&&window.currentUser.uid)){seen[d.id]=1;results.push(Object.assign({uid:d.id},d.data()));}
-    });
-    if(!results.length){el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--txt-4);font-size:.78rem">No learners found for "'+q+'"</div>';return;}
+    // Matches @username prefix or any part of the display name
+    var results=await window.SOCIAL.search(q);
+    if(!results.length){el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--txt-4);font-size:.78rem">No learners found for "'+escHtml(q)+'"</div>';return;}
     el.innerHTML=results.map(function(f){
       var isFriend=_friends.some(function(fr){return fr.uid===f.uid;});
       var safeUid=f.uid.replace(/'/g,"'");
@@ -10626,43 +10595,15 @@ function addFriendFromSearch(btn){
   sendFriendReq(toUid,toData,btn);
 }
 async function sendFriendReq(toUid, toData, btn){
-  var myUid=window.currentUser&&window.currentUser.uid; if(!myUid||!window.FB){showToast('Sign in first','info');return;}
+  var myUid=window.currentUser&&window.currentUser.uid; if(!myUid||!window.SOCIAL){showToast('Sign in first','info');return;}
   if(toUid===myUid){showToast('That\'s you! 😂','info');return;}
   if(btn){btn.textContent='Sending...';btn.disabled=true;}
   try{
-    // Check not already friends
-    var existing=await window.FB.getDoc(window.FB.doc(window.FB.db,'users',myUid,'friends',toUid));
-    if(existing.exists()){showToast('Already friends! 👯','info');if(btn){btn.textContent='Friends ✓';btn.disabled=true;}return;}
-    // Check if request already sent
-    var alreadySent=await window.FB.getDoc(window.FB.doc(window.FB.db,'users',myUid,'sentRequests',toUid));
-    if(alreadySent.exists()){showToast('Request already sent! ⏳','info');if(btn){btn.textContent='Sent ✓';btn.disabled=true;btn.style.opacity='.5';}return;}
-    // Write request to their incoming
-    await window.FB.setDoc(window.FB.doc(window.FB.db,'users',toUid,'friendRequests',myUid),{
-      fromUid:myUid,
-      displayName:window.currentUser.displayName||'',
-      username:window.currentUser.username||'',
-      avatar:window.currentUser.avatar||'🧬',
-      grade:window.currentUser.grade||'',
-      province:window.currentUser.province||'',
-      sentAt:window.FB.serverTimestamp()
-    });
-    // Also write to MY sentRequests so UI persists across sessions
-    await window.FB.setDoc(window.FB.doc(window.FB.db,'users',myUid,'sentRequests',toUid),{
-      toUid:toUid,
-      displayName:toData&&toData.displayName||'',
-      sentAt:window.FB.serverTimestamp()
-    });
-    // Write notification to the recipient
-    await window.FB.setDoc(window.FB.doc(window.FB.db,'users',toUid,'notifications',myUid+'_fr'),{
-      type:'friend_request',
-      fromUid:myUid,
-      fromName:window.currentUser.displayName||'Someone',
-      fromAvatar:window.currentUser.avatar||'🧬',
-      message:(window.currentUser.displayName||'Someone')+' sent you a friend request',
-      read:false,
-      createdAt:window.FB.serverTimestamp()
-    });
-    showToast('Friend request sent to '+(toData&&toData.displayName||'them')+' 📨','success');
+    var res=await window.SOCIAL.sendRequest(toUid);
+    if(res==='friends'){showToast('Already friends! 👯','info');if(btn){btn.textContent='Friends ✓';btn.disabled=true;}return;}
+    if(res==='sent'){showToast('Request already sent! ⏳','info');if(btn){btn.textContent='Sent ✓';btn.disabled=true;btn.style.opacity='.5';}return;}
+    if(res==='accepted'){showToast('They had already asked you — you\'re now friends! 🎉','success');if(btn){btn.textContent='Friends ✓';btn.disabled=true;}return;}
+    showToast('Friend request sent to '+escHtml(toData&&toData.displayName||'them')+' 📨','success');
     if(btn){btn.textContent='Sent ✓';btn.disabled=true;btn.style.opacity='.5';btn.style.background='rgba(0,214,143,.15)';btn.style.color='var(--dna-green)';}
   }catch(e){showToast('Could not send request','error');console.warn(e);if(btn){btn.textContent='+ Add Friend';btn.disabled=false;}}
 }
@@ -10696,17 +10637,14 @@ function closeDmPanel(){
   if(panel) panel.classList.remove('open');
   if(_dmUnsubscribe){_dmUnsubscribe();_dmUnsubscribe=null;}
 }
-function getDmChatId(uid1,uid2){ return [uid1,uid2].sort().join('_'); }
 function listenDmMessages(friendUid){
   if(_dmUnsubscribe){_dmUnsubscribe();_dmUnsubscribe=null;}
-  var myUid=window.currentUser&&window.currentUser.uid; if(!myUid||!window.rtdb) return;
-  var chatId=getDmChatId(myUid,friendUid);
+  var myUid=window.currentUser&&window.currentUser.uid; if(!myUid||!window.SOCIAL) return;
   var msgs=document.getElementById('dmMessages');
   if(!msgs) return;
   msgs.innerHTML='<div id="dmEmpty" style="text-align:center;padding:2rem;color:var(--txt-4);font-size:.75rem">Start of your conversation</div>';
-  var msgRef=window.dbRef(window.rtdb,'dms/'+chatId+'/messages');
-  _dmUnsubscribe=window.rtOnChildAdded(msgRef,function(snap){
-    var m=snap.val(); if(!m||!m.text) return;
+  function addMsg(m){
+    if(!m||!m.text) return;
     var empty=document.getElementById('dmEmpty');
     if(empty) empty.remove();
     var mine=m.uid===myUid;
@@ -10716,9 +10654,11 @@ function listenDmMessages(friendUid){
       +'<div class="dm-msg-time">'+(mine?'You · ':'')+new Date(m.ts||Date.now()).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</div></div>';
     msgs.appendChild(div);
     msgs.scrollTop=msgs.scrollHeight;
-  },function(err){
-    console.warn('listenDmMessages:',err.message);
-  });
+  }
+  // History first, then new messages as they arrive
+  _dmUnsubscribe=window.SOCIAL.watchDm(friendUid,addMsg);
+  window.SOCIAL.dmHistory(friendUid).then(function(list){ list.forEach(addMsg); })
+    .catch(function(err){ console.warn('listenDmMessages:',err.message); });
 }
 function sendDM(){
   if(!_activeDmFriend||!window.currentUser) return;
@@ -10728,11 +10668,7 @@ function sendDM(){
   // Strip HTML tags for safety
   msg=msg.replace(/<[^>]*>/g,'');
   inp.value='';
-  var myUid=window.currentUser.uid;
-  var chatId=getDmChatId(myUid,_activeDmFriend.uid);
-  var key='m'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
-  var msgRef=window.dbRef(window.rtdb,'dms/'+chatId+'/messages/'+key);
-  window.rtSet(msgRef,{uid:myUid,text:msg,ts:Date.now()}).catch(function(e){
+  window.SOCIAL.sendDm(_activeDmFriend.uid,msg).catch(function(e){
     console.warn('DM send failed:',e.message);
     showToast('Message failed — check connection','error');
     if(inp) inp.value=msg;
@@ -10772,18 +10708,10 @@ async function createGroup(){
     nextSession:(date&&time)?(date+'T'+time):null,
     recurring:recurring,
     format:{discussion:'Discussion',quiz:'Live Quiz',homework:'Homework Help',exam:'Exam Prep'}[format]||format,
-    memberUids:[u.uid],
-    createdAt:window.FB.serverTimestamp()
   };
   try{
-    var ref=await window.FB.addDoc(window.FB.collection(window.FB.db,'groups'),newGroup);
-    // Write to members subcollection — non-fatal if it fails
-    try{
-      await window.FB.setDoc(window.FB.doc(window.FB.db,'groups',ref.id,'members',u.uid),{
-        uid:u.uid, displayName:u.displayName||'', avatar:u.avatar||'🧬',
-        username:u.username||'', grade:u.grade||'', joinedAt:window.FB.serverTimestamp(), role:'admin'
-      });
-    }catch(memberErr){ console.warn('members write (non-fatal):', memberErr.message); }
+    // The database adds the creator as the group owner
+    await window.GROUPS.create(newGroup);
     // Success — close modal FIRST, then reset form
     closeModal('createGroupModal');
     showToast('Group "'+name+'" created! 🎉','success');
@@ -10797,8 +10725,8 @@ async function createGroup(){
   }catch(e){
     console.warn('createGroup error:', e.message);
     var msg = e.message||'';
-    if(msg.includes('permission')||msg.includes('Missing or insufficient')) 
-      showToast('Permission error — check you are signed in and Firestore rules are published','error');
+    if(msg.includes('row-level security')||msg.includes('permission')) 
+      showToast('Permission error — check you are signed in','error');
     else if(msg.includes('network')||msg.includes('offline')) 
       showToast('No internet — try again','error');
     else 
@@ -10808,44 +10736,27 @@ async function createGroup(){
 
 async function joinGroup(gid){
   var u=window.currentUser; if(!u){showToast('Sign in to join groups','info');return;}
-  if(!window.FB) return;
+  if(!window.GROUPS) return;
   try{
-    var gRef=window.FB.doc(window.FB.db,'groups',gid);
-    var gSnap=await window.FB.getDoc(gRef);
-    if(!gSnap.exists()) return;
-    var g=gSnap.data();
+    var g=_allGroups.find(function(x){return x.id===gid;});
+    if(!g) return;
     if((g.memberUids||[]).includes(u.uid)){showToast('Already in this group','info');return;}
     if(g.joinType==='invite'){showToast('This group is invite only','info');return;}
-    if(g.joinType==='request'){
-      await window.FB.setDoc(window.FB.doc(window.FB.db,'groups',gid,'joinRequests',u.uid),{
-        uid:u.uid,displayName:u.displayName||'',avatar:u.avatar||'🧬',
-        username:u.username||'',grade:u.grade||'',requestedAt:window.FB.serverTimestamp()
-      });
-      showToast('Join request sent! Admin will approve you 📨','success');
-      return;
-    }
-    // Open join — add immediately
-    await Promise.all([
-      window.FB.updateDoc(gRef,{memberUids:window.FB.arrayUnion(u.uid),members:window.FB.increment(1)}),
-      window.FB.setDoc(window.FB.doc(window.FB.db,'groups',gid,'members',u.uid),{
-        uid:u.uid,displayName:u.displayName||'',avatar:u.avatar||'🧬',
-        username:u.username||'',grade:u.grade||'',joinedAt:window.FB.serverTimestamp(),role:'member'
-      })
-    ]);
+    var res=await window.GROUPS.join(gid,g.joinType);
+    if(res==='requested'){ showToast('Join request sent! Admin will approve you 📨','success'); return; }
     showToast('Joined "'+escHtml(g.name)+'"! 🎉','success');
   }catch(e){showToast('Error joining group','error');console.warn(e);}
 }
 
 function listenGroupChat(gid){
   if(_groupChatUnsub){_groupChatUnsub();_groupChatUnsub=null;}
-  if(!window.rtdb) return;
+  if(!window.GROUPS) return;
   var box=document.getElementById('groupChatMessages');
   if(!box) return;
   box.innerHTML='<div id="gcEmpty" style="text-align:center;padding:2rem;color:var(--txt-4);font-size:.75rem">No messages yet. Say hi! 👋</div>';
   var myUid=window.currentUser&&window.currentUser.uid;
-  var msgRef=window.dbRef(window.rtdb,'groupChats/'+gid+'/messages');
-  _groupChatUnsub=window.rtOnChildAdded(msgRef,function(snap){
-    var m=snap.val(); if(!m||!m.text) return;
+  function addMsg(m){
+    if(!m||!m.text) return;
     var empty=document.getElementById('gcEmpty');
     if(empty) empty.remove();
     var mine=m.uid===myUid;
@@ -10856,7 +10767,10 @@ function listenGroupChat(gid){
       +'<div class="dm-msg-time">'+new Date(m.ts||Date.now()).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</div>';
     box.appendChild(div);
     box.scrollTop=box.scrollHeight;
-  },function(err){
+  }
+  // History first, then new messages live
+  _groupChatUnsub=window.GROUPS.watchMessages(gid,addMsg);
+  window.GROUPS.messages(gid).then(function(list){ list.forEach(addMsg); }).catch(function(err){
     console.warn('listenGroupChat:',err.message);
     if(box) box.innerHTML='<div style="text-align:center;padding:2rem;color:#EF4444;font-size:.75rem">Could not load messages — check connection</div>';
   });
@@ -10901,7 +10815,20 @@ window.saveNewProfile=async function(){
     subjects:[],mantra:'',pts:0,isNew:false,
     createdAt:new Date().toISOString()
   };
-  if(window.DB) await window.DB.saveProfile(uid,profile);
+  // Optional @username — used by friend search
+  var unEl=document.getElementById('newUsername');
+  var uname=unEl?unEl.value.trim().toLowerCase():'';
+  if(uname){
+    if(uname.length<3){showToast('@username needs at least 3 characters','error');return;}
+    if(!_usernameAvail){showToast('That @username is taken — pick another','error');return;}
+    profile.username=uname;
+  }
+  try{
+    if(window.DB) await window.DB.saveProfile(uid,profile);
+  }catch(e){
+    showToast(String(e&&e.message||'').includes('duplicate')?'That @username was just taken — pick another':'Error saving profile — try again','error');
+    return;
+  }
   window.currentUser=Object.assign({},window.currentUser,profile);
   closeModal('authModal');
   goTo('home');
@@ -10957,14 +10884,7 @@ async function leaveGroup(){
   if(!confirm('Leave "'+_activeGroup.name+'"? You can rejoin if it\'s open.')) return;
   var gid=_activeGroup.id;
   try{
-    if(window.FB){
-      await Promise.all([
-        window.FB.deleteDoc(window.FB.doc(window.FB.db,'groups',gid,'members',u.uid)),
-        window.FB.updateDoc(window.FB.doc(window.FB.db,'groups',gid),{
-          members:Math.max(0,(_activeGroup.members||1)-1)
-        })
-      ]);
-    }
+    if(window.GROUPS) await window.GROUPS.leave(gid);
     showToast('Left '+escHtml(_activeGroup.name)+' 👋','info');
   }catch(e){
     console.warn('leaveGroup:',e.message);
@@ -10979,7 +10899,7 @@ async function deleteGroup(){
   if(_activeGroup.adminUid!==u.uid){ showToast('Only the group admin can delete this group','error'); return; }
   if(!confirm('Delete "'+_activeGroup.name+'" permanently? This cannot be undone.')) return;
   try{
-    if(window.FB) await window.FB.deleteDoc(window.FB.doc(window.FB.db,'groups',_activeGroup.id));
+    if(window.GROUPS) await window.GROUPS.remove(_activeGroup.id);
     showToast('Group deleted','info');
   }catch(e){ showToast('Error deleting group','error'); }
   closeGroupChat();

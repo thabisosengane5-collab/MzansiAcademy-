@@ -8,44 +8,88 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, deleteDoc, query, orderBy, limit, where, serverTimestamp, onSnapshot, addDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+// Admin console data — Supabase (admins only: profiles.is_admin, enforced by RLS and admin_learners()).
+// ADMIN_FB keeps the small Firestore-style surface the console below already uses.
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/+esm';
+const SB = createClient('https://kxndcjzntrthwwnookgt.supabase.co', 'sb_publishable_ow1NvVwxtHCEm-iD5sOvVA_8-1z8FKg');
 
-const firebaseConfig = {
-  apiKey:"AIzaSyCS6LZeWX0qmi3O1BN9dD4u8yGVu9N0Fi8",
-  authDomain:"edusa-a6efe.firebaseapp.com",
-  projectId:"edusa-a6efe",
-  storageBucket:"edusa-a6efe.firebasestorage.app",
-  messagingSenderId:"104983276558",
-  appId:"1:104983276558:web:3a5bf7016666d3e873a2e0",
-  measurementId:"G-N8W3TQ8QVD"
+const ts = (iso) => iso ? { toDate: () => new Date(iso) } : null;
+// The console builds HTML by string concatenation, so every text field is escaped here
+// (enquiries come from the public website and must never run as HTML).
+const esc = (v) => typeof v === 'string' ? v.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) : v;
+const escAll = (o) => { const out = {}; Object.keys(o).forEach(k => { out[k] = esc(o[k]); }); return out; };
+const snap = (rows) => ({ docs: rows.map(r => { const d = escAll(r.d); return { id: r.id, data: () => d }; }), empty: !rows.length, size: rows.length,
+                          forEach(fn) { this.docs.forEach(fn); } });
+function phoneOf(msg) { const m = /^Phone: (.*)$/m.exec(msg || ''); return m ? m[1] : ''; }
+function reasonOf(msg) { return String(msg || '').replace(/^Phone: .*\n\n?/, ''); }
+
+const loaders = {
+  async users(n) {
+    const { data, error } = await SB.rpc('admin_learners', { p_limit: n || 500 });
+    if (error) throw error;
+    return data.map(u => ({ id: u.id, d: Object.assign({}, u.data || {}, { uid: u.id, email: u.email, username: u.username || '',
+      displayName: u.display_name, avatar: u.avatar, grade: u.grade || '', province: u.province || '', school: u.school || '',
+      mantra: u.mantra || '', pts: u.pts || 0, isAdmin: u.is_admin, createdAt: ts(u.created_at) }) }));
+  },
+  async leaderboard(n) {
+    const { data, error } = await SB.rpc('leaderboard_top', { p_limit: n || 100 });
+    if (error) throw error;
+    return data.map(r => ({ id: r.id, d: { uid: r.id, displayName: r.display_name, avatar: r.avatar, grade: r.grade || '', province: r.province || '', pts: r.pts || 0 } }));
+  },
+  async announcements(n) {
+    const { data, error } = await SB.from('announcements').select('id,title,body,type,target,created_by,created_at').order('created_at', { ascending: false }).limit(n || 50);
+    if (error) throw error;
+    return data.map(a => ({ id: String(a.id), d: { title: a.title, message: a.body, type: a.type, target: a.target, createdBy: a.created_by, createdAt: ts(a.created_at) } }));
+  },
+  async partnershipInquiries(n) {
+    const { data, error } = await SB.from('partnership_inquiries').select('id,name,email,org,message,created_at').order('created_at', { ascending: false }).limit(n || 100);
+    if (error) throw error;
+    return data.map(p => ({ id: String(p.id), d: { name: p.name, email: p.email, organisation: p.org || '', phone: phoneOf(p.message), reason: reasonOf(p.message), submittedAt: ts(p.created_at) } }));
+  }
+};
+const TABLES = { announcements: 'announcements', partnershipInquiries: 'partnership_inquiries' };
+let _token = '';
+
+window.ADMIN_FB = {
+  db: {},
+  auth: { currentUser: { getIdToken: async () => _token }, signOut: () => SB.auth.signOut() },
+  collection: (db, name) => ({ name }),
+  doc: (db, name, id) => ({ name, id }),
+  orderBy: () => null,
+  limit: (n) => ({ limit: n }),
+  query: (col, ...parts) => ({ name: col.name, limit: (parts.find(p => p && p.limit) || {}).limit }),
+  serverTimestamp: () => null,
+  async getDocs(q) { return snap(await loaders[q.name](q.limit)); },
+  async addDoc(col, d) {
+    if (col.name !== 'announcements') throw new Error('Unsupported collection ' + col.name);
+    const { error } = await SB.from('announcements').insert({ title: d.title, body: d.message, type: d.type || 'info', target: d.target || 'all', created_by: window.adminUser && window.adminUser.uid });
+    if (error) throw error;
+  },
+  async deleteDoc(ref) {
+    const { error } = await SB.from(TABLES[ref.name]).delete().eq('id', ref.id);
+    if (error) throw error;
+  }
 };
 
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
-const auth= getAuth(app);
-const rtdb= getDatabase(app);
-
-window.ADMIN_FB = { db, auth, rtdb, collection, getDocs, doc, getDoc, updateDoc, deleteDoc, query, orderBy, limit, where, serverTimestamp, onSnapshot, addDoc, setDoc, ref, onValue };
-
-onAuthStateChanged(auth, async (user) => {
+SB.auth.getSession().then(async ({ data }) => {
   document.getElementById('adminLoader').style.display = 'none';
-  if (!user) { window.location.href = 'index.html'; return; }
+  const session = data.session;
+  if (!session) { window.location.href = 'index.html'; return; }
+  _token = session.access_token;
   try {
-    const snap = await getDoc(doc(db, 'users', user.uid));
-    if (!snap.exists() || !snap.data().isAdmin) {
-      document.getElementById('accessDenied').style.display = 'flex';
-      return;
-    }
-    window.adminUser = { ...snap.data(), uid: user.uid, email: user.email };
+    const { data: p, error } = await SB.from('profiles').select('id,display_name,is_admin').eq('id', session.user.id).single();
+    if (error || !p.is_admin) { document.getElementById('accessDenied').style.display = 'flex'; return; }
+    window.adminUser = { uid: p.id, email: session.user.email, displayName: p.display_name };
     document.getElementById('adminShell').style.display = 'flex';
-    document.getElementById('adminEmail').textContent = user.email;
+    document.getElementById('adminEmail').textContent = session.user.email;
     if (typeof initAdminDashboard === 'function') initAdminDashboard();
   } catch(e) {
     document.getElementById('accessDenied').style.display = 'flex';
   }
+});
+SB.auth.onAuthStateChange((event, session) => {
+  if (session) _token = session.access_token;
+  if (event === 'SIGNED_OUT') window.location.href = 'index.html';
 });
 </script>
 

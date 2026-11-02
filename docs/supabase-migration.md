@@ -33,22 +33,25 @@ Tested as two fake users in a rolled-back transaction: profile auto-created, poi
 `award_points()`, users can't raise their own points or make themselves admin, DMs blocked until
 friends, accepting a request creates both friendship rows, leaderboard shows first name + initial.
 
-## Phase 2 — Switch the app (next)
+## Phase 2 — Switch the app (done on the branch, 3 Nov 2026)
 
-1. Add the Supabase JS client and the project URL + publishable key to `index.html`
-   (publishable keys are safe in the browser; the service-role key never is).
-2. Replace `window.DB` / `window.FB` calls feature by feature: auth → profile → progress and
-   points → leaderboard → friends → DMs and groups → announcements → admin.
-3. Move `api/notify.js` to read tokens from `push_tokens` (FCM can keep sending pushes).
-4. Keep Firebase running read-only during the switch; remove it when everything works.
+- Decisions: start fresh (no Firebase accounts imported), Google sign-in only, no phone sign-in.
+- `index.html`: the Firebase block is replaced by the Supabase data layer (see CLAUDE.md §6);
+  every Firestore / Realtime Database call now goes through it. Phone and email sign-in screens
+  were removed. Firebase stays only for push delivery (FCM).
+- `admin.html`: same console, Supabase data; admins are `profiles.is_admin`.
+- `api/notify.js`: verifies the Supabase access token and reads `push_tokens` with the
+  service-role key.
+- Extra tables and functions: `db/supabase/002_app_switch.sql`.
+- 10 demo learners (with points, friendships, a study group and announcements) seed the app.
 
-## Decisions needed from the owner
+## Before it goes live (owner)
 
-1. **Existing accounts.** Either (a) import Firebase users and their points/progress — needs a
-   Firebase export (`firebase auth:export` with password hashes, plus a Firestore export) run by
-   the owner, or (b) ask learners to create a new account (simplest; progress is lost).
-2. **Sign-in methods.** Email and Google work on the free plan (Google needs an OAuth client in
-   Google Cloud). **Phone OTP needs a paid SMS provider** (e.g. Twilio) — keep it or drop it?
-3. **Old test tables.** `dm_messages`, `group_messages`, `progress`, `quiz_history` and
-   `analytics_events` are empty leftovers from the `apps/web` rebuild; four have RLS disabled.
-   Recommended: drop them (they hold no data).
+1. Google sign-in: in Google Cloud Console create an OAuth client (Web), add the redirect URI
+   `https://kxndcjzntrthwwnookgt.supabase.co/auth/v1/callback`; then in Supabase →
+   Authentication → Providers → Google paste the client ID and secret and enable it.
+2. Supabase → Authentication → URL Configuration: Site URL `https://www.mzansiacademysa.co.za`,
+   add it (and `https://mzansiacademysa.co.za`) to Redirect URLs.
+3. Vercel → Environment Variables: add `SUPABASE_SERVICE_ROLE_KEY` (Supabase → Settings → API
+   keys → secret key) for push notifications.
+4. Make yourself admin: Supabase → Table editor → profiles → your row → `is_admin` = true.
