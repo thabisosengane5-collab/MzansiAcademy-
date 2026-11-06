@@ -19,7 +19,8 @@ _lsAdd('m0', {
       {q:"The monomer of a protein is:",opts:["Glucose","Amino acid","Fatty acid","Nucleotide"],a:1,et:"Proteins are long chains of amino acids."},
       {q:"Iodine turns blue-black in the presence of:",opts:["Protein","Glucose","Starch","Lipid"],a:2,et:"Iodine is the test for starch."},
       {q:"Which stores the most energy per gram?",opts:["Carbohydrate","Protein","Lipid","Water"],a:2,et:"Lipids release about 37 kJ/g, more than double carbohydrates."},
-    ]},
+    ],
+    conclusion:"Carbohydrates fuel, proteins build and catalyse, lipids store energy and form membranes, and nucleic acids carry the genetic code. For tests, pair each monomer with its polymer and link structure to function."},
 
   1: {emoji:"🧀", subtitle:"Grade 10 · The biological catalysts that make life fast",
     illusText:"Without enzymes, digesting a single meal would take years. With them, it takes hours.",
@@ -337,7 +338,8 @@ _lsAdd('m2', {
       {q:"Water moves up a plant in the:",opts:["Phloem","Xylem","Stomata","Cortex"],a:1,et:"Xylem vessels carry water and minerals upwards."},
       {q:"Transpiration is:",opts:["Loss of water vapour from leaves","Making food","Absorbing minerals","Releasing energy"],a:0,et:"Water evaporates from leaves through stomata."},
       {q:"Transpiration increases when it is:",opts:["Cold and still","Hot and windy","Humid","Dark"],a:1,et:"Heat and wind speed up evaporation."},
-    ]},
+    ],
+    conclusion:"Xylem carries water and minerals up, phloem carries sugars from the leaves, and evaporation through the stomata pulls water up, no pump needed. For exams, compare xylem and phloem and explain what speeds up transpiration."},
 
   1: {emoji:"❤️", subtitle:"Grade 10 · The heart, blood and blood vessels",
     illusText:"Your heart beats about 100 000 times a day, pushing blood through roughly 100 000 km of vessels.",
@@ -656,7 +658,8 @@ _lsAdd('m4', {
       {q:"Homologous structures suggest:",opts:["Identical function","A common ancestor","No relationship","Recent design"],a:1,et:"Same basic structure inherited from a shared ancestor."},
       {q:"Homo naledi was found in:",opts:["Kenya","The Rising Star cave, Gauteng","Ethiopia","The Karoo"],a:1,et:"In the Cradle of Humankind near Johannesburg."},
       {q:"Evolution is change in:",opts:["One individual","Populations over generations","Rocks","Weather"],a:1,et:"Populations evolve; individuals don't."},
-    ]},
+    ],
+    conclusion:"Fossils, homologous and vestigial structures, and DNA similarity all point to common ancestry, and the Cradle of Humankind keeps adding evidence. In exams, explain how each shows common ancestry and keep homologous and analogous apart."},
 
   1: {emoji:"🦠", subtitle:"Grade 12 · Survival of the best adapted",
     illusText:"Drug-resistant TB is natural selection happening in real time — inside patients, in South African clinics.",
