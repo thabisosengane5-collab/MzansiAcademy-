@@ -127,6 +127,29 @@ Unless the user names `apps/web` or `mzansi-app`, "the website" means root `inde
 
 - Branch → commit → push → draft PR. There's no GitHub Actions workflow; production
   deploys come from Vercel's Git integration on `main`.
-- No test suite or linter. Verify `index.html` changes by loading the page (Playwright
-  + Chromium are available in cloud sessions) and checking the console for errors.
+- Checks: `node tools/qa/check-content.js` (lesson and quiz rules, no browser) and
+  `node tools/qa/check-site.js` (loads the site in Chromium: phone layout, every lesson,
+  module tests, console errors). Playwright + Chromium are available in cloud sessions.
 - Known issues and the fix backlog: `docs/site-review.md`.
+
+## 10. AI team
+
+MzansiAcademy is a free education business: free must still mean quality in the courses,
+the quizzes and the UI. Claude works as a small team — agents in `.claude/agents/`,
+blueprint in `docs/ai-team.md`.
+
+| Agent | Job | Edits files? |
+|---|---|---|
+| `curriculum-planner` | CAPS/NSC gap check → brief per topic | No |
+| `lesson-writer` | Lessons + quizzes in house style | Yes |
+| `reviewer` | Facts, maths, CAPS, quiz quality → BLOCKER/FIX/NIT | No |
+| `illustrator` | 400×220 lesson SVGs (`tools/illustrations/`) | Yes |
+| `qa-tester` | `tools/qa/` + phone UI checks | No |
+
+- Course, lesson or quiz work → follow the `content-pipeline` skill (plan → write →
+  review → illustrate → QA → owner approval).
+- Before asking to merge → run the `ship-check` skill.
+- **Approval gates — always ask the owner first:** merging to `main` (that publishes to
+  every learner), pushing to a new branch, deleting content or data, sending anything to
+  users (push, email, announcements), changing the database, or spending money.
+  Never ask for passwords or keys in chat.
