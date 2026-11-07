@@ -57,7 +57,7 @@ const server = http.createServer((req, res) => {
       for (let i = 0; i < 5; i++) { document.querySelector('#lpQuiz .lp-opt').click(); document.querySelector('#lpQuiz .lp-next button').click(); }
       return document.querySelector('.lp-score') && document.querySelector('.lp-score').textContent;
     });
-    ok(!!result, `home 60-second challenge plays to the end (${result})`);
+    ok(!!result, `home 15-second challenge plays to the end (${result})`);
   }
   await phone.evaluate(() => goTo('leaderboard'));
   const lbShown = await phone.waitForFunction(() => { const t = document.getElementById('lbTable'); return t && !t.querySelector('.spinner') && t.children.length; }, null, { timeout: 20000 }).then(() => true, () => false);
