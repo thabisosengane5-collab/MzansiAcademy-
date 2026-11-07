@@ -1273,7 +1273,7 @@ code { font-family:var(--mono); font-size:0.85em; background:var(--bg-4); paddin
 .feature-icon { font-size:2.5rem; margin-bottom:1rem; display:block; }
 .feature-title { font-family:var(--serif); font-size:1.2rem; margin-bottom:.625rem; color:var(--txt); }
 .feature-desc { font-size:.85rem; color:var(--txt-2); line-height:1.7; }
-/* ── Landing: subject marquee, 60-second challenge, lesson hooks ── */
+/* ── Landing: subject marquee, 15-second challenge, lesson hooks, important links ── */
 .lp-marquee { overflow:hidden; padding:1.25rem 0 .25rem; -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); }
 .lp-track { display:flex; gap:.625rem; width:max-content; animation:lpScroll 45s linear infinite; }
 .lp-marquee:hover .lp-track { animation-play-state:paused; }
@@ -1300,6 +1300,25 @@ code { font-family:var(--mono); font-size:0.85em; background:var(--bg-4); paddin
 .lp-next { display:none; margin-top:1rem; }
 .lp-done { text-align:center; padding:.5rem 0; }
 .lp-score { font-family:var(--serif); font-size:3rem; line-height:1; margin:.5rem 0; }
+.lp-timer { color:var(--dna-teal); font-variant-numeric:tabular-nums; }
+.lp-timer.low { color:var(--dna-red); }
+.lp-clock { height:4px; background:var(--bg-4); border-radius:4px; overflow:hidden; margin:-.625rem 0 1rem; }
+.lp-clock > div { height:100%; width:100%; background:var(--dna-gold); transition:width 1s linear; }
+.lp-clock.low > div { background:var(--dna-red); }
+#lpLinks { scroll-margin-top:calc(var(--nav-h) + .75rem); }
+.lp-links { max-width:820px; margin:0 auto; display:grid; gap:.75rem; }
+.lp-lgroup { background:var(--bg-2); border:1px solid var(--border-2); border-radius:var(--radius-lg); overflow:hidden; }
+.lp-lgroup > summary { cursor:pointer; list-style:none; padding:1rem 1.25rem; font-weight:800; color:var(--txt); display:flex; justify-content:space-between; align-items:center; gap:.75rem; }
+.lp-lgroup > summary::-webkit-details-marker { display:none; }
+.lp-lgroup > summary small { display:block; font-weight:600; font-size:.75rem; color:var(--txt-3); margin-top:.15rem; }
+.lp-lgroup > summary::after { content:'+'; flex:none; font-size:1.25rem; color:var(--dna-teal); }
+.lp-lgroup[open] > summary::after { content:'\2212'; }
+.lp-link { display:block; text-decoration:none; padding:.875rem 1.25rem; border-top:1px solid var(--border); }
+.lp-link:hover { background:var(--bg-3); text-decoration:none; }
+.lp-link:hover b { text-decoration:underline; }
+.lp-link b { color:var(--dna-teal); font-size:.92rem; }
+.lp-link p { color:var(--txt-2); font-size:.82rem; line-height:1.6; margin:.25rem 0 0; }
+.lp-link .lp-url { display:block; color:var(--txt-3); font-size:.7rem; margin-top:.3rem; overflow-wrap:anywhere; }
 .lp-hooks { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1rem; }
 .lp-hook { background:var(--bg-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.375rem; cursor:pointer; transition:border-color .2s, box-shadow .2s; }
 .lp-hook:hover { border-color:var(--border-glow); box-shadow:var(--glow-green); }
@@ -2968,12 +2987,12 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
     <div class="lp-track"><span class="lp-chip" onclick="goTo('courses')">📐 Mathematics</span><span class="lp-chip" onclick="goTo('courses')">🧬 Life Sciences</span><span class="lp-chip" onclick="goTo('courses')">⚗️ Physical Sciences</span><span class="lp-chip" onclick="goTo('courses')">📊 Accounting</span><span class="lp-chip" onclick="goTo('courses')">🌍 Geography</span><span class="lp-chip" onclick="goTo('courses')">📜 History</span><span class="lp-chip" onclick="goTo('courses')">💼 Business Studies</span><span class="lp-chip" onclick="goTo('courses')">📈 Economics</span><span class="lp-chip" onclick="goTo('courses')">📖 English HL</span><span class="lp-chip" onclick="goTo('courses')">💻 CAT</span><span class="lp-chip" onclick="goTo('courses')">🎨 Visual Arts</span><span class="lp-chip" onclick="goTo('courses')">🎵 Music</span><span class="lp-chip" onclick="goTo('courses')">🧭 Life Orientation</span><span class="lp-chip" onclick="goTo('courses')">🧮 Maths Literacy</span><span class="lp-chip" onclick="goTo('courses')">🛠️ Technology</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">📐 Mathematics</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🧬 Life Sciences</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">⚗️ Physical Sciences</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">📊 Accounting</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🌍 Geography</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">📜 History</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">💼 Business Studies</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">📈 Economics</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">📖 English HL</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">💻 CAT</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🎨 Visual Arts</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🎵 Music</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🧭 Life Orientation</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🧮 Maths Literacy</span><span class="lp-chip lp-dup" onclick="goTo('courses')" aria-hidden="true">🛠️ Technology</span></div>
   </div>
 
-  <!-- 60-second challenge (no sign-in needed) -->
+  <!-- 15-second challenge (no sign-in needed) -->
   <section class="lp-section" id="lpChallenge">
     <div class="section-header" style="margin-bottom:1.75rem">
       <div class="section-tag">⚡ Try it now · no sign-up</div>
-      <h2 class="section-title">The <em class="grad-text">60-second</em> challenge</h2>
-      <p class="section-sub">Five real questions from our lessons. See how many you get — then save your XP.</p>
+      <h2 class="section-title">The <em class="grad-text">15-second</em> challenge</h2>
+      <p class="section-sub">Five real questions from our lessons — 15 seconds each. See how many you get, then save your XP.</p>
     </div>
     <div class="lp-quiz" id="lpQuiz" aria-live="polite"></div>
   </section>
@@ -3024,34 +3043,56 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
     {s:'Mathematics',q:'8 + 4 + 2 + 1 + … goes on forever. What does it add up to?',o:['15','16','Infinity','32'],a:1,f:'Each term halves, so the sum gets closer and closer to 16 but never passes it: S∞ = 8 ÷ (1 − ½).'},
     {s:'Mathematics',q:'In a class, 22 play soccer, 15 play netball and 6 play both. How many play at least one?',o:['37','31','43','28'],a:1,f:'22 + 15 − 6 = 31. Subtract the overlap so the 6 aren\'t counted twice — the addition rule.'}
   ];
-  var i=0,score=0,xp=0,streak=0,el=null;
+  var T=15,i=0,score=0,xp=0,streak=0,el=null,left=T,tick=null,started=false,inView=false;
   function bar(){ return '<div class="lp-bar"><div style="width:'+(i/Q.length*100)+'%"></div></div>'; }
-  function top(){ return '<div class="lp-qtop"><span>Question '+Math.min(i+1,Q.length)+' of '+Q.length+'</span><span><span class="lp-streak">🔥 '+streak+'</span> &nbsp; <span class="lp-xp">⭐ '+xp+' XP</span></span></div>'; }
+  function top(){ return '<div class="lp-qtop"><span>Question '+Math.min(i+1,Q.length)+' of '+Q.length+'</span><span class="lp-timer'+(left<=5?' low':'')+'">⏱ '+left+'s</span><span><span class="lp-streak">🔥 '+streak+'</span> &nbsp; <span class="lp-xp">⭐ '+xp+' XP</span></span></div>'; }
+  function stop(){ clearInterval(tick); tick=null; }
+  function paint(){
+    var t=el.querySelector('.lp-timer'),c=el.querySelector('.lp-clock');
+    if(t){ t.textContent='⏱ '+left+'s'; t.classList.toggle('low',left<=5); }
+    if(c){ c.classList.toggle('low',left<=5); c.firstChild.style.width=(left/T*100)+'%'; }
+  }
+  // The clock only runs while the quiz is on screen and the tab is visible, so nobody loses time they can't see
+  function run(){ if(tick||!inView||document.hidden||!el.querySelector('.lp-opt:not(:disabled)')) return; tick=setInterval(function(){ left--; paint(); if(left<=0){ stop(); pick(-1); } },1000); }
+  function clock(){ stop(); left=T; paint(); run(); }
   function show(){
+    stop(); left=T;
     if(i>=Q.length){ return done(); }
-    var c=Q[i],h=top()+bar()+'<div class="lp-subj">'+c.s+'</div><div class="lp-q">'+c.q+'</div><div class="lp-opts">';
+    var c=Q[i],h=top()+bar()+'<div class="lp-clock"><div></div></div><div class="lp-subj">'+c.s+'</div><div class="lp-q">'+c.q+'</div><div class="lp-opts">';
     c.o.forEach(function(o,k){ h+='<button class="lp-opt" data-k="'+k+'">'+o+'</button>'; });
     h+='</div><div class="lp-fact"></div><div class="lp-next"><button class="btn btn-primary btn-full">'+(i<Q.length-1?'Next question →':'See my score →')+'</button></div>';
     el.innerHTML=h;
     el.querySelectorAll('.lp-opt').forEach(function(b){ b.onclick=function(){ pick(+b.getAttribute('data-k')); }; });
     el.querySelector('.lp-next button').onclick=function(){ i++; show(); };
+    if(started) clock();
   }
   function pick(k){
+    stop();
     var c=Q[i],bs=el.querySelectorAll('.lp-opt');
     bs.forEach(function(b,j){ b.disabled=true; if(j===c.a) b.classList.add('right'); else if(j===k) b.classList.add('wrong'); });
     if(k===c.a){ score++; streak++; xp+=20+streak*5; } else { streak=0; }
     el.querySelector('.lp-qtop').outerHTML=top();
-    var f=el.querySelector('.lp-fact'); f.innerHTML=(k===c.a?'✅ <b>Correct!</b> ':'❌ <b>Not quite.</b> ')+c.f; f.style.display='block';
+    var f=el.querySelector('.lp-fact'); f.innerHTML=(k===c.a?'✅ <b>Correct!</b> ':k<0?'⏰ <b>Time\'s up!</b> ':'❌ <b>Not quite.</b> ')+c.f; f.style.display='block';
     el.querySelector('.lp-next').style.display='block';
   }
   function done(){
+    stop();
     var msg=score===5?'Perfect score — you\'re matric-ready material! 🏆':score>=3?'Solid! A few more lessons and you\'ll ace it. 💪':'Every expert started here. The lessons will get you there. 🌱';
     el.innerHTML=bar()+'<div class="lp-done"><div class="lp-subj">Your result</div><div class="lp-score grad-text">'+score+'/5</div><div class="lp-xp" style="font-weight:800;margin-bottom:.5rem">⭐ '+xp+' XP earned</div><p class="section-sub" style="margin-bottom:1.25rem">'+msg+'</p><button class="btn btn-primary btn-lg" id="lpSave">🚀 Sign up free to save your XP</button><div style="margin-top:.75rem"><button class="btn btn-secondary" id="lpAgain">Try again</button></div></div>';
     el.querySelector('.lp-bar div').style.width='100%';
     document.getElementById('lpSave').onclick=function(){ openModal('authModal'); };
     document.getElementById('lpAgain').onclick=function(){ i=0;score=0;xp=0;streak=0;show(); };
   }
-  function init(){ el=document.getElementById('lpQuiz'); if(el) show(); }
+  function init(){
+    el=document.getElementById('lpQuiz'); if(!el) return;
+    show();
+    if(!('IntersectionObserver' in window)){ started=inView=true; return clock(); }
+    new IntersectionObserver(function(es){
+      inView=es[0].isIntersecting;
+      if(inView){ started=true; run(); } else stop();
+    },{threshold:.5}).observe(el);
+    document.addEventListener('visibilitychange',function(){ if(document.hidden) stop(); else run(); });
+  }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
 </script>
@@ -3091,28 +3132,54 @@ body:has(#pgCourseView.active) .ai-fab { bottom:calc(var(--bottom-nav) + 4.5rem)
           <h3 class="feature-title">Friends & Study Groups</h3>
           <p class="feature-desc">Add friends, send direct messages, and join subject study groups. Learning is better together — build your academic circle.</p>
         </div>
-        <div class="feature-card" style="perspective:800px;cursor:pointer;min-height:160px" onclick="this.querySelector('.flip-inner').style.transform=this.querySelector('.flip-inner').style.transform?'':'rotateY(180deg)'">
-          <div class="flip-inner" style="position:relative;width:100%;transition:transform 0.6s;transform-style:preserve-3d">
-            <div style="backface-visibility:hidden;-webkit-backface-visibility:hidden">
-              <span class="feature-icon">🎓</span>
-              <h3 class="feature-title">Grade 11 & 12 Learners</h3>
-              <p class="feature-desc">Are you planning for university or college? Tap to see important links you'll need — from CAO forms to uMalusi and university applications.</p>
-              <div style="font-size:.65rem;color:var(--dna-teal);margin-top:.5rem;font-weight:700">TAP TO FLIP →</div>
-            </div>
-            <div style="position:absolute;top:0;left:0;width:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(180deg);background:var(--bg-2);border-radius:12px;padding:1rem">
-              <div style="font-size:.72rem;font-weight:800;color:var(--dna-green);margin-bottom:.625rem">📎 Important Links</div>
-              <div style="display:flex;flex-direction:column;gap:.375rem">
-                <a href="https://www.cao.ac.za" target="_blank" style="font-size:.68rem;color:var(--dna-teal);text-decoration:none;padding:.35rem .5rem;background:var(--bg-3);border-radius:6px;display:block;line-height:1.4">📋 <b>CAO — Central Applications Office</b><br><span style="color:var(--txt-4);font-size:.6rem">Apply to multiple universities with one form</span></a>
-                <a href="https://www.umalusi.org.za" target="_blank" style="font-size:.68rem;color:var(--dna-teal);text-decoration:none;padding:.35rem .5rem;background:var(--bg-3);border-radius:6px;display:block;line-height:1.4">✅ <b>uMalusi — Certificate Verification</b><br><span style="color:var(--txt-4);font-size:.6rem">Verify your matric results &amp; request statement of results</span></a>
-                <a href="https://www.nsfas.org.za" target="_blank" style="font-size:.68rem;color:var(--dna-teal);text-decoration:none;padding:.35rem .5rem;background:var(--bg-3);border-radius:6px;display:block;line-height:1.4">💰 <b>NSFAS — Student Financial Aid</b><br><span style="color:var(--txt-4);font-size:.6rem">Apply for bursaries &amp; loans to fund your tertiary studies</span></a>
-                <a href="https://www.saqa.org.za" target="_blank" style="font-size:.68rem;color:var(--dna-teal);text-decoration:none;padding:.35rem .5rem;background:var(--bg-3);border-radius:6px;display:block;line-height:1.4">📜 <b>SAQA — Qualifications Authority</b><br><span style="color:var(--txt-4);font-size:.6rem">Check if your qualification is nationally recognised</span></a>
-                <a href="https://www.dhet.gov.za" target="_blank" style="font-size:.68rem;color:var(--dna-teal);text-decoration:none;padding:.35rem .5rem;background:var(--bg-3);border-radius:6px;display:block;line-height:1.4">🏫 <b>DHET — Higher Education &amp; Training</b><br><span style="color:var(--txt-4);font-size:.6rem">Official dept for universities, TVET &amp; adult education</span></a>
-                <a href="https://www.tvetcolleges.co.za" target="_blank" style="font-size:.68rem;color:var(--dna-teal);text-decoration:none;padding:.35rem .5rem;background:var(--bg-3);border-radius:6px;display:block;line-height:1.4">🔧 <b>TVET Colleges Directory</b><br><span style="color:var(--txt-4);font-size:.6rem">Find accredited technical &amp; vocational colleges near you</span></a>
-              </div>
-            </div>
-          </div>
+        <div class="feature-card" role="button" tabindex="0" style="cursor:pointer" onclick="document.getElementById('lpLinks').scrollIntoView({behavior:'smooth',block:'start'})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+          <span class="feature-icon">🎓</span>
+          <h3 class="feature-title">Grade 11, 12 &amp; school leavers</h3>
+          <p class="feature-desc">Planning for university, a TVET college, a bursary or your first job? See the important links — what each one is for and when to use it.</p>
+          <div style="font-size:.65rem;color:var(--dna-teal);margin-top:.5rem;font-weight:700">SEE THE IMPORTANT LINKS ↓</div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Important links: Grade 11 & 12 learners and school leavers -->
+  <section class="lp-section" id="lpLinks" style="padding-bottom:3.5rem">
+    <div class="section-header" style="margin-bottom:1.75rem">
+      <div class="section-tag">🎓 Grade 11, 12 &amp; school leavers</div>
+      <h2 class="section-title">Important links for <em class="grad-text">what comes next</em></h2>
+      <p class="section-sub">Applications, funding, TVET colleges, second chances and first jobs — what each link is for and when to use it. The websites are free to use, but some applications charge a fee — we say which.</p>
+    </div>
+    <div class="lp-links">
+      <details class="lp-lgroup" open>
+        <summary><span>📎 Apply, get funded and check your papers<small>The key official links</small></span></summary>
+        <a class="lp-link" href="https://www.cao.ac.za" target="_blank" rel="noopener">📋 <b>CAO — Central Applications Office</b><p>One application for the four KwaZulu-Natal public universities — DUT, MUT, UKZN and UniZulu — instead of applying to each separately. Apply in Grade 12 using your Grade 11 final results. There is a non-refundable application fee that goes up for late applications, and some programmes, such as medicine, close months before others — check the fee and closing dates on the site early.</p><span class="lp-url">www.cao.ac.za ↗</span></a>
+        <a class="lp-link" href="https://www.umalusi.org.za" target="_blank" rel="noopener">✅ <b>Umalusi — matric certificates</b><p>Umalusi quality-assures the matric (NSC) exams and issues the certificates. Lost or damaged your certificate? Apply for a replacement here (there is a fee). Found a mistake on it? Apply for a re-issue at your provincial education department or the DBE — do it soon, because corrections are only accepted for a limited time. Employers check certificates through Umalusi-approved verification agencies.</p><span class="lp-url">www.umalusi.org.za ↗</span></a>
+        <a class="lp-link" href="https://www.nsfas.org.za" target="_blank" rel="noopener">💰 <b>NSFAS — student financial aid</b><p>Government bursary for study at public universities and TVET colleges. If your household earns R350 000 a year or less (R600 000 if you have a disability), it can cover tuition and registration, learning materials, a living allowance for food, and either accommodation or a transport allowance. Apply online while applications are open — check the dates on the site and don't wait for your results. You must also apply to the university or college itself.</p><span class="lp-url">www.nsfas.org.za ↗</span></a>
+        <a class="lp-link" href="https://www.saqa.org.za" target="_blank" rel="noopener">📜 <b>SAQA — Qualifications Authority</b><p>Oversees the National Qualifications Framework (NQF) and keeps the national record of registered qualifications. Before you pay a private college, check that its qualification is registered here — and that the college is on DHET's register (below).</p><span class="lp-url">www.saqa.org.za ↗</span></a>
+        <a class="lp-link" href="https://www.dhet.gov.za" target="_blank" rel="noopener">🏫 <b>DHET — Department of Higher Education and Training</b><p>The government department in charge of universities, TVET colleges and community colleges. It publishes the official registers of private colleges, so you can check a college is registered and avoid fake (bogus) colleges.</p><span class="lp-url">www.dhet.gov.za ↗</span></a>
+        <a class="lp-link" href="https://www.dhet.gov.za/SitePages/Map.aspx" target="_blank" rel="noopener">🔧 <b>TVET colleges — find one near you</b><p>South Africa has 50 public TVET colleges on more than 360 campuses. They teach practical, job-focused courses such as engineering trades, IT, hospitality and business, and students can apply to NSFAS for funding. On this DHET page, tap your province to see every public TVET college, with phone numbers and websites.</p><span class="lp-url">www.dhet.gov.za/SitePages/Map.aspx ↗</span></a>
+      </details>
+      <details class="lp-lgroup">
+        <summary><span>🚪 Just finished school? Your next step<small>Rewrite matric, get career advice, find a place to study</small></span></summary>
+        <a class="lp-link" href="https://www.education.gov.za/Programmes/SecondChanceProgramme.aspx" target="_blank" rel="noopener">🔁 <b>Second Chance Matric Programme</b><p>Free help from the Department of Basic Education if you didn't pass matric or want better marks: study material and support classes in your province. You still have to register for the exams with your provincial education department before its deadline.</p><span class="lp-url">www.education.gov.za/Programmes/SecondChanceProgramme.aspx ↗</span></a>
+        <a class="lp-link" href="https://www.careerhelp.org.za" target="_blank" rel="noopener">🧭 <b>Khetha — free career advice</b><p>The Department of Higher Education and Training's free career advice service. Contact a career adviser by phone, SMS or email (details on the site) about what to study, where to study it and how to pay for it — useful if you don't know what to do next.</p><span class="lp-url">www.careerhelp.org.za ↗</span></a>
+        <a class="lp-link" href="https://ncap.careerhelp.org.za" target="_blank" rel="noopener">🗺️ <b>National Career Advice Portal (NCAP)</b><p>DHET's free self-help career site: career quizzes, information on hundreds of careers, and a subject chooser for learners picking Grade 10 subjects. Good for Grade 11s choosing a direction before applications open.</p><span class="lp-url">ncap.careerhelp.org.za ↗</span></a>
+        <a class="lp-link" href="https://usaf.ac.za" target="_blank" rel="noopener">🏛️ <b>Universities South Africa</b><p>The body that represents all 26 public universities. Use it to find each university's website and apply directly (except DUT, MUT, UKZN and UniZulu, which use CAO). Most open applications early in Grade 12 and use your Grade 11 results. Many charge an application fee, and popular courses close early.</p><span class="lp-url">usaf.ac.za ↗</span></a>
+        <a class="lp-link" href="https://www.unisa.ac.za" target="_blank" rel="noopener">🎓 <b>UNISA — study by distance</b><p>South Africa's biggest distance-learning university. You study from home, so you can work at the same time, but assignments and exams have fixed dates. Applications open for set periods and there is an application fee — check the dates on the website.</p><span class="lp-url">www.unisa.ac.za ↗</span></a>
+      </details>
+      <details class="lp-lgroup">
+        <summary><span>💸 More bursaries and funding<small>If NSFAS doesn't cover you</small></span></summary>
+        <a class="lp-link" href="https://www.isfap.org.za" target="_blank" rel="noopener">💼 <b>ISFAP — help for the “missing middle”</b><p>Funding for students whose families earn too much for NSFAS but too little to pay fees, studying in high-demand fields (such as engineering, health and accounting) at ISFAP's partner universities. It also offers mentoring and support during your studies.</p><span class="lp-url">www.isfap.org.za ↗</span></a>
+        <a class="lp-link" href="https://www.education.gov.za/Programmes/FunzaLushaka.aspx" target="_blank" rel="noopener">🍎 <b>Funza Lushaka — bursary to become a teacher</b><p>A government bursary to train as a teacher (a BEd degree or PGCE) in a priority subject at a public university. In return you teach at a public school for the same number of years you were funded — if you don't, the bursary becomes a loan you must repay.</p><span class="lp-url">www.education.gov.za/Programmes/FunzaLushaka.aspx ↗</span></a>
+        <a class="lp-link" href="https://www.zabursaries.co.za" target="_blank" rel="noopener">🔎 <b>ZA Bursaries — bursary listings</b><p>A free website listing company and government bursaries by field of study, with closing dates. Real bursaries never ask you to pay to apply — if one does, it's a scam.</p><span class="lp-url">www.zabursaries.co.za ↗</span></a>
+      </details>
+      <details class="lp-lgroup">
+        <summary><span>🧑‍💼 Work, learnerships and skills<small>Earn, learn and build your CV</small></span></summary>
+        <a class="lp-link" href="https://sayouth.mobi" target="_blank" rel="noopener">📱 <b>SAYouth.mobi — jobs and learnerships</b><p>The national youth employment network. Make a free profile once and get matched to jobs, learnerships and training. It is zero-rated on the major networks, so browsing the site doesn't use your data.</p><span class="lp-url">sayouth.mobi ↗</span></a>
+        <a class="lp-link" href="https://www.yes4youth.co.za" target="_blank" rel="noopener">🛠️ <b>YES — Youth Employment Service</b><p>A year (12 months) of paid work experience at real companies for unemployed young people — check the age and other criteria on the site. A strong first job for your CV.</p><span class="lp-url">www.yes4youth.co.za ↗</span></a>
+        <a class="lp-link" href="https://www.nyda.gov.za" target="_blank" rel="noopener">🚀 <b>NYDA — National Youth Development Agency</b><p>Support for young people: business grants and mentoring if you want to start your own business, plus skills programmes and help finding opportunities.</p><span class="lp-url">www.nyda.gov.za ↗</span></a>
+        <a class="lp-link" href="https://essa.labour.gov.za" target="_blank" rel="noopener">🗂️ <b>ESSA — register as a job seeker</b><p>The Department of Employment and Labour's free job-seeker database. Register your CV so employers and labour centres can match you to vacancies.</p><span class="lp-url">essa.labour.gov.za ↗</span></a>
+      </details>
     </div>
   </section>
 
