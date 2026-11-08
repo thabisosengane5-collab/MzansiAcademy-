@@ -38,6 +38,15 @@ const TEXT_FIELDS = ['illusText', 'intro', 'activity', 'activityAnswer', 'examTi
 // Start from the lessons written inline in index.html, as the site does, then merge the files
 global.LESSON_DB = objectLiteral('var LESSON_DB = {');
 let totalLessons = 0, totalTopics = 0;
+const wordCounts = [];
+function lessonWords(L) {
+  const count = (x) => (typeof x === 'string' ? x : x ? JSON.stringify(x) : '').replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length;
+  const parts = [L.illusText, L.intro, L.activity, L.activityAnswer, L.examTip, L.conclusion, L.hook && L.hook.body, L.callout && (L.callout.body || L.callout)];
+  (L.concepts || []).forEach((c) => parts.push(typeof c === 'string' ? c : c.body));
+  (L.examples || []).forEach((e) => parts.push(e.body, e.answer));
+  (L.mistakes || []).forEach((m) => parts.push(m));
+  return parts.reduce((a, x) => a + count(x), 0);
+}
 for (const sid of subjects) {
   const file = path.join(ROOT, 'content', 'lessons', sid + '.js');
   if (!fs.existsSync(file)) { err(`${sid}: no file content/lessons/${sid}.js`); continue; }
@@ -80,6 +89,10 @@ for (const sid of subjects) {
         (L.examples || []).map((e) => e.body + ' ' + e.answer),
         L.hook ? [L.hook.body] : []);
       texts.forEach((s) => { const m = /\d \d{3}(?!\d)/.exec(String(s).replace(/<[^>]*>/g, '')); if (m) warn(`${at}: digit group "${m[0]}" uses a normal space — use \\u00a0`); });
+      // Depth: teaching text (everything except quiz, keyterms and svg), target 700–900 words
+      const words = lessonWords(L);
+      if (words < 700) warn(`${at}: short lesson (${words} words; aim for 700–900)`);
+      wordCounts.push(words);
     });
   });
   totalLessons += real; totalTopics += topics;
@@ -87,6 +100,10 @@ for (const sid of subjects) {
 }
 
 console.log(`\n${totalLessons}/${totalTopics} topics have real lessons in the checked subjects`);
+if (wordCounts.length) {
+  const w = wordCounts.slice().sort((a, b) => a - b);
+  console.log(`Lesson length (words): shortest ${w[0]}, median ${w[w.length >> 1]}, longest ${w[w.length - 1]}; ${w.filter((x) => x >= 700).length}/${w.length} at 700+`);
+}
 warns.forEach((w) => console.log('WARN  ' + w));
 errors.forEach((e) => console.log('ERROR ' + e));
 console.log(`\n${errors.length} error(s), ${warns.length} warning(s)`);
